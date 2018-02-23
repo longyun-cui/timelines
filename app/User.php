@@ -27,6 +27,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $dateFormat = 'U';
+
 
     // 课程
     function courses()

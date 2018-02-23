@@ -58,6 +58,7 @@ Route::group(['namespace' => 'Front'], function () {
 Route::match(['get','post'], 'login', 'Home\AuthController@user_login');
 Route::match(['get','post'], 'logout', 'Home\AuthController@user_logout');
 Route::match(['get','post'], 'register', 'Home\AuthController@user_register');
+Route::match(['get','post'], 'activation', 'Home\AuthController@activation');
 
 
 
