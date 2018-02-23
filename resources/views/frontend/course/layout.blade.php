@@ -59,7 +59,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{asset('css/common.css')}}">
-    <link rel="stylesheet" href="{{asset('css/front/index.css')}}">
+    <link rel="stylesheet" href="{{asset('css/frontend/index.css')}}">
 
     @yield('style')
     <style>
@@ -71,8 +71,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .main-footer {margin-left:300px;}
 
         .recursion-menu {height:28px;line-height:28px;margin:4px 0;}
-        .recursion-icon {margin-right:4px;}
-        .recursion-text { width:calc(100% - 18px);width:-moz-calc(100% - 18px);width:-webkit-calc(100% - 18px);float:right; }
+        .recursion-icon {margin-right:0;cursor:pointer}
+        .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
         .recursion-text a { width:100%;padding-left:8px;color:#eee;float:right; }
         .recursion-text a:hover { color:#222;background-color:#ccc; }
         .recursion-text.active { background-color:#ccc; }
@@ -218,12 +218,13 @@ desired effect
             </div>
 
             @foreach( $data->contents_recursion as $key => $recursion )
-                <div class="col-md-12" style="color:#eee;">
-                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*16 }}px">
+                <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
+                     style="color:#eee;display:@if($recursion->level != 0) none @endif">
+                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*20 }}px">
                         <span class="recursion-icon">
                             @if($recursion->type == 1)
                                 @if($recursion->has_child == 1)
-                                    <i class="fa fa-plus-square"></i>
+                                    <i class="fa fa-plus-square recursion-fold"></i>
                                 @else
                                     <i class="fa fa-file-text"></i>
                                 @endif
@@ -416,7 +417,7 @@ desired effect
 </script>
 
 
-<script src="{{asset('js/admin/index.js')}}"></script>
+<script src="{{asset('js/frontend/index.js')}}"></script>
 
 @yield('js')
 

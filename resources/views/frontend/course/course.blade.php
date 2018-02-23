@@ -71,6 +71,59 @@
 @section('js')
     <script>
         $(function() {
+
+            xx();
+
+            // 收起
+            $(".sidebar").on('click', '.fa-minus-square', function () {
+                var this_row = $(this).parents('.recursion-row');
+                var this_level = this_row.attr('data-level');
+                this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
+                    if($(this).attr('data-level') <= this_level ) return false;
+                    $(this).hide();
+                });
+                $(this).removeClass('fa-minus-square').addClass('fa-plus-square');
+            });
+
+            // 展开
+            $(".sidebar").on('click', '.fa-plus-square', function () {
+                var this_row = $(this).parents('.recursion-row');
+                var this_level = this_row.attr('data-level');
+                this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
+                    if($(this).attr('data-level') <= this_level ) return false;
+                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+                    $(this).show();
+                });
+                $(this).removeClass('fa-plus-square').addClass('fa-minus-square');
+            });
+
         });
+
+        function xx() {
+            var this_row = $('.recursion-row .active').parents('.recursion-row');
+            var this_level = this_row.attr('data-level');
+
+            if(this_level == 0)
+            {
+                this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
+                    if($(this).attr('data-level') <= this_level ) return false;
+                    $(this).show();
+                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+                });
+            }
+            else if(this_level > 0)
+            {
+                this_row.prevUntil().each( function () {
+                    if( $(this).attr('data-level') == 0 )
+                    {
+                        $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+
+                        $(this).nextUntil('.recursion-row[data-level=0]').show();
+                        $(this).nextUntil('.recursion-row[data-level=0]').find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+                        return false;
+                    }
+                });
+            }
+        }
     </script>
 @endsection
