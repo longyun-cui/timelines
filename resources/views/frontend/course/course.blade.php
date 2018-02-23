@@ -1,7 +1,9 @@
 @extends('frontend.course.layout')
 
 @section('title') {{$data->title}} @endsection
-@section('header') {{$data->title}} @endsection
+@section('header')
+    <a href="{{url('/course/'.$data->encode_id)}}">{{$data->title}}</a>
+@endsection
 @section('description')
     来自 <a href="{{url('/u/'.$data->user->encode_id)}}"><b>{{ $data->user->name }}</b></a>
 @endsection
@@ -10,10 +12,10 @@
     <li><a href="#"><i class="fa "></i>Here</a></li>
 @endsection
 
+
 @section('content')
 <div style="display:none;">
-    <input type="hidden" id="chart_id" value="{{$chart_encode or ''}}" readonly>
-    <input type="hidden" id="table_id" value="{{$table_encode or ''}}" readonly>
+    <input type="hidden" id="" value="{{$_encode or ''}}" readonly>
 </div>
 
 {{--内容--}}

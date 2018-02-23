@@ -72,7 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         .recursion-menu {height:28px;line-height:28px;margin:4px 0;}
         .recursion-icon {margin-right:4px;}
-        .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
+        .recursion-text { width:calc(100% - 18px);width:-moz-calc(100% - 18px);width:-webkit-calc(100% - 18px);float:right; }
         .recursion-text a { width:100%;padding-left:8px;color:#eee;float:right; }
         .recursion-text a:hover { color:#222;background-color:#ccc; }
         .recursion-text.active { background-color:#ccc; }
@@ -204,6 +204,18 @@ desired effect
         {{--<!-- sidebar: style can be found in sidebar.less -->--}}
         <section class="sidebar">
 
+            <div class="col-md-12" style="color:#eee;">
+                <div class="row recursion-menu">
+                    <span class="recursion-icon" style="color:orange;">
+                        <i class="fa fa-bookmark"></i>
+                    </span>
+                    <span class="recursion-text @if(empty($content)) active @endif">
+                        <a href="{{url('/course/'.encode($data->id))}}">
+                            {{ $data->title or '' }}
+                        </a>
+                    </span>
+                </div>
+            </div>
 
             @foreach( $data->contents_recursion as $key => $recursion )
                 <div class="col-md-12" style="color:#eee;">

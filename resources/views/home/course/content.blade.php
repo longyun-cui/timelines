@@ -271,7 +271,7 @@
                         $('#menu').find('option').prop('selected',null);
                         $('#menu').find('option[value='+data.data.p_id+']').prop("selected", true);
                         var selected_text = $('#menu').find('option[value='+data.data.p_id+']').text();
-                        //$("html, body").animate({ scrollTop: $("#form-edit-content").offset().top }, {duration: 500,easing: "swing"});
+                        $("html, body").animate({ scrollTop: $("#form-edit-content").offset().top }, {duration: 500,easing: "swing"});
 
                     }
                 },
