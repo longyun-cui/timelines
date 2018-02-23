@@ -1,0 +1,51 @@
+<?php
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+
+class Content extends Model
+{
+    //
+    protected $table = "contents";
+    protected $fillable = [
+        'sort', 'type', 'active', 'user_id', 'course_id', 'p_id', 'order', 'title', 'description', 'content',
+        'is_shared', 'visit_num', 'share_num'
+    ];
+    protected $dateFormat = 'U';
+
+
+    // 管理员
+    function user()
+    {
+        return $this->belongsTo('App\User','user_id','id');
+    }
+
+    // 课程
+    function course()
+    {
+        return $this->belongsTo('App\Models\Course','course_id','id');
+    }
+
+    // 父节点
+    function parent()
+    {
+        return $this->belongsTo('App\Models\Content','p_id','id');
+    }
+
+    // 子节点
+    function children()
+    {
+        return $this->hasMany('App\Models\Content','p_id','id');
+    }
+
+    /**
+     * 获得此人的所有标签。
+     */
+    public function tags()
+    {
+        return $this->morphToMany('App\Models\Tag', 'taggable');
+    }
+
+
+
+
+}
