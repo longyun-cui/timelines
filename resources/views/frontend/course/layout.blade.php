@@ -71,7 +71,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .main-footer {margin-left:300px;}
 
         .recursion-menu {height:28px;line-height:28px;margin:4px 0;}
-        .recursion-icon {margin-right:0;cursor:pointer}
+        .recursion-icon {margin-right:0;cursor:pointer;}
+        .recursion-icon .fa-file-text {color:grey;}
+        /*.recursion-icon .fa-plus-square {color:#3c8dbc;}*/
+        /*.recursion-icon .fa-minus-square {color:green;}*/
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
         .recursion-text a { width:100%;padding-left:8px;color:#eee;float:right; }
         .recursion-text a:hover { color:#222;background-color:#ccc; }
@@ -220,7 +223,7 @@ desired effect
             @foreach( $data->contents_recursion as $key => $recursion )
                 <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
                      style="color:#eee;display:@if($recursion->level != 0) none @endif">
-                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*20 }}px">
+                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*24 }}px">
                         <span class="recursion-icon">
                             @if($recursion->type == 1)
                                 @if($recursion->has_child == 1)
