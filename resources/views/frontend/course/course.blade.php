@@ -102,6 +102,7 @@
         function xx() {
             var this_row = $('.recursion-row .active').parents('.recursion-row');
             var this_level = this_row.attr('data-level');
+            this_row.find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
 
             if(this_level == 0)
             {
