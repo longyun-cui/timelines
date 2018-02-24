@@ -5,7 +5,7 @@
 @section('content')
 <div class="register-box">
     <div class="register-logo">
-        <a href="/"><b>课程站</b> 注册</a>
+        <a href="/"><b>三人行</b> 注册</a>
     </div>
 
     <div class="register-box-body">

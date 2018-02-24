@@ -226,7 +226,7 @@ desired effect
                                 <img src="/AdminLTE/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                                 <p>
-{{--                                    {{Auth::guard('admin')->user()->nickname or ''}} - Web Developer--}}
+                                    {{Auth::user()->name}}
                                     <small>Member since Nov. 2012</small>
                                 </p>
                             </li>
@@ -251,7 +251,7 @@ desired effect
                                     <a href="#" class="btn btn-default btn-flat">个人资料</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="/admin/logout" class="btn btn-default btn-flat admin-logout">退出</a>
+                                    <a href="/logout" class="btn btn-default btn-flat user-logout">退出</a>
                                 </div>
                             </li>
                         </ul>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        <a href="/"><b>课程站</b> </a>
+        <a href="/"><b>三人行</b> </a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
