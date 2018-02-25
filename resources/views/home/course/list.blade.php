@@ -115,7 +115,7 @@
                         "data": "encode_id",
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return '<a target="_blank" href="/course?id='+data+'">'+row.title+'</a>';
+                            return '<a target="_blank" href="/course/'+data+'">'+row.title+'</a>';
                         }
                     },
                     {
