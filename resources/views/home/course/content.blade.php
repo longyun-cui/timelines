@@ -24,7 +24,7 @@
             <div class="box-header with-border" style="margin:16px 0;">
                 <h3 class="box-title">内容结构图</h3>
                 <div class="pull-right">
-                    <a><button type="button" class="btn btn-success pull-right show-create-content"><i class="fa fa-plus"></i> 添加内容</button></a>
+                    <button type="button" class="btn btn-success pull-right show-create-content"><i class="fa fa-plus"></i> 添加新内容</button>
                 </div>
             </div>
 
@@ -55,6 +55,7 @@
             <div class="box-footer">
                 <div class="row" style="margin:16px 0;">
                     <div class="col-md-9 col-md-offset-2">
+                        <a href="{{ url('/course/'.$data->encode_id) }}" target="_blank"><button type="button" class="btn btn-primary">预览</button></a>
                         <button type="button" onclick="history.go(-1);" class="btn btn-default">返回</button>
                     </div>
                 </div>
@@ -72,7 +73,8 @@
 
             <div class="box-header with-border" style="margin:16px 0;">
                 <h3 class="box-title"> @if(empty($encode_id)) 添加内容 @else 编辑目录 @endif </h3>
-                <div class="box-tools pull-right">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-success pull-right show-create-content"><i class="fa fa-plus"></i> 添加新内容</button>
                 </div>
             </div>
 
