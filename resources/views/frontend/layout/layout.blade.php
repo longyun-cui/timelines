@@ -91,7 +91,7 @@ desired effect
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="{{url('/home')}}" class="logo" style="background-color:#222d32;">
+        <a href="{{url('/')}}" class="logo" style="background-color:#222d32;">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>师</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -134,7 +134,7 @@ desired effect
                 <li class="header">目录</li>
 
                 <li class="treeview">
-                    <a href="{{url('/courses')}}"><i class="fa fa-list text-orange"></i> <span>课程集</span></a>
+                    <a href="{{url('/courses')}}"><i class="fa fa-list text-orange"></i> <span>大家分享</span></a>
                 </li>
 
                 <li class="header">Home</li>

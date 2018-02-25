@@ -27,9 +27,9 @@
 
                 <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
                     <h3 class="box-title">
-                        <a href="{{url('/course/'.encode($data->id))}}" target="_blank">{{$data->title or ''}}</a>
+                        <a href="{{url('/course/'.encode($data->id))}}">{{$data->title or ''}}</a>
                     </h3>
-                    <span>来自 <a href="{{url('/u/'.encode($data->user->id))}}" target="_blank">{{$data->user->name or ''}}</a></span>
+                    <span>来自 <a href="{{url('/u/'.encode($data->user->id))}}">{{$data->user->name or ''}}</a></span>
                 </div>
 
                 @if(!empty($data->description))
