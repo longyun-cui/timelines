@@ -29,8 +29,8 @@
                 </div>
 
                 @if(!empty($content->description))
-                    <div class="box-body">
-                        <div class="colo-md-12 text-muted"> {{ $content->description or '' }} </div>
+                    <div class="box-body text-muted">
+                        <div class="colo-md-12"> {!! $content->description or '' !!}  </div>
                     </div>
                 @endif
 
@@ -45,8 +45,8 @@
                 </div>
 
                 @if(!empty($data->description))
-                    <div class="box-body">
-                        <div class="colo-md-12 text-muted"> {{ $data->description or '' }} </div>
+                    <div class="box-body text-muted">
+                        <div class="colo-md-12"> {!! $data->description or '' !!}  </div>
                     </div>
                 @endif
 

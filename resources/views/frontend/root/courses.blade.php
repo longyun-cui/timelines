@@ -33,8 +33,8 @@
                 </div>
 
                 @if(!empty($data->description))
-                    <div class="box-body">
-                        <div class="colo-md-12 text-muted"> {{ $data->description or '' }} </div>
+                    <div class="box-body text-muted">
+                        <div class="colo-md-12"> {!! $data->description or '' !!}  </div>
                     </div>
                 @endif
 

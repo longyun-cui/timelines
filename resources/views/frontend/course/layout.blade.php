@@ -205,7 +205,7 @@ desired effect
     <aside class="main-sidebar" style="">
 
         {{--<!-- sidebar: style can be found in sidebar.less -->--}}
-        <section class="sidebar">
+        <section class="sidebar" style="padding-bottom:32px;">
 
             <div class="col-md-12" style="color:#eee;">
                 <div class="row recursion-menu">
@@ -245,30 +245,6 @@ desired effect
             @endforeach
 
 
-            <ul class="sidebar-menu" style="display:none;">
-                <li class="header">HEADER</li>
-                <!-- Optionally, you can add icons to the links -->
-                <li class="treeview">
-                    <a href=""><i class="fa fa-th"></i> <span>GPS</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="{{url('/index')}}"><i class="fa fa-circle-o text-blue"></i>Navigation</a></li>
-                        <li><a href="{{url('/tools')}}"><i class="fa fa-circle-o text-blue"></i>Tools</a></li>
-                    </ul>
-                </li>
-                <li class="active">
-                    <a href="/index"><i class="fa fa-circle-o text-red"></i> <span>Navigation</span></a>
-                </li>
-                <li>
-                    <a href="/tools"><i class="fa fa-circle-o text-red"></i> <span>Tools</span></a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a>
-                </li>
-            </ul>
 
 
             <!-- /.sidebar-menu -->
