@@ -223,7 +223,7 @@ desired effect
                 </div>
             </div>
 
-            <div class="col-md-12" style="margin:16px 0 8px;color:#eee;">
+            <div class="col-md-12" style="margin:8px 0;color:#eee;">
                 <div class="col-md-6 fold-button fold-down">
                     <span class="">
                         <i class="fa fa-plus-square"></i> &nbsp; 全部展开

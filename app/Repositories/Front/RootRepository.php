@@ -19,7 +19,10 @@ class RootRepository {
 
     public function view_courses($post_data)
     {
-        $courses = Course::with(['user'])->orderBy('id','desc')->paginate(20);
+        $courses = Course::with([
+            'user',
+            'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+        ])->orderBy('id','desc')->paginate(20);
         return view('frontend.root.courses')->with(['datas'=>$courses]);
     }
 
