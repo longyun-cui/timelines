@@ -22,7 +22,7 @@ class RootRepository {
         $courses = Course::with([
             'user',
             'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
-        ])->orderBy('id','desc')->paginate(20);
+        ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         return view('frontend.root.courses')->with(['datas'=>$courses]);
     }
 
@@ -68,7 +68,7 @@ class RootRepository {
             'courses'=>function($query) { $query->orderBy('id','desc'); }
         ])->find($user_decode);
 
-        $courses = Course::where('user_id',$user_decode)->orderBy('id','desc')->paginate(20);
+        $courses = Course::where('user_id',$user_decode)->orderBy('id','desc')->where('active', 1)->paginate(20);
 
         return view('frontend.user.user')->with(['data'=>$user,'courses'=>$courses]);
     }
