@@ -74,8 +74,24 @@
 
             xx();
 
+            // 全部展开
+            $(".sidebar").on('click', '.fold-down', function () {
+                $('.recursion-row').each( function () {
+                    $(this).show();
+                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+                });
+            });
+
+            // 全部收起
+            $(".sidebar").on('click', '.fold-up', function () {
+                $('.recursion-row').each( function () {
+                    if($(this).attr('data-level') != 0) $(this).hide();
+                    $(this).find('.recursion-fold').removeClass('fa-minus-square').addClass('fa-plus-square');
+                });
+            });
+
             // 收起
-            $(".sidebar").on('click', '.fa-minus-square', function () {
+            $(".sidebar").on('click', '.recursion-row .fa-minus-square', function () {
                 var this_row = $(this).parents('.recursion-row');
                 var this_level = this_row.attr('data-level');
                 this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
@@ -86,7 +102,7 @@
             });
 
             // 展开
-            $(".sidebar").on('click', '.fa-plus-square', function () {
+            $(".sidebar").on('click', '.recursion-row .fa-plus-square', function () {
                 var this_row = $(this).parents('.recursion-row');
                 var this_level = this_row.attr('data-level');
                 this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {

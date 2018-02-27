@@ -70,6 +70,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .content-wrapper {margin-left:300px;}
         .main-footer {margin-left:300px;}
 
+        .fold-button {height:24px;line-height:24px;cursor:pointer;}
+        .fold-button:hover { color:#222;background-color:#ccc; }
+
         .recursion-menu {height:28px;line-height:28px;margin:4px 0;}
         .recursion-icon {margin-right:0;cursor:pointer;}
         .recursion-icon .fa-file-text {color:grey;}
@@ -216,6 +219,19 @@ desired effect
                         <a href="{{url('/course/'.encode($data->id))}}">
                             {{ $data->title or '' }}
                         </a>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-12" style="margin:16px 0 8px;color:#eee;">
+                <div class="col-md-6 fold-button fold-down">
+                    <span class="">
+                        <i class="fa fa-plus-square"></i> &nbsp; 全部展开
+                    </span>
+                </div>
+                <div class="col-md-6 fold-button fold-up">
+                    <span class="">
+                        <i class="fa fa-minus-square"></i> &nbsp; 全部折叠
                     </span>
                 </div>
             </div>
