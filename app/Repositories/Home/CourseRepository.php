@@ -26,7 +26,7 @@ class CourseRepository {
     public function get_list_datatable($post_data)
     {
         $user = Auth::user();
-        $query = Course::select("*")->with(['user']);
+        $query = Course::select("*")->with(['user'])->where('user_id', $user->id);
         if(!empty($post_data['name'])) $query->where('name', 'like', "%{$post_data['name']}%");
         if(!empty($post_data['major'])) $query->where('major', 'like', "%{$post_data['major']}%");
         if(!empty($post_data['nation'])) $query->where('nation', 'like', "%{$post_data['nation']}%");
