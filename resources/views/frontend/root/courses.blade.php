@@ -14,15 +14,15 @@
     <div class="row course-option">
         <div class="col-md-12">
             <!-- BEGIN PORTLET-->
-            <div class="box panel-default
-                @if($loop->index % 7 == 0) box-info
-                @elseif($loop->index % 7 == 1) box-danger
-                @elseif($loop->index % 7 == 2) box-success
-                @elseif($loop->index % 7 == 3) box-default
-                @elseif($loop->index % 7 == 4) box-warning
-                @elseif($loop->index % 7 == 5) box-primary
-                @elseif($loop->index % 7 == 6) box-danger
-                @endif
+            <div class="box panel-default box-primary
+                {{--@if($loop->index % 7 == 0) box-info--}}
+                {{--@elseif($loop->index % 7 == 1) box-danger--}}
+                {{--@elseif($loop->index % 7 == 2) box-success--}}
+                {{--@elseif($loop->index % 7 == 3) box-default--}}
+                {{--@elseif($loop->index % 7 == 4) box-warning--}}
+                {{--@elseif($loop->index % 7 == 5) box-primary--}}
+                {{--@elseif($loop->index % 7 == 6) box-danger--}}
+                {{--@endif--}}
             ">
 
                 <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
@@ -37,7 +37,8 @@
                     <div class="colo-md-12 text-muted" style="margin-bottom:16px;">目录结构</div>
                     @foreach($data->contents as $content)
                         <div class="colo-md-12 box-body" style="padding:4px 10px;">
-                            <i class="fa fa-list-ol"></i> &nbsp; {{ $content->title or '' }} </div>
+                            <a href="{{ url('course/'.encode($data->id).'?content='.encode($content->id)) }}">
+                                <i class="fa fa-list-ol"></i> &nbsp; {{ $content->title or '' }}</a> </div>
                     @endforeach
                 </div>
 

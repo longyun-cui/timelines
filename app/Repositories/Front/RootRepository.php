@@ -17,6 +17,8 @@ class RootRepository {
     {
     }
 
+
+    // 平台主页
     public function view_courses($post_data)
     {
         $courses = Course::with([
@@ -26,6 +28,9 @@ class RootRepository {
         return view('frontend.root.courses')->with(['datas'=>$courses]);
     }
 
+
+
+    // 课程详情
     public function view_course($post_data,$id=0)
     {
 //        $course_encode = $post_data['id'];
@@ -57,6 +62,9 @@ class RootRepository {
         return view('frontend.course.course')->with(['data'=>$course,'content'=>$content]);
     }
 
+
+
+    // 用户首页
     public function view_user($post_data,$id=0)
     {
 //        $course_encode = $post_data['id'];
@@ -68,10 +76,13 @@ class RootRepository {
             'courses'=>function($query) { $query->orderBy('id','desc'); }
         ])->find($user_decode);
 
-        $courses = Course::where('user_id',$user_decode)->orderBy('id','desc')->where('active', 1)->paginate(20);
+        $courses = Course::with([
+            'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+        ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
 
         return view('frontend.user.user')->with(['data'=>$user,'courses'=>$courses]);
     }
+
 
 
     // 顺序排列
