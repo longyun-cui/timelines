@@ -134,7 +134,7 @@ desired effect
                 <li class="header">目录</li>
 
                 <li class="treeview">
-                    <a href="{{url('/courses')}}"><i class="fa fa-list text-orange"></i> <span>大家分享</span></a>
+                    <a href="{{url('/')}}"><i class="fa fa-list text-orange"></i> <span>平台主页</span></a>
                 </li>
 
                 <li class="header">Home</li>

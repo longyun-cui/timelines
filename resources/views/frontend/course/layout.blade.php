@@ -75,7 +75,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         .recursion-menu {height:28px;line-height:28px;margin:4px 0;}
         .recursion-icon {margin-right:0;cursor:pointer;}
-        .recursion-icon .fa-file-text {color:grey;}
+        .recursion-icon .fa-file-text {color:#bbb;}
         /*.recursion-icon .fa-plus-square {color:#3c8dbc;}*/
         /*.recursion-icon .fa-minus-square {color:green;}*/
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
@@ -223,7 +223,7 @@ desired effect
                 </div>
             </div>
 
-            <div class="col-md-12" style="margin:8px 0;color:#eee;">
+            <div class="col-md-12" style="margin:8px 0;color:#666;">
                 <div class="col-md-6 fold-button fold-down">
                     <span class="">
                         <i class="fa fa-plus-square"></i> &nbsp; 全部展开
