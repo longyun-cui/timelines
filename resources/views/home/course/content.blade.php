@@ -40,7 +40,7 @@
                                     <i class="fa fa-file-text"></i>
                                 @endif
                             </span>
-                            <span class="form-control" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                            <span class="form-control" style="white-space:nowrap;text-overflow:ellipsis;">
                                 {{ $content->title or '' }}</span>
 
                             @if($content->type == 1)
