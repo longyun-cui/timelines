@@ -79,7 +79,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         /*.recursion-icon .fa-plus-square {color:#3c8dbc;}*/
         /*.recursion-icon .fa-minus-square {color:green;}*/
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
-        .recursion-text a { width:100%;padding-left:8px;color:#eee;float:right; }
+        .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#eee;float:right; }
         .recursion-text a:hover { color:#222;background-color:#ccc; }
         .recursion-text.active { background-color:#ccc; }
         .recursion-text.active a { color:#222; }
