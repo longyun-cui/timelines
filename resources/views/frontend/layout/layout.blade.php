@@ -143,6 +143,8 @@ desired effect
 
                     <li class="treeview">
                         <a href="{{url('/login')}}"><i class="fa fa-circle-o"></i> <span>登录</span></a>
+                    </li>
+                    <li class="treeview">
                         <a href="{{url('/register')}}"><i class="fa fa-circle-o"></i> <span>注册</span></a>
                     </li>
                 @else

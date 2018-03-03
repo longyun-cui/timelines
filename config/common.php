@@ -10,12 +10,12 @@
             ],
 
             'online' => [
-                'root' => 'http://live8.pub',
-                'cdn' => 'http://cdn.live8.pub',
+                'root' => 'http://softdoc.pub',
+                'cdn' => 'http://cdn.softdoc.pub',
             ],
         ],
 
-        'MailService' => 'http://live2.pub:8088',
+        'MailService' => 'http://cuilongyun.win:8088',
 
         'zh' => [
             'course' => '课程',
