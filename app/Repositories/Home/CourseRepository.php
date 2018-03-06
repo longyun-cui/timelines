@@ -133,7 +133,7 @@ class CourseRepository {
                 if(!empty($post_data["cover"]))
                 {
                     $upload = new CommonRepository();
-                    $result = $upload->upload($post_data["cover"], 'unique-cover-peoples' , 'cover_people_'.$encode_id);
+                    $result = $upload->upload($post_data["cover"], 'unique-cover-courses' , 'cover_course_'.$encode_id);
                     if($result["status"])
                     {
                         $course->cover_pic = $result["data"];
@@ -152,8 +152,8 @@ class CourseRepository {
         {
             DB::rollback();
 //            exit($e->getMessage());
-//            $msg = $e->getMessage();
-            $msg = '操作失败，请重试！';
+            $msg = $e->getMessage();
+//            $msg = '操作失败，请重试！';
             return response_fail([], $msg);
         }
     }

@@ -34,7 +34,7 @@ Route::group(['prefix' => 'common'], function () {
 
 
 /*
- * User Frontend
+ * Root Frontend
  */
 Route::group(['namespace' => 'Front'], function () {
 
@@ -63,7 +63,7 @@ Route::match(['get','post'], 'activation', 'Home\AuthController@activation');
 
 
 /*
- * Admin Backend
+ * Home Backend
  */
 Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
 
@@ -106,3 +106,4 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
     });
 
 });
+

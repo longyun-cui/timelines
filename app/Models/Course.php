@@ -7,7 +7,7 @@ class Course extends Model
     //
     protected $table = "courses";
     protected $fillable = [
-        'sort', 'type', 'active', 'user_id', 'title', 'description', 'content', 'pic_cover',
+        'sort', 'type', 'active', 'user_id', 'title', 'description', 'content', 'cover_pic',
         'is_shared', 'visit_num', 'share_num'
     ];
     protected $dateFormat = 'U';
