@@ -1,3 +1,7 @@
-._none {display: none;}
+._none {display:none;}
+._pointer {cursor:pointer}
+._left {float:left;}
+._right {float:right;}
+
 img {max-width:100%;height:auto;}
 embed {max-width:100%;}

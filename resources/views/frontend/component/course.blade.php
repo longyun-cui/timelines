@@ -4,7 +4,7 @@
             <!-- BEGIN PORTLET-->
             <div class="box panel-default box-default">
 
-                <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
+                <div class="box-header" style="margin:8px 0 0;border-bottom:1px solid #f4f4f4;">
                     <h3 class="box-title">
                         <a href="{{url('/course/'.encode($course->id))}}">{{$course->title or ''}}</a>
                     </h3>
