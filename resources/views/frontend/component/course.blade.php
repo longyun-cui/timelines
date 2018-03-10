@@ -46,32 +46,8 @@
 
                 {{--tools--}}
                 <div class="box-footer">
-
-                    {{--收藏--}}
-                    <a class="margin">
-                        @if(Auth::check())
-                            @if($course->user_id != Auth::id())
-                                @if(count($course->collections))
-                                    <span class="margin collect-this-cancel"><i class="fa fa-heart text-red"></i>
-                                @else
-                                    <span class="margin collect-this"><i class="fa fa-heart-o"></i>
-                                @endif
-                            @else
-                                <span class="collect-mine"><i class="fa fa-heart-o"></i>
-                            @endif
-                        @else
-                            <span class="margin collect-this"><i class="fa fa-heart-o"></i>
-                        @endif
-
-                        @if($course->collect_num) {{$course->collect_num}} @endif </span>
-                    </a>
-
-                    <a class="margin _none"><i class="fa fa-share"></i> @if($course->share_num) {{$course->share_num}} @endif</a>
-
-                    <a class="margin comment-toggle"><i class="fa fa-commenting-o"></i> @if($course->comment_num) {{$course->comment_num}} @endif</a>
-
                     {{--点赞--}}
-                    <a class="margin">
+                    <a class="margin" role="button">
                         @if(Auth::check())
                             @if($course->others->contains('type', 1))
                                 <span class="favor-this-cancel"><i class="fa fa-thumbs-up text-red"></i>
@@ -83,6 +59,33 @@
                         @endif
 
                         @if($course->favor_num) {{$course->favor_num}} @endif </span>
+                    </a>
+
+                    {{--收藏--}}
+                    <a class="margin" role="button">
+                        @if(Auth::check())
+                            @if($course->user_id != Auth::id())
+                                @if(count($course->collections))
+                                    <span class="collect-this-cancel"><i class="fa fa-heart text-red"></i>
+                                @else
+                                    <span class="collect-this"><i class="fa fa-heart-o"></i>
+                                @endif
+                            @else
+                                <span class="collect-mine"><i class="fa fa-heart-o"></i>
+                            @endif
+                        @else
+                            <span class="collect-this"><i class="fa fa-heart-o"></i>
+                        @endif
+
+                        @if($course->collect_num) {{$course->collect_num}} @endif </span>
+                    </a>
+
+                    <a class="margin _none" role="button">
+                        <i class="fa fa-share"></i> @if($course->share_num) {{$course->share_num}} @endif
+                    </a>
+
+                    <a class="margin comment-toggle" role="button">
+                        <i class="fa fa-commenting-o"></i> @if($course->comment_num) {{$course->comment_num}} @endif
                     </a>
 
                 </div>
