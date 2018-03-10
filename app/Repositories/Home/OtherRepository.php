@@ -58,8 +58,11 @@ class OtherRepository {
         foreach ($list as $k => $v)
         {
             $list[$k]->encode_id = encode($v->id);
-            $list[$k]->course->encode_id = encode($v->course->id);
-            $list[$k]->course->user->encode_id = encode($v->course->user->id);
+            if($list[$k]->course)
+            {
+                $list[$k]->course->encode_id = encode($v->course->id);
+                $list[$k]->course->user->encode_id = encode($v->course->user->id);
+            }
         }
         return datatable_response($list, $draw, $total);
     }
@@ -77,6 +80,13 @@ class OtherRepository {
         DB::beginTransaction();
         try
         {
+            $course_id = $collection->course_id;
+            $course = Course::find($course_id);
+            if($course)
+            {
+                $course->decrement('collect_num');
+            }
+
             $bool = $collection->delete();
             if(!$bool) throw new Exception("delete--collection--fail");
 
@@ -125,8 +135,11 @@ class OtherRepository {
         foreach ($list as $k => $v)
         {
             $list[$k]->encode_id = encode($v->id);
-            $list[$k]->course->encode_id = encode($v->course->id);
-            $list[$k]->course->user->encode_id = encode($v->course->user->id);
+            if($list[$k]->course)
+            {
+                $list[$k]->course->encode_id = encode($v->course->id);
+                $list[$k]->course->user->encode_id = encode($v->course->user->id);
+            }
         }
         return datatable_response($list, $draw, $total);
     }
@@ -144,6 +157,13 @@ class OtherRepository {
         DB::beginTransaction();
         try
         {
+            $course_id = $other->course_id;
+            $course = Course::find($course_id);
+            if($course)
+            {
+                $course->decrement('favor_num');
+            }
+
             $bool = $other->delete();
             if(!$bool) throw new Exception("delete--other--fail");
 

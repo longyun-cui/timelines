@@ -109,7 +109,8 @@
                         "data": "encode_id",
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.course == null ? '' : '<a target="_blank" href="/course/'+row.course.encode_id+'">'+row.course.title+'</a>';
+                            return row.course == null ?
+                                '该课程已经不在了！' : '<a target="_blank" href="/course/'+row.course.encode_id+'">'+row.course.title+'</a>';
                         }
                     },
                     {
