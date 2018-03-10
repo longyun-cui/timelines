@@ -59,7 +59,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link href="https://cdn.bootcss.com/bootstrap-switch/3.3.4/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{asset('css/common.css')}}">
-    <link rel="stylesheet" href="{{asset('css/front/index.css')}}">
+    <link rel="stylesheet" href="{{asset('css/frontend/index.css')}}">
 
     @yield('style')
 
@@ -166,7 +166,7 @@ desired effect
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
+        <section class="content-header" style="display:none;">
             <h1>
                 @yield('header')
                 <small>@yield('description')</small>
@@ -177,7 +177,7 @@ desired effect
         </section>
 
         <!-- Main content -->
-        <section class="content" style="margin-top:16px;">
+        <section class="content" style="">
             @yield('content') {{--Your Page Content Here--}}
         </section>
         <!-- /.content -->
@@ -308,7 +308,7 @@ desired effect
 </script>
 
 
-<script src="{{asset('js/admin/index.js')}}"></script>
+<script src="{{asset('js/frontend/index.js')}}"></script>
 
 @yield('js')
 

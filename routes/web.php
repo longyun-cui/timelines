@@ -49,6 +49,17 @@ Route::group(['namespace' => 'Front'], function () {
 
     Route::get('u/{id?}', 'RootController@view_user');
 
+
+    Route::group(['middleware' => 'login'], function () {
+
+        Route::post('item/collect/save', 'RootController@item_collect_save');
+        Route::post('item/collect/cancel', 'RootController@item_collect_cancel');
+
+        Route::post('item/favor/save', 'RootController@item_favor_save');
+        Route::post('item/favor/cancel', 'RootController@item_favor_cancel');
+
+    });
+
 });
 
 

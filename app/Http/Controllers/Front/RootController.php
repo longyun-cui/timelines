@@ -37,4 +37,26 @@ class RootController extends Controller
 
 
 
+    // 收藏
+    public function item_collect_save()
+    {
+        return $this->repo->item_collect_save(request()->all());
+    }
+    public function item_collect_cancel()
+    {
+        return $this->repo->item_collect_cancel(request()->all());
+    }
+
+    // 点赞
+    public function item_favor_save()
+    {
+        return $this->repo->item_favor_save(request()->all());
+    }
+    public function item_favor_cancel()
+    {
+        return $this->repo->item_favor_cancel(request()->all());
+    }
+
+
+
 }

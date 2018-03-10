@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-hone.index
+home.index
 @endsection
 
 

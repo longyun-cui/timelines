@@ -37,6 +37,12 @@ class Content extends Model
         return $this->hasMany('App\Models\Content','p_id','id');
     }
 
+    // 内容
+    function communications()
+    {
+        return $this->hasMany('App\Models\Communication','content_id','id');
+    }
+
     /**
      * 获得此人的所有标签。
      */
