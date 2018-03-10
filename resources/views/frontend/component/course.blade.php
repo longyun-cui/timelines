@@ -52,7 +52,7 @@
                                     <span class="margin collect-this"><i class="fa fa-heart-o"></i>
                                 @endif
                             @else
-                                <span class=""><i class="fa fa-heart-o"></i>
+                                <span class="collect-mine"><i class="fa fa-heart-o"></i>
                             @endif
                         @else
                             <span class="margin collect-this"><i class="fa fa-heart-o"></i>

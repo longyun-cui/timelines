@@ -40,7 +40,7 @@ class RootRepository {
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
             ])->find($id);
         }
-        return view('frontend.component.course')->with(['data'=>$data])->__toString();
+        return view('frontend.component.course')->with(['course'=>$data])->__toString();
     }
 
 

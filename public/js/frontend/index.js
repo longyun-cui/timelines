@@ -26,6 +26,10 @@ jQuery( function ($) {
 
 
     // 收藏
+    $(".item-option").off("click",".collect-mine").on('click', ".collect-mine", function() {
+        layer.msg('不能收藏自己的', function(){});
+    });
+    // 收藏
     $(".item-option").off("click",".collect-this").on('click', ".collect-this", function() {
         var that = $(this);
         var item_option = $(this).parents('.item-option');
