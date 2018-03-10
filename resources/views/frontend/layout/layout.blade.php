@@ -60,6 +60,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <link rel="stylesheet" href="{{asset('css/common.css')}}">
     <link rel="stylesheet" href="{{asset('css/frontend/index.css')}}">
+    <style>
+        .main-header .header-text {
+            float: left;
+            background-color: transparent;
+            background-image: none;
+            padding: 15px 15px;
+            font-family: fontAwesome;
+            color:#fff;
+        }
+    </style>
 
     @yield('style')
 
@@ -98,18 +108,19 @@ desired effect
             <span class="logo-lg"><b>三人行</b></span>
         </a>
 
-        <!-- Header Navbar -->
+        {{--<!-- Header Navbar -->--}}
         <nav class="navbar navbar-static-top" role="navigation" style="background-color:#1a2226;">
-            <!-- Sidebar toggle button-->
+            {{--<!-- Sidebar toggle button-->--}}
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
-            <!-- Navbar Right Menu -->
+            <span class="header-text" d> @yield('header_title') </span>
+
+            {{--<!-- Navbar Right Menu -->--}}
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-
-                    <!-- Control Sidebar Toggle Button -->
+                    {{--<!-- Control Sidebar Toggle Button -->--}}
                     <li style="display:none;">
                         <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                     </li>

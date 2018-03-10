@@ -81,6 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
         .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#eee;float:right; }
         .recursion-text a:hover { color:#222;background-color:#ccc; }
+        .recursion-user a:hover { color:#222;background-color:; }
         .recursion-text.active { background-color:#ccc; }
         .recursion-text.active a { color:#222; }
         @media (max-width: 767px) {
@@ -221,6 +222,14 @@ desired effect
                         </a>
                     </span>
                 </div>
+                <div class="row recursion-menu">
+                    <span class="recursion-icon" style="color:orange;">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    <span class="recursion-text recursion-user">
+                        <a href="{{url('/u/'.$data->user->encode_id)}}"><b class="text-blue">{{ $data->user->name }}</b></a>
+                    </span>
+                </div>
             </div>
 
             <div class="col-md-12" style="margin:8px 0;color:#666;">
@@ -273,7 +282,7 @@ desired effect
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper" style="">
         <!-- Content Header (Page header) -->
-        <section class="content-header">
+        <section class="content-header" style="display:none;">
             <h1>
                 @yield('header')
                 <small>@yield('description')</small>
@@ -281,7 +290,7 @@ desired effect
         </section>
 
         <!-- Main content -->
-        <section class="content" style="margin-top:16px;">
+        <section class="content">
             @yield('content') {{--Your Page Content Here--}}
         </section>
         <!-- /.content -->

@@ -1,5 +1,7 @@
 @extends('frontend.layout.layout')
 
+@section('header_title')  @endsection
+
 @section('title','三人行')
 @section('header','三人行必有我师焉')
 @section('description','课程集')
@@ -11,7 +13,7 @@
     </div>
 
     {{--课程s--}}
-    @foreach($datas as $num => $data)
+    @foreach($datas as $num => $course)
         @include('frontend.component.course')
     @endforeach
 
