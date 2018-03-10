@@ -58,6 +58,10 @@ Route::group(['namespace' => 'Front'], function () {
         Route::post('item/favor/save', 'RootController@item_favor_save');
         Route::post('item/favor/cancel', 'RootController@item_favor_cancel');
 
+        Route::post('item/comment/save', 'RootController@item_comment_save');
+        Route::post('item/comment/get', 'RootController@item_comment_get');
+        Route::post('item/comment/get_html', 'RootController@item_comment_get_html');
+
     });
 
 });

@@ -1,9 +1,10 @@
 
-    <div class="row item-option course-option" data-id="{{encode($course->id)}}">
+    <div class="row item-option course-option" data-course="{{encode($course->id)}}" data-content="{{encode(0)}}">
         <div class="col-md-9">
             <!-- BEGIN PORTLET-->
             <div class="box panel-default box-default">
 
+                {{--header--}}
                 <div class="box-header" style="margin:8px 0 0;border-bottom:1px solid #f4f4f4;">
                     <h3 class="box-title">
                         <a href="{{url('/course/'.encode($course->id))}}">{{$course->title or ''}}</a>
@@ -17,6 +18,7 @@
                     <span class="pull-right">{{ $course->created_at->format('Y-n-j H:i') }}</span>
                 </div>
 
+                {{--menu--}}
                 <div class="box-body menu-container" style="display:none;border-bottom:1px solid #ddd;">
                     <div class="colo-md-12 text-muted" style="margin-bottom:16px;">目录结构</div>
                     @foreach($course->contents as $content)
@@ -27,12 +29,14 @@
                     @endforeach
                 </div>
 
+                {{--description--}}
                 @if(!empty($course->description))
                     <div class="box-body text-muted">
                         <div class="colo-md-12"> {!! $course->description or '' !!} </div>
                     </div>
                 @endif
 
+                {{--content--}}
                 @if(!empty($course->content))
                     <div class="box-body">
                         <div class="colo-md-12"> {!! $course->content or '' !!} </div>
@@ -40,6 +44,7 @@
                 @endif
 
 
+                {{--tools--}}
                 <div class="box-footer">
 
                     {{--收藏--}}
@@ -61,7 +66,7 @@
                         @if($course->collect_num) {{$course->collect_num}} @endif </span>
                     </a>
 
-                    <a class="margin"><i class="fa fa-share"></i> @if($course->share_num) {{$course->share_num}} @endif</a>
+                    <a class="margin _none"><i class="fa fa-share"></i> @if($course->share_num) {{$course->share_num}} @endif</a>
 
                     <a class="margin comment-toggle"><i class="fa fa-commenting-o"></i> @if($course->comment_num) {{$course->comment_num}} @endif</a>
 
@@ -79,6 +84,53 @@
 
                         @if($course->favor_num) {{$course->favor_num}} @endif </span>
                     </a>
+
+                </div>
+
+
+                {{--comment--}}
+                <div class="box-body comment-container" style="display:none;" >
+
+                    <div class="box-body comment-input-container">
+                        <form action="" method="post" class="form-horizontal form-bordered item-comment-form">
+
+                            {{csrf_field()}}
+                            <input type="hidden" name="course_id" value="{{encode($course->id)}}" readonly>
+                            <input type="hidden" name="content_id" value="{{encode(0)}}" readonly>
+                            <input type="hidden" name="type" value="1" readonly>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div><textarea class="form-control" name="content" rows="3" placeholder="请输入你的评论"></textarea></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12 ">
+                                    <button type="button" class="btn btn-block btn-flat btn-primary comment-submit">提交</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                    {{--评论列表--}}
+                    <div class="box-body comment-entity-container">
+
+                        <div class="comment-list-container">
+                        </div>
+
+                        <div class="col-md-12" style="padding:16px 0">
+                            <a href="{{url('/course/'.encode($course->id))}}" target="_blank">
+                                <button type="button" class="btn btn-block btn-flat btn-default comment-more">
+                                    @if(count($course->communications) < 10) 没有更多了 @else 更多 @endif
+                                </button>
+                            </a>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>

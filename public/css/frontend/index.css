@@ -1,5 +1,5 @@
 
-.page-option {position:relative;padding:16px 0 0 0;margin:16px 0;border-bottom: 1px solid #f4f4f4;cursor:pointer;}
+.page-option {position:relative;padding:16px 0 0 0;margin:16px 0;border-bottom:1px solid #f4f4f4;cursor:pointer;}
 .page-option:hover {background-color:#f4f4f4}
 
 .edui-editor {width:100%;}
@@ -11,3 +11,11 @@
 
 .box-header .box-title a {color:#222;}
 .box-header .box-title a:hover {color:#3c8dbc;}
+
+.comment-input-container {border-top:2px solid #eee;border-bottom:2px solid #eee;}
+
+
+
+.comment-piece {padding:4px 8px;border-bottom:1px solid #f4f4f4;}
+
+

@@ -38,8 +38,8 @@ jQuery( function ($) {
             "/item/collect/save",
             {
                 _token: $('meta[name="_token"]').attr('content'),
-                course_id: item_option.attr('data-id'),
-                content_id: 0,
+                course_id: item_option.attr('data-course'),
+                content_id: item_option.attr('data-content'),
                 type: 1
             },
             function(data){
@@ -66,8 +66,8 @@ jQuery( function ($) {
                     "/item/collect/cancel",
                     {
                         _token: $('meta[name="_token"]').attr('content'),
-                        course_id: item_option.attr('data-id'),
-                        content_id: 0,
+                        course_id: item_option.attr('data-course'),
+                        content_id: item_option.attr('data-content'),
                         type: 1
                     },
                     function(data){
@@ -87,8 +87,6 @@ jQuery( function ($) {
     });
 
 
-
-
     // 点赞
     $(".item-option").off("click",".favor-this").on('click', ".favor-this", function() {
         var that = $(this);
@@ -98,8 +96,8 @@ jQuery( function ($) {
             "/item/favor/save",
             {
                 _token: $('meta[name="_token"]').attr('content'),
-                course_id: item_option.attr('data-id'),
-                content_id: 0,
+                course_id: item_option.attr('data-course'),
+                content_id: item_option.attr('data-content'),
                 type: 1
             },
             function(data){
@@ -126,8 +124,8 @@ jQuery( function ($) {
                     "/item/favor/cancel",
                     {
                         _token: $('meta[name="_token"]').attr('content'),
-                        course_id: item_option.attr('data-id'),
-                        content_id: 0,
+                        course_id: item_option.attr('data-course'),
+                        content_id: item_option.attr('data-content'),
                         type: 1
                     },
                     function(data){
@@ -144,6 +142,56 @@ jQuery( function ($) {
                 );
             }
         });
+    });
+
+
+
+
+    // 显示评论
+    $(".item-option").off("click",".comment-toggle").on('click', ".comment-toggle", function() {
+        var item_option = $(this).parents('.item-option');
+        item_option.find(".comment-container").toggle();
+
+        if(!item_option.find(".comment-container").is(":hidden"))
+        {
+            $.post(
+                "/item/comment/get_html",
+                {
+                    _token: $('meta[name="_token"]').attr('content'),
+                    course_id: item_option.attr('data-course'),
+                    content_id: item_option.attr('data-content'),
+                    type: 1
+                },
+                function(data){
+                    if(!data.success) layer.msg(data.msg);
+                    else
+                    {
+                        item_option.find('.comment-list-container').html(data.data.html);
+                    }
+                },
+                'json'
+            );
+        }
+    });
+    // 发布评论
+    $(".item-option").off("click",".comment-submit").on('click', ".comment-submit", function() {
+        var item_option = $(this).parents('.item-option');
+        var form = $(this).parents('.item-comment-form');
+        var options = {
+            url: "/item/comment/save",
+            type: "post",
+            dataType: "json",
+            // target: "#div2",
+            success: function (data) {
+                if(!data.success) layer.msg(data.msg);
+                else
+                {
+                    form.find('textarea').val('');
+                    item_option.find('.comment-list-container').prepend(data.data.html);
+                }
+            }
+        };
+        form.ajaxSubmit(options);
     });
 
 

@@ -47,6 +47,7 @@ class RootController extends Controller
         return $this->repo->item_collect_cancel(request()->all());
     }
 
+
     // 点赞
     public function item_favor_save()
     {
@@ -55,6 +56,17 @@ class RootController extends Controller
     public function item_favor_cancel()
     {
         return $this->repo->item_favor_cancel(request()->all());
+    }
+
+
+    // 点赞
+    public function item_comment_save()
+    {
+        return $this->repo->item_comment_save(request()->all());
+    }
+    public function item_comment_get_html()
+    {
+        return $this->repo->item_comment_get_html(request()->all());
     }
 
 

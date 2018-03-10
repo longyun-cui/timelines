@@ -4,12 +4,13 @@ namespace App\Repositories\Front;
 use App\User;
 use App\Models\Course;
 use App\Models\Content;
+use App\Models\Communication;
 use App\Models\Pivot_User_Collection;
 use App\Models\Pivot_User_Course;
 
 use App\Repositories\Common\CommonRepository;
 
-use Response, Auth, Validator, DB, Exception;
+use Response, Auth, Validator, DB, Exception, Blade;
 use QrCode;
 
 class RootRepository {
@@ -17,10 +18,13 @@ class RootRepository {
     private $model;
     public function __construct()
     {
+        Blade::setEchoFormat('%s');
+        Blade::setEchoFormat('e(%s)');
+        Blade::setEchoFormat('nl2br(e(%s))');
     }
 
 
-    // 平台主页
+    // 课程模板
     public function view_item_html($id)
     {
         if(Auth::check())
@@ -42,8 +46,6 @@ class RootRepository {
         }
         return view('frontend.component.course')->with(['course'=>$data])->__toString();
     }
-
-
 
 
     // 平台主页
@@ -70,6 +72,24 @@ class RootRepository {
     }
 
 
+    // 用户首页
+    public function view_user($post_data,$id=0)
+    {
+//        $course_encode = $post_data['id'];
+        $user_encode = $id;
+        $user_decode = decode($user_encode);
+        if(!$user_decode) return view('frontend.404');
+
+        $user = User::with([
+            'courses'=>function($query) { $query->orderBy('id','desc'); }
+        ])->find($user_decode);
+
+        $courses = Course::with([
+            'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+        ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
+
+        return view('frontend.user.user')->with(['data'=>$user,'courses'=>$courses]);
+    }
 
 
     // 课程详情
@@ -123,27 +143,6 @@ class RootRepository {
 
 
 
-    // 用户首页
-    public function view_user($post_data,$id=0)
-    {
-//        $course_encode = $post_data['id'];
-        $user_encode = $id;
-        $user_decode = decode($user_encode);
-        if(!$user_decode) return view('frontend.404');
-
-        $user = User::with([
-            'courses'=>function($query) { $query->orderBy('id','desc'); }
-        ])->find($user_decode);
-
-        $courses = Course::with([
-            'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
-        ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
-
-        return view('frontend.user.user')->with(['data'=>$user,'courses'=>$courses]);
-    }
-
-
-
 
     // 收藏
     public function item_collect_save($post_data)
@@ -170,6 +169,10 @@ class RootRepository {
             $course_decode = decode($course_encode);
             if(!$course_decode) return response_error([],"参数有误，请重试！");
 
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
             $course = Course::find($course_decode);
             if($course)
             {
@@ -178,7 +181,7 @@ class RootRepository {
                 {
                     $time = time();
                     $user = Auth::user();
-                    $user->pivot_collection_courses()->attach($course_decode,['type'=>1,'content_id'=>0,'created_at'=>$time,'updated_at'=>$time]);
+                    $user->pivot_collection_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
 
                     $course->increment('collect_num');
 
@@ -291,6 +294,10 @@ class RootRepository {
             $course_decode = decode($course_encode);
             if(!$course_decode) return response_error([],"参数有误，请重试！");
 
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
             $course = Course::find($course_decode);
             if($course)
             {
@@ -299,7 +306,7 @@ class RootRepository {
                 {
                     $time = time();
                     $user = Auth::user();
-                    $user->pivot_item_courses()->attach($course_decode,['type'=>1,'content_id'=>0,'created_at'=>$time,'updated_at'=>$time]);
+                    $user->pivot_item_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
 
                     $course->increment('favor_num');
 
@@ -387,6 +394,117 @@ class RootRepository {
     }
 
 
+
+
+    // 添加评论
+    public function item_comment_save($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+            'content.required' => '内容不能为空',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required',
+            'content' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        if(Auth::check())
+        {
+            $course_encode = $post_data['course_id'];
+            $course_decode = decode($course_encode);
+            if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+            $user = Auth::user();
+            $insert['type'] = $post_data['type'];
+            $insert['user_id'] = $user->id;
+            $insert['course_id'] = $course_decode;
+            $insert['content_id'] = $content_decode;
+            $insert['content'] = $post_data['content'];
+
+            DB::beginTransaction();
+            try
+            {
+                $course = Course::find($course_decode);
+                if(!$course) return response_error([],"该课题不存在，刷新一下试试");
+                $course->timestamps = false;
+                $course->increment('comment_num');
+
+                if($content_decode)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$content) return response_error([],"该章节不存在，刷新一下试试");
+                    $content->timestamps = false;
+                    $content->increment('comment_num');
+                }
+
+                $communication = new Communication;
+                $bool = $communication->fill($insert)->save();
+                if(!$bool) throw new Exception("insert--communication--fail");
+
+                $html["html"] = view('frontend.component.comment')->with("comment",$communication)->__toString();
+
+                DB::commit();
+                return response_success($html);
+            }
+            catch (Exception $e)
+            {
+                DB::rollback();
+//                exit($e->getMessage());
+//                $msg = $e->getMessage();
+                $msg = '添加失败，请重试！';
+                return response_fail([], $msg);
+            }
+        }
+        else return response_error([],"请先登录！");
+
+    }
+    // 用户评论
+    public function item_comment_get_html($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        $course_encode = $post_data['course_id'];
+        $course_decode = decode($course_encode);
+        if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+
+        $content_encode = $post_data['content_id'];
+        $content_decode = decode($content_encode);
+        if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+        $communications = Communication::with(['user'])
+            ->where(['course_id'=>$course_decode,'content_id'=>$content_decode])->orderBy('id','desc')->get();
+
+        $html["html"] = view('frontend.component.comments')->with("communications",$communications)->__toString();
+        return response_success($html);
+
+    }
 
 
 
