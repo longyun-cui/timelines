@@ -19,7 +19,7 @@ class Pivot_User_Course extends Model
     }
 
     // 话题
-    function topic()
+    function course()
     {
         return $this->belongsTo('App\Models\Course','course_id','id');
     }

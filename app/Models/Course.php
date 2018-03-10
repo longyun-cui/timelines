@@ -37,7 +37,7 @@ class Course extends Model
         return $this->hasMany('App\Models\Communication','course_id','id');
     }
 
-    // 内容
+    // 收藏
     function collections()
     {
         return $this->hasMany('App\Models\Pivot_User_Collection','course_id','id');

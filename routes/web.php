@@ -118,6 +118,28 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
 
             Route::get('select2_menus', $controller.'@select2_menus');
         });
+
+
+
+        // 收藏
+        Route::group(['prefix' => 'collect'], function () {
+
+            $controller = 'OtherController';
+
+            Route::match(['get','post'], 'list', $controller.'@collect_viewList');
+            Route::post('delete', $controller.'@collect_deleteAction');
+        });
+
+        // 点赞
+        Route::group(['prefix' => 'favor'], function () {
+
+            $controller = 'OtherController';
+
+            Route::match(['get','post'], 'list', $controller.'@favor_viewList');
+            Route::post('delete', $controller.'@favor_deleteAction');
+        });
+
+
     });
 
 });

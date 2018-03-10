@@ -312,6 +312,17 @@ desired effect
                 </li>
 
 
+                <li class="header">其他</li>
+
+                <li class="treeview">
+                    <a href="{{url('/home/collect/list')}}"><i class="fa fa-heart text-red"></i> <span>我的收藏</span></a>
+                </li>
+
+                <li class="treeview">
+                    <a href="{{url('/home/favor/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>我的赞</span></a>
+                </li>
+
+
                 <li class="header">课程站</li>
 
                 <li class="treeview">
