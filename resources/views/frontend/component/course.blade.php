@@ -2,7 +2,7 @@
     <div class="row item-option course-option" data-id="{{encode($data->id)}}">
         <div class="col-md-9">
             <!-- BEGIN PORTLET-->
-            <div class="box panel-default box-primary">
+            <div class="box panel-default box-default">
 
                 <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
                     <h3 class="box-title">

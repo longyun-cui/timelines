@@ -21,7 +21,7 @@
 {{--内容--}}
 <div class="row">
     <div class="col-md-12">
-        <div class="box panel-default box-info">
+        <div class="box panel-default box-default">
 
             @if(!empty($content))
                 <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
