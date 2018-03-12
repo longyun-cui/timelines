@@ -61,7 +61,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{asset('css/common.css')}}">
     <link rel="stylesheet" href="{{asset('css/frontend/index.css')}}">
     <style>
-        .main-header .header-text {
+        .main-header .header-title {
             float: left;
             background-color: transparent;
             background-image: none;
@@ -114,7 +114,7 @@ desired effect
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
-            <span class="header-text" d> @yield('header_title') </span>
+            <span class="header-title"> @yield('header_title') </span>
 
             {{--<!-- Navbar Right Menu -->--}}
             <div class="navbar-custom-menu">

@@ -1,8 +1,8 @@
 @extends('home.layout.layout')
 
-@section('title','赞过列表')
-@section('header','赞过列表')
-@section('description','赞过列表')
+@section('title','收藏课程列表')
+@section('header','收藏课程')
+@section('description','列表')
 @section('breadcrumb')
     <li><a href="{{url('/home')}}"><i class="fa fa-home"></i>首页</a></li>
     <li><a href="#"><i class="fa "></i>Here</a></li>
@@ -16,23 +16,23 @@
         <div class="box box-info">
 
             <div class="box-header with-border" style="margin:16px 0;">
-                <h3 class="box-title">赞过列表</h3>
+                <h3 class="box-title">收藏课程列表</h3>
 
                 <div class="pull-right">
                 </div>
             </div>
 
-            <div class="box-body" id="other-list-body">
+            <div class="box-body" id="collection-list-body">
                 <!-- datatable start -->
                 <table class='table table-striped table-bordered' id='datatable_ajax'>
                     <thead>
                     <tr role='row' class='heading'>
-                        <th>话题</th>
+                        <th>课程</th>
                         <th>作者</th>
                         <th>浏览数</th>
                         <th>收藏数</th>
                         <th>点赞数</th>
-                        <th>创建时间</th>
+                        <th>收藏时间</th>
                         <th>操作</th>
                     </tr>
                     <tr>
@@ -91,7 +91,7 @@
                 "serverSide": true,
                 "searching": false,
                 "ajax": {
-                    'url': '/home/favor/list',
+                    'url': '/home/collect/course/list',
                     "type": 'POST',
                     "dataType" : 'json',
                     "data": function (d) {
@@ -154,7 +154,7 @@
                         'data': 'encode_id',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return '<button type="button" class="btn btn-sm bg-purple favor-delete-submit" data-id="'+data+'">删除</button>';
+                            return '<button type="button" class="btn btn-sm bg-purple collect-delete-submit" data-id="'+data+'">删除</button>';
                         }
                     }
                 ],
@@ -230,14 +230,14 @@
     $(function() {
 
         // 表格【删除】
-        $("#other-list-body").on('click', ".favor-delete-submit", function() {
+        $("#collection-list-body").on('click', ".collect-delete-submit", function() {
             var that = $(this);
-            layer.msg('确定要取消"赞"么', {
+            layer.msg('确定要删除该"收藏"么', {
                 time: 0
                 ,btn: ['确定', '取消']
                 ,yes: function(index){
                     $.post(
-                            "/home/favor/delete",
+                            "/home/collect/course/delete",
                             {
                                 _token: $('meta[name="_token"]').attr('content'),
                                 id:that.attr('data-id')

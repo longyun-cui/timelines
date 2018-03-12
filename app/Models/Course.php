@@ -25,14 +25,14 @@ class Course extends Model
         return $this->hasMany('App\Models\Content','course_id','id');
     }
 
-    // 内容
+    // 评论
     function communications()
     {
         return $this->hasMany('App\Models\Communication','course_id','id');
     }
 
     // 评论
-    function favor()
+    function comments()
     {
         return $this->hasMany('App\Models\Communication','course_id','id');
     }
@@ -41,6 +41,12 @@ class Course extends Model
     function collections()
     {
         return $this->hasMany('App\Models\Pivot_User_Collection','course_id','id');
+    }
+
+    // 其他人的
+    function others()
+    {
+        return $this->hasMany('App\Models\Pivot_User_Course','course_id','id');
     }
 
     // 与我相关的话题
@@ -53,12 +59,6 @@ class Course extends Model
     function pivot_collection_chapter_users()
     {
         return $this->belongsToMany('App\User','pivot_user_collection','content_id','user_id');
-    }
-
-    // 内容
-    function others()
-    {
-        return $this->hasMany('App\Models\Pivot_User_Course','course_id','id');
     }
 
     /**

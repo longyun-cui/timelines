@@ -303,25 +303,39 @@ desired effect
 
                 <li class="header">课程管理</li>
 
-                <li class="treeview">
+                <li class="treeview {{$menu_course_list or ''}}">
                     <a href="{{url('/home/course/list')}}"><i class="fa fa-table text-green"></i> <span>课程管理</span></a>
                 </li>
 
-                <li class="treeview">
+                <li class="treeview {{$menu_course_create or ''}}">
                     <a href="{{url('/home/course/create')}}"><i class="fa fa-plus text-green"></i> <span>添加课程</span></a>
                 </li>
 
 
-                <li class="header">其他</li>
 
-                <li class="treeview">
-                    <a href="{{url('/home/collect/list')}}"><i class="fa fa-heart text-red"></i> <span>我的收藏</span></a>
+                <li class="header">课程</li>
+
+                <li class="treeview {{$menu_collect_course or ''}}">
+                    <a href="{{url('/home/collect/course/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏课程</span></a>
                 </li>
 
-                <li class="treeview">
-                    <a href="{{url('/home/favor/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>我的赞</span></a>
+                <li class="treeview {{$menu_favor_course or ''}}">
+                    <a href="{{url('/home/favor/course/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞课程</span></a>
                 </li>
 
+
+
+                <li class="header">内容</li>
+
+                <li class="treeview {{$menu_collect_chapter or ''}}">
+                    <a href="{{url('/home/collect/chapter/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏内容</span></a>
+                </li>
+
+                <li class="treeview {{$menu_favor_chapter or ''}}">
+                    <a href="{{url('/home/favor/chapter/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞内容</span></a>
+                </li>
+
+                
 
                 <li class="header">课程站</li>
 

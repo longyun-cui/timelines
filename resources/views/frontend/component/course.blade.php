@@ -46,8 +46,9 @@
 
                 {{--tools--}}
                 <div class="box-footer">
+
                     {{--点赞--}}
-                    <a class="margin" role="button">
+                    <a class="margin favor-btn" role="button" data-num="{{$course->favor_num}}">
                         @if(Auth::check())
                             @if($course->others->contains('type', 1))
                                 <span class="favor-this-cancel"><i class="fa fa-thumbs-up text-red"></i>
@@ -62,7 +63,7 @@
                     </a>
 
                     {{--收藏--}}
-                    <a class="margin" role="button">
+                    <a class="margin collect-btn" role="button" data-num="{{$course->collect_num}}">
                         @if(Auth::check())
                             @if($course->user_id != Auth::id())
                                 @if(count($course->collections))
@@ -84,7 +85,7 @@
                         <i class="fa fa-share"></i> @if($course->share_num) {{$course->share_num}} @endif
                     </a>
 
-                    <a class="margin comment-toggle" role="button">
+                    <a class="margin comment-toggle" role="button" data-num="{{$course->comment_num}}">
                         <i class="fa fa-commenting-o"></i> @if($course->comment_num) {{$course->comment_num}} @endif
                     </a>
 
@@ -93,6 +94,8 @@
 
                 {{--comment--}}
                 <div class="box-body comment-container" style="display:none;" >
+
+                    <input type="hidden" class="get-comments get-comments-default">
 
                     <div class="box-body comment-input-container">
                         <form action="" method="post" class="form-horizontal form-bordered item-comment-form">
@@ -124,11 +127,9 @@
                         <div class="comment-list-container">
                         </div>
 
-                        <div class="col-md-12" style="padding:16px 0">
+                        <div class="col-md-12" style="padding:0;margin-top:16px;">
                             <a href="{{url('/course/'.encode($course->id))}}" target="_blank">
-                                <button type="button" class="btn btn-block btn-flat btn-default comment-more">
-                                    @if(count($course->communications) < 10) 没有更多了 @else 更多 @endif
-                                </button>
+                                <button type="button" class="btn btn-block btn-flat btn-default item-more"></button>
                             </a>
                         </div>
 

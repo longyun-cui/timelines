@@ -181,8 +181,8 @@ desired effect
                             <i class="fa fa-home"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="header"><a href="{{url('/u/'.$data->user->encode_id)}}"><i class="fa fa-home text-orange"></i>
-                                    {{$data->user->name}}的主页</a></li>
+                            <li class="header"><a href="{{url('/u/'.$course->user->encode_id)}}"><i class="fa fa-home text-orange"></i>
+                                    {{$course->user->name}}的主页</a></li>
                             @if(!Auth::check())
                                 <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i>注册</a></li>
                                 <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i>注册</a></li>
@@ -217,8 +217,8 @@ desired effect
                         <i class="fa fa-bookmark"></i>
                     </span>
                     <span class="recursion-text @if(empty($content)) active @endif">
-                        <a href="{{url('/course/'.encode($data->id))}}">
-                            {{ $data->title or '' }}
+                        <a href="{{url('/course/'.encode($course->id))}}">
+                            {{ $course->title or '' }}
                         </a>
                     </span>
                 </div>
@@ -227,7 +227,7 @@ desired effect
                         <i class="fa fa-user"></i>
                     </span>
                     <span class="recursion-text recursion-user">
-                        <a href="{{url('/u/'.$data->user->encode_id)}}"><b class="text-blue">{{ $data->user->name }}</b></a>
+                        <a href="{{url('/u/'.$course->user->encode_id)}}"><b class="text-blue">{{ $course->user->name }}</b></a>
                     </span>
                 </div>
             </div>
@@ -245,7 +245,7 @@ desired effect
                 </div>
             </div>
 
-            @foreach( $data->contents_recursion as $key => $recursion )
+            @foreach( $course->contents_recursion as $key => $recursion )
                 <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
                      style="color:#eee;display:@if($recursion->level != 0) none @endif">
                     <div class="row recursion-menu" style="margin-left:{{ $recursion->level*24 }}px">
@@ -261,16 +261,13 @@ desired effect
                             @endif
                         </span>
                         <span class="recursion-text @if(!empty($content)) @if($recursion->id == $content->id) active @endif @endif">
-                            <a href="{{url('/course/'.encode($data->id).'?content='.encode($recursion->id))}}">
+                            <a href="{{url('/course/'.encode($course->id).'?content='.encode($recursion->id))}}">
                                 {{ $recursion->title or '' }}
                             </a>
                         </span>
                     </div>
                 </div>
             @endforeach
-
-
-
 
             <!-- /.sidebar-menu -->
         </section>

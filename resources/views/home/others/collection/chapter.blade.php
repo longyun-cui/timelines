@@ -1,8 +1,8 @@
 @extends('home.layout.layout')
 
-@section('title','收藏列表')
-@section('header','收藏列表')
-@section('description','收藏列表')
+@section('title','收藏内容列表')
+@section('header','收藏内容')
+@section('description','列表')
 @section('breadcrumb')
     <li><a href="{{url('/home')}}"><i class="fa fa-home"></i>首页</a></li>
     <li><a href="#"><i class="fa "></i>Here</a></li>
@@ -16,7 +16,7 @@
         <div class="box box-info">
 
             <div class="box-header with-border" style="margin:16px 0;">
-                <h3 class="box-title">收藏列表</h3>
+                <h3 class="box-title">收藏内容列表</h3>
 
                 <div class="pull-right">
                 </div>
@@ -27,15 +27,17 @@
                 <table class='table table-striped table-bordered' id='datatable_ajax'>
                     <thead>
                     <tr role='row' class='heading'>
-                        <th>话题</th>
+                        <th>标题</th>
+                        <th>所属课程</th>
                         <th>作者</th>
                         <th>浏览数</th>
                         <th>收藏数</th>
                         <th>点赞数</th>
-                        <th>创建时间</th>
+                        <th>收藏时间</th>
                         <th>操作</th>
                     </tr>
                     <tr>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -91,7 +93,7 @@
                 "serverSide": true,
                 "searching": false,
                 "ajax": {
-                    'url': '/home/collect/list',
+                    'url': '/home/collect/chapter/list',
                     "type": 'POST',
                     "dataType" : 'json',
                     "data": function (d) {
@@ -109,36 +111,43 @@
                         "data": "encode_id",
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.course == null ?
-                                '该课程已经不在了！' : '<a target="_blank" href="/course/'+row.course.encode_id+'">'+row.course.title+'</a>';
+                            return row.chapter == null ?
+                                '该课程已经不在了！' : '<a target="_blank" href="/course/'+row.chapter.course.encode_id+'/?content='+row.chapter.encode_id+'">'+row.chapter.title+'</a>';
+                        }
+                    },
+                    {
+                        'data': 'course',
+                        'orderable': false,
+                        render: function(data, type, row, meta) {
+                            return row.chapter == null ? '' : '<a target="_blank" href="/course/'+row.chapter.course.encode_id+'">'+row.chapter.course.title+'</a>';
                         }
                     },
                     {
                         'data': 'user',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.course == null ? '' : '<a target="_blank" href="/u/'+row.course.user.encode_id+'">'+row.course.user.name+'</a>';
+                            return row.chapter == null ? '' : '<a target="_blank" href="/u/'+row.chapter.user.encode_id+'">'+row.chapter.user.name+'</a>';
                         }
                     },
                     {
                         'data': 'visit_num',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.course == null ? 0 : row.course.visit_num;
+                            return row.chapter == null ? 0 : row.chapter.visit_num;
                         }
                     },
                     {
                         'data': 'collect_num',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.course == null ? 0 : row.course.collect_num;
+                            return row.chapter == null ? 0 : row.chapter.collect_num;
                         }
                     },
                     {
                         'data': 'favor_num',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.course == null ? 0 : row.course.favor_num;
+                            return row.chapter == null ? 0 : row.chapter.favor_num;
                         }
                     },
                     {
@@ -237,7 +246,7 @@
                 ,btn: ['确定', '取消']
                 ,yes: function(index){
                     $.post(
-                            "/home/collect/delete",
+                            "/home/collect/chapter/delete",
                             {
                                 _token: $('meta[name="_token"]').attr('content'),
                                 id:that.attr('data-id')

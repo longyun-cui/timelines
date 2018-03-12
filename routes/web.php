@@ -126,8 +126,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
 
             $controller = 'OtherController';
 
-            Route::match(['get','post'], 'list', $controller.'@collect_viewList');
-            Route::post('delete', $controller.'@collect_deleteAction');
+            Route::match(['get','post'], 'course/list', $controller.'@collect_course_viewList');
+            Route::match(['get','post'], 'chapter/list', $controller.'@collect_chapter_viewList');
+            Route::post('course/delete', $controller.'@collect_course_deleteAction');
+            Route::post('chapter/delete', $controller.'@collect_chapter_deleteAction');
         });
 
         // 点赞
@@ -135,8 +137,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
 
             $controller = 'OtherController';
 
-            Route::match(['get','post'], 'list', $controller.'@favor_viewList');
-            Route::post('delete', $controller.'@favor_deleteAction');
+            Route::match(['get','post'], 'course/list', $controller.'@favor_course_viewList');
+            Route::match(['get','post'], 'chapter/list', $controller.'@favor_chapter_viewList');
+            Route::post('course/delete', $controller.'@favor_course_deleteAction');
+            Route::post('chapter/delete', $controller.'@favor_chapter_deleteAction');
         });
 
 

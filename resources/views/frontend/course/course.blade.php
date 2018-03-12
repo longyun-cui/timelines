@@ -1,16 +1,10 @@
 @extends('frontend.course.layout')
 
-@section('title') {{$data->title}} @endsection
-@section('header')
-    <a href="{{url('/course/'.$data->encode_id)}}">{{$data->title}}</a>
-@endsection
-@section('description')
-    来自 <a href="{{url('/u/'.$data->user->encode_id)}}"><b>{{ $data->user->name }}</b></a>
-@endsection
-@section('breadcrumb')
-    <li><a href="{{url('/')}}"><i class="fa fa-dashboard"></i>首页</a></li>
-    <li><a href="#"><i class="fa "></i>Here</a></li>
-@endsection
+@section('title') {{$course->title}} @endsection
+@section('header','')
+@section('description','')
+
+@section('header_title') {{$course->title}} @endsection
 
 
 @section('content')
@@ -19,55 +13,106 @@
 </div>
 
 {{--内容--}}
-<div class="row">
-    <div class="col-md-12">
+<div class="row item-option course-option" data-course="{{$course->encode_id or encode(0)}}" data-content="{{$content->encode_id or encode(0)}}">
+    <div class="col-md-9">
         <div class="box panel-default box-default">
 
             @if(!empty($content))
-                <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
-                    <h3 class="box-title">{{$content->title}}</h3>
-                </div>
-                <div class="box-body text-muted">
-                    <span>阅读 <span class="text-blue">{{ $content->visit_num }}</span> 次</span>
-                    <span class="pull-right">{{ $data->created_at->format('Y-n-j H:i') }}</span>
-                </div>
-
-                @if(!empty($content->description))
-                    <div class="box-body text-muted">
-                        <div class="colo-md-12"> {!! $content->description or '' !!}  </div>
-                    </div>
-                @endif
-
-                @if(!empty($content->content))
-                    <div class="box-body">
-                        <div class="colo-md-12"> {!! $content->content or '' !!}  </div>
-                    </div>
-                @endif
+                @include('frontend.course.component.content')
             @else
-                <div class="box-header with-border panel-heading" style="margin:16px 0 8px;">
-                    <h3 class="box-title">{{$data->title}}</h3>
-                </div>
-                <div class="box-body text-muted">
-                    <span>阅读 <span class="text-blue">{{ $data->visit_num }}</span> 次</span>
-                    <span class="pull-right">{{ $data->created_at->format('Y-n-j H:i') }}</span>
-                </div>
-
-                @if(!empty($data->description))
-                    <div class="box-body text-muted">
-                        <div class="colo-md-12"> {!! $data->description or '' !!}  </div>
-                    </div>
-                @endif
-
-                @if(!empty($data->content))
-                    <div class="box-body">
-                        <div class="colo-md-12"> {!! $data->content or '' !!}  </div>
-                    </div>
-                @endif
+                @include('frontend.course.component.course')
             @endif
 
+            {{--tools--}}
             <div class="box-footer">
-                &nbsp;
+
+                {{--点赞--}}
+                <a class="margin favor-btn" role="button" data-num="{{$item->favor_num}}">
+                    @if(Auth::check())
+                        @if($item->others->contains('type', 1))
+                            <span class="favor-this-cancel"><i class="fa fa-thumbs-up text-red"></i>
+                        @else
+                            <span class="favor-this"><i class="fa fa-thumbs-o-up"></i>
+                        @endif
+                    @else
+                        <span class="favor-this"><i class="fa fa-thumbs-o-up"></i>
+                    @endif
+
+                    @if($item->favor_num) {{$item->favor_num}} @endif </span>
+                </a>
+
+                {{--收藏--}}
+                <a class="margin collect-btn" role="button" data-num="{{$item->collect_num}}">
+                    @if(Auth::check())
+                        @if($item->user_id != Auth::id())
+                            @if(count($item->collections))
+                                <span class="collect-this-cancel"><i class="fa fa-heart text-red"></i>
+                            @else
+                                <span class="collect-this"><i class="fa fa-heart-o"></i>
+                            @endif
+                        @else
+                            <span class="collect-mine"><i class="fa fa-heart-o"></i>
+                        @endif
+                    @else
+                        <span class="collect-this"><i class="fa fa-heart-o"></i>
+                    @endif
+
+                    @if($item->collect_num) {{$item->collect_num}} @endif </span>
+                </a>
+
+                <a class="margin _none" role="button">
+                    <i class="fa fa-share"></i> @if($item->share_num) {{$item->share_num}} @endif
+                </a>
+
+                <a class="margin comment-btn" role="button" data-num="{{$item->comment_num}}">
+                    <i class="fa fa-commenting-o"></i> @if($item->comment_num) {{$item->comment_num}} @endif
+                </a>
+
             </div>
+
+            {{--comment--}}
+            <div class="box-body comment-container">
+
+                <input type="hidden" class="get-comments get-comments-default">
+
+                {{--添加评论--}}
+                <div class="box-body comment-input-container">
+                    <form action="" method="post" class="form-horizontal form-bordered item-comment-form">
+
+                        {{csrf_field()}}
+                        <input type="hidden" name="course_id" value="{{$course->encode_id or encode(0)}}" readonly>
+                        <input type="hidden" name="content_id" value="{{$content->encode_id or encode(0)}}" readonly>
+                        <input type="hidden" name="type" value="1" readonly>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div><textarea class="form-control" name="content" rows="3" placeholder="请输入你的评论"></textarea></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 ">
+                                <button type="button" class="btn btn-block btn-flat btn-primary comment-submit">提交</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                {{--评论列表--}}
+                <div class="box-body comment-entity-container">
+
+                    <div class="comment-list-container">
+                    </div>
+
+                    <div class="col-md-12" style="padding:0;margin-top:16px;">
+                        <button type="button" class="btn btn-block btn-flat btn-default comments-more"></button>
+                    </div>
+
+                </div>
+
+            </div>
+
 
         </div>
     </div>
@@ -80,75 +125,9 @@
     <script>
         $(function() {
 
-            xx();
-
-            // 全部展开
-            $(".sidebar").on('click', '.fold-down', function () {
-                $('.recursion-row').each( function () {
-                    $(this).show();
-                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-                });
-            });
-
-            // 全部收起
-            $(".sidebar").on('click', '.fold-up', function () {
-                $('.recursion-row').each( function () {
-                    if($(this).attr('data-level') != 0) $(this).hide();
-                    $(this).find('.recursion-fold').removeClass('fa-minus-square').addClass('fa-plus-square');
-                });
-            });
-
-            // 收起
-            $(".sidebar").on('click', '.recursion-row .fa-minus-square', function () {
-                var this_row = $(this).parents('.recursion-row');
-                var this_level = this_row.attr('data-level');
-                this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
-                    if($(this).attr('data-level') <= this_level ) return false;
-                    $(this).hide();
-                });
-                $(this).removeClass('fa-minus-square').addClass('fa-plus-square');
-            });
-
-            // 展开
-            $(".sidebar").on('click', '.recursion-row .fa-plus-square', function () {
-                var this_row = $(this).parents('.recursion-row');
-                var this_level = this_row.attr('data-level');
-                this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
-                    if($(this).attr('data-level') <= this_level ) return false;
-                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-                    $(this).show();
-                });
-                $(this).removeClass('fa-plus-square').addClass('fa-minus-square');
-            });
+            fold();
+            $(".get-comments-default").click();
 
         });
-
-        function xx() {
-            var this_row = $('.recursion-row .active').parents('.recursion-row');
-            var this_level = this_row.attr('data-level');
-            this_row.find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-
-            if(this_level == 0)
-            {
-                this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
-                    if($(this).attr('data-level') <= this_level ) return false;
-                    $(this).show();
-                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-                });
-            }
-            else if(this_level > 0)
-            {
-                this_row.prevUntil().each( function () {
-                    if( $(this).attr('data-level') == 0 )
-                    {
-                        $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-
-                        $(this).nextUntil('.recursion-row[data-level=0]').show();
-                        $(this).nextUntil('.recursion-row[data-level=0]').find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-                        return false;
-                    }
-                });
-            }
-        }
     </script>
 @endsection

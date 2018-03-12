@@ -58,7 +58,8 @@ class RootRepository {
             $datas = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
-                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
+                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); },
+                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); }
             ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         }
         else
@@ -68,7 +69,7 @@ class RootRepository {
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
             ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         }
-        return view('frontend.root.courses')->with(['datas'=>$datas]);
+        return view('frontend.root.courses')->with(['getType'=>'items','datas'=>$datas]);
     }
 
 
@@ -84,11 +85,26 @@ class RootRepository {
             'courses'=>function($query) { $query->orderBy('id','desc'); }
         ])->find($user_decode);
 
-        $courses = Course::with([
-            'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
-        ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
+        if(Auth::check())
+        {
+            $me = Auth::user();
+            $me_id = $me->id;
+            $datas = Course::with([
+                'user',
+                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
+                'collections'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'content_id' => 0]); },
+                'others'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'content_id' => 0]); }
+            ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
+        }
+        else
+        {
+            $datas = Course::with([
+                'user',
+                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+            ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
+        }
 
-        return view('frontend.user.user')->with(['data'=>$user,'courses'=>$courses]);
+        return view('frontend.user.user')->with(['getType'=>'items','data'=>$user,'courses'=>$datas]);
     }
 
 
@@ -107,8 +123,23 @@ class RootRepository {
             $content_decode = decode($content_encode);
             if(!$content_decode) return view('frontend.404');
 
-            $content = Content::find($content_decode);
-            if(!$content)  return view('frontend.404');
+            if(Auth::check())
+            {
+                $user = Auth::user();
+                $user_id = $user->id;
+                $content = Content::with([
+                    'collections'=>function($query) use ($user_id,$content_decode) { $query->where(['user_id' => $user_id,'content_id' => $content_decode]); },
+                    'others'=>function($query) use ($user_id,$content_decode) { $query->where(['user_id' => $user_id,'content_id' => $content_decode]); }
+                ])->find($content_decode);
+            }
+            else
+            {
+                $content = Content::find($content_decode);
+            }
+            if(!$content) return view('frontend.404');
+
+            $content->encode_id = encode($content->id);
+            $content->user->encode_id = encode($content->user->id);
 
             $content->increment('visit_num');
         }
@@ -120,7 +151,8 @@ class RootRepository {
             $course = Course::with([
                 'user',
                 'contents'=>function($query) { $query->orderBy('id','asc'); },
-                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
+                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); },
+                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); }
             ])->find($course_decode);
         }
         else
@@ -138,7 +170,16 @@ class RootRepository {
 
         $course->contents_recursion = $this->get_recursion($course->contents,0);
 
-        return view('frontend.course.course')->with(['data'=>$course,'content'=>$content]);
+
+        if(!empty($post_data['content']))
+        {
+            if($content->user_id == $course->user_id) $item = $content;
+            else return view('frontend.404');
+
+        }
+        else $item = $course;
+
+        return view('frontend.course.course')->with(['getType'=>'item','course'=>$course,'content'=>$content,'item'=>$item]);
     }
 
 
@@ -176,6 +217,12 @@ class RootRepository {
             $course = Course::find($course_decode);
             if($course)
             {
+                if($content_decode != 0)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                }
+
                 DB::beginTransaction();
                 try
                 {
@@ -183,7 +230,8 @@ class RootRepository {
                     $user = Auth::user();
                     $user->pivot_collection_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
 
-                    $course->increment('collect_num');
+                    if($content_decode == 0) $course->increment('collect_num');
+                    else $content->increment('collect_num');
 
                     $html['html'] = $this->view_item_html($course_decode);
 
@@ -229,23 +277,34 @@ class RootRepository {
             $course_decode = decode($course_encode);
             if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
             $course = Course::find($course_decode);
             if($course)
             {
+                if($content_decode != 0)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                }
+
                 DB::beginTransaction();
                 try
                 {
                     $user = Auth::user();
                     $user_id = $user->id;
 
-                    $collections = Pivot_User_Collection::where(['type'=>1,'user_id'=>$user_id,'course_id'=>$course_decode,'content_id'=>0]);
+                    $collections = Pivot_User_Collection::where(['type'=>1,'user_id'=>$user_id,'course_id'=>$course_decode,'content_id'=>$content_decode]);
                     $count = count($collections->get());
                     if($count)
                     {
                         $num = $collections->delete();
                         if($num != $count) throw new Exception("delete--pivot--fail");
 
-                        $course->decrement('collect_num');
+                        if($content_decode == 0) $course->decrement('collect_num');
+                        else $content->decrement('collect_num');
                     }
                     $html['html'] = $this->view_item_html($course_decode);
 
@@ -301,6 +360,12 @@ class RootRepository {
             $course = Course::find($course_decode);
             if($course)
             {
+                if($content_decode != 0)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                }
+
                 DB::beginTransaction();
                 try
                 {
@@ -308,7 +373,9 @@ class RootRepository {
                     $user = Auth::user();
                     $user->pivot_item_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
 
-                    $course->increment('favor_num');
+                    if($content_decode == 0) $course->increment('favor_num');
+                    else $content->increment('favor_num');
+
 
                     $html['html'] = $this->view_item_html($course_decode);
 
@@ -354,23 +421,34 @@ class RootRepository {
             $course_decode = decode($course_encode);
             if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
             $course = Course::find($course_decode);
             if($course)
             {
+                if($content_decode != 0)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                }
+
                 DB::beginTransaction();
                 try
                 {
                     $user = Auth::user();
                     $user_id = $user->id;
 
-                    $favors = Pivot_User_Course::where(['type'=>1,'user_id'=>$user_id,'course_id'=>$course_decode,'content_id'=>0]);
+                    $favors = Pivot_User_Course::where(['type'=>1,'user_id'=>$user_id,'course_id'=>$course_decode,'content_id'=>$content_decode]);
                     $count = count($favors->get());
                     if($count)
                     {
                         $num = $favors->delete();
                         if($num != $count) throw new Exception("delete--pivot--fail");
 
-                        $course->decrement('favor_num');
+                        if($content_decode == 0) $course->decrement('favor_num');
+                        else $content->decrement('favor_num');
                     }
                     $html['html'] = $this->view_item_html($course_decode);
 
@@ -439,15 +517,19 @@ class RootRepository {
             {
                 $course = Course::find($course_decode);
                 if(!$course) return response_error([],"该课题不存在，刷新一下试试");
-                $course->timestamps = false;
-                $course->increment('comment_num');
 
-                if($content_decode)
+                if($content_decode != 0)
                 {
                     $content = Content::find($content_decode);
-                    if(!$content) return response_error([],"该章节不存在，刷新一下试试");
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+
                     $content->timestamps = false;
                     $content->increment('comment_num');
+                }
+                else
+                {
+                    $course->timestamps = false;
+                    $course->increment('comment_num');
                 }
 
                 $communication = new Communication;
@@ -469,6 +551,60 @@ class RootRepository {
             }
         }
         else return response_error([],"请先登录！");
+
+    }
+    // 获取评论
+    public function item_comment_get($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        $type = $post_data['type'];
+
+        $course_encode = $post_data['course_id'];
+        $course_decode = decode($course_encode);
+        if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+
+        $content_encode = $post_data['content_id'];
+        $content_decode = decode($content_encode);
+        if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+        $comments = Communication::with(['user'])
+            ->where(['type'=>$type,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+
+        if(!empty($post_data['min_id']) && $post_data['min_id'] != 0) $comments->where('id', '<', $post_data['min_id']);
+
+        $comments = $comments->orderBy('id','desc')->paginate(10);
+
+        if(!$comments->isEmpty())
+        {
+            $return["html"] = view('frontend.component.comments')->with("communications",$comments)->__toString();
+            $return["max_id"] = $comments->first()->id;
+            $return["min_id"] = $comments->last()->id;
+            $return["more"] = ($comments->count() >= 10) ? 'more' : 'none';
+        }
+        else
+        {
+            $return["html"] = '';
+            $return["max_id"] = 0;
+            $return["min_id"] = 0;
+            $return["more"] = 'none';
+        }
+
+        return response_success($return);
 
     }
     // 用户评论
@@ -505,7 +641,6 @@ class RootRepository {
         return response_success($html);
 
     }
-
 
 
 

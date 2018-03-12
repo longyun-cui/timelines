@@ -30,30 +30,55 @@ class OtherController extends Controller
 
 
 
-    // 收藏列表
-    public function collect_viewList()
+    // 【课程】收藏 列表
+    public function collect_course_viewList()
     {
-        if(request()->isMethod('get')) return view('home.others.collect');
-        else if(request()->isMethod('post')) return $this->repo->collect_get_list_datatable(request()->all());
+        if(request()->isMethod('get')) return view('home.others.collection.course')->with(['menu_collect_course'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->collect_course_get_list_datatable(request()->all());
     }
-    // 收藏【删除】
-    public function collect_deleteAction()
+    // 【课程】收藏【删除】
+    public function collect_course_deleteAction()
     {
-        return $this->repo->collect_delete(request()->all());
+        return $this->repo->collect_course_delete(request()->all());
+    }
+    // 【课程】收藏 列表
+    public function collect_chapter_viewList()
+    {
+        if(request()->isMethod('get')) return view('home.others.collection.chapter')->with(['menu_collect_chapter'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->collect_chapter_get_list_datatable(request()->all());
+    }
+    // 【章节】收藏【删除】
+    public function collect_chapter_deleteAction()
+    {
+        return $this->repo->collect_chapter_delete(request()->all());
     }
 
 
 
-    // 收藏列表
-    public function favor_viewList()
+
+    // 【课程】点赞 列表
+    public function favor_course_viewList()
     {
-        if(request()->isMethod('get')) return view('home.others.favor');
-        else if(request()->isMethod('post')) return $this->repo->favor_get_list_datatable(request()->all());
+        if(request()->isMethod('get')) return view('home.others.favor.course')->with(['menu_favor_course'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->favor_course_get_list_datatable(request()->all());
     }
-    // 收藏【删除】
-    public function favor_deleteAction()
+    // 【课程】点赞【删除】
+    public function favor_course_deleteAction()
     {
-        return $this->repo->favor_delete(request()->all());
+        return $this->repo->favor_course_delete(request()->all());
+    }
+
+
+    // 【章节】点赞 列表
+    public function favor_chapter_viewList()
+    {
+        if(request()->isMethod('get')) return view('home.others.favor.chapter')->with(['menu_favor_chapter'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->favor_chapter_get_list_datatable(request()->all());
+    }
+    // 【章节】点赞【删除】
+    public function favor_chapter_deleteAction()
+    {
+        return $this->repo->favor_chapter_delete(request()->all());
     }
 
 

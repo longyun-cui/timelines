@@ -61,7 +61,7 @@ class CourseRepository {
     // 返回添加视图
     public function view_create()
     {
-        return view('home.course.edit');
+        return view('home.course.edit')->with(['menu_course_create'=>'active']);
     }
     // 返回编辑视图
     public function view_edit()

@@ -64,6 +64,10 @@ class RootController extends Controller
     {
         return $this->repo->item_comment_save(request()->all());
     }
+    public function item_comment_get()
+    {
+        return $this->repo->item_comment_get(request()->all());
+    }
     public function item_comment_get_html()
     {
         return $this->repo->item_comment_get_html(request()->all());

@@ -31,7 +31,7 @@ class CourseController extends Controller
     // 列表
     public function viewList()
     {
-        if(request()->isMethod('get')) return view('home.course.list');
+        if(request()->isMethod('get')) return view('home.course.list')->with(['menu_course_list'=>'active']);
         else if(request()->isMethod('post')) return $this->repo->get_list_datatable(request()->all());
     }
 

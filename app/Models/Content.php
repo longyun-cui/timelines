@@ -37,10 +37,22 @@ class Content extends Model
         return $this->hasMany('App\Models\Content','p_id','id');
     }
 
-    // 内容
+    // 评论
     function communications()
     {
         return $this->hasMany('App\Models\Communication','content_id','id');
+    }
+
+    // 收藏
+    function collections()
+    {
+        return $this->hasMany('App\Models\Pivot_User_Collection','content_id','id');
+    }
+
+    // 其他人的
+    function others()
+    {
+        return $this->hasMany('App\Models\Pivot_User_Course','content_id','id');
     }
 
     /**
