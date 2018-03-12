@@ -48,7 +48,7 @@
                 <div class="box-footer">
 
                     {{--点赞--}}
-                    <a class="margin favor-btn" role="button" data-num="{{$course->favor_num}}">
+                    <a class="margin favor-btn" data-num="{{$course->favor_num}}" role="button">
                         @if(Auth::check())
                             @if($course->others->contains('type', 1))
                                 <span class="favor-this-cancel"><i class="fa fa-thumbs-up text-red"></i>
@@ -63,7 +63,7 @@
                     </a>
 
                     {{--收藏--}}
-                    <a class="margin collect-btn" role="button" data-num="{{$course->collect_num}}">
+                    <a class="margin collect-btn" data-num="{{$course->collect_num}}" role="button">
                         @if(Auth::check())
                             @if($course->user_id != Auth::id())
                                 @if(count($course->collections))

@@ -20,7 +20,7 @@ class LoginMiddleware
     {
         if(!Auth::check()) // 未登录
         {
-            return response_error([],"请先登录！");
+            return Response(response_error([],"请先登录！"));
 //            $return["status"] = false;
 //            $return["log"] = "admin-no-login";
 //            $return["msg"] = "请先登录";

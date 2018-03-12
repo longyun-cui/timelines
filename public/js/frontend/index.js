@@ -111,6 +111,7 @@ jQuery( function ($) {
     });
 
 
+
     // 点赞
     $(".item-option").off("click",".favor-this").on('click', ".favor-this", function() {
         var that = $(this);
