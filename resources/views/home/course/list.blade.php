@@ -34,6 +34,8 @@
                         <th>课程名</th>
                         <th>浏览数</th>
                         <th>分享数</th>
+                        <th>收藏数</th>
+                        <th>点赞数</th>
                         <th>状态</th>
                         <th>创建时间</th>
                         <th>修改时间</th>
@@ -42,6 +44,8 @@
                     </tr>
                     <tr>
                         <td><input type="text" class="form-control" name="title" /></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -127,6 +131,20 @@
                     },
                     {
                         'data': 'share_num',
+                        'orderable': true,
+                        render: function(val) {
+                            return val == null ? 0 : val;
+                        }
+                    },
+                    {
+                        'data': 'collect_num',
+                        'orderable': true,
+                        render: function(val) {
+                            return val == null ? 0 : val;
+                        }
+                    },
+                    {
+                        'data': 'favor_num',
                         'orderable': true,
                         render: function(val) {
                             return val == null ? 0 : val;
