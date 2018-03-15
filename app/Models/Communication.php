@@ -44,6 +44,18 @@ class Communication extends Model
         return $this->hasMany('App\Models\Communication','reply_id','id');
     }
 
+    // 对话
+    function dialogs()
+    {
+        return $this->hasMany('App\Models\Communication','dialog_id','id');
+    }
+
+    // 点赞
+    function favors()
+    {
+        return $this->hasMany('App\Models\Communication','reply_id','id');
+    }
+
     /**
      * 获得此人的所有标签。
      */

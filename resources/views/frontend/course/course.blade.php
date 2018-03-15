@@ -13,7 +13,7 @@
 </div>
 
 {{--内容--}}
-<div class="row item-option course-option" data-course="{{$course->encode_id or encode(0)}}" data-content="{{$content->encode_id or encode(0)}}">
+<div class="row item-option course-option item-piece" data-course="{{$course->encode_id or encode(0)}}" data-content="{{$content->encode_id or encode(0)}}">
     <div class="col-md-9">
         <div class="box panel-default box-default">
 
@@ -105,7 +105,7 @@
                     <div class="comment-list-container">
                     </div>
 
-                    <div class="col-md-12" style="padding:0;margin-top:16px;">
+                    <div class="col-md-12 more-box" style="margin-top:16px;">
                         <button type="button" class="btn btn-block btn-flat btn-default comments-more"></button>
                     </div>
 

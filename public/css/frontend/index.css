@@ -12,10 +12,24 @@
 .box-header .box-title a {color:#222;}
 .box-header .box-title a:hover {color:#3c8dbc;}
 
+
+.more-box {padding:0;}
+
+.item-piece .pull-left {margin-right:12px;}
+.item-piece .pull-right {margin-left:12px;}
+.comment-title-container {padding:4px 0}
+.comment-content-container {padding:8px;}
 .comment-input-container {border-top:2px solid #eee;border-bottom:2px solid #eee;}
 
-
-
 .comment-piece {padding:4px 8px;border-bottom:1px solid #f4f4f4;}
+
+.comment-reply-input-container {display:none;padding:2px 0;margin-bottom:16px;border-bottom:1px solid #fff;background:#f4f4f4;}
+
+.reply-piece {padding:16px 8px;border-top:1px solid #ccc;background:#f4f4f4;}
+.reply-piece:first-child  {border-top:0;}
+.reply-title-container {padding:0 8px 8px}
+.reply-tools-container {padding:0 8px;}
+.reply-container {padding:0;}
+.reply-input-container {display:none;padding:2px 0;margin-top:16px;background:#fff;}
 
 

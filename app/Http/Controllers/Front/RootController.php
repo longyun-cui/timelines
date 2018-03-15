@@ -59,7 +59,7 @@ class RootController extends Controller
     }
 
 
-    // 点赞
+    // 评论
     public function item_comment_save()
     {
         return $this->repo->item_comment_save(request()->all());
@@ -71,6 +71,28 @@ class RootController extends Controller
     public function item_comment_get_html()
     {
         return $this->repo->item_comment_get_html(request()->all());
+    }
+
+
+    // 回复
+    public function item_reply_save()
+    {
+        return $this->repo->item_reply_save(request()->all());
+    }
+    public function item_reply_get()
+    {
+        return $this->repo->item_reply_get(request()->all());
+    }
+
+
+    // 评论点赞
+    public function item_comment_favor_save()
+    {
+        return $this->repo->item_comment_favor_save(request()->all());
+    }
+    public function item_comment_favor_cancel()
+    {
+        return $this->repo->item_comment_favor_cancel(request()->all());
     }
 
 

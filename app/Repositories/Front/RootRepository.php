@@ -582,12 +582,81 @@ class RootRepository {
         $content_decode = decode($content_encode);
         if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
-        $comments = Communication::with(['user'])
-            ->where(['type'=>$type,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+        if(Auth::check())
+        {
+            $user = Auth::user();
+            $user_id = $user->id;
+            $comments = Communication::with([
+                'user',
+                'reply'=>function($query) { $query->with(['user']); },
+//                'dialogs'=>function($query) use ($user_id) { $query->with([
+//                    'user',
+//                    'reply'=>function($query1) { $query1->with(['user']); },
+//                    'favors'=>function($query) use ($user_id)  { $query->where(['type'=>5,'user_id'=>$user_id]); }
+//                ])->orderBy('id','desc'); },
+                'favors'=>function($query) use ($user_id) { $query->where(['type'=>5,'user_id'=>$user_id]); }
+            ])->withCount('dialogs')
+            ->where(['type'=>$type,'reply_id'=>0,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+        }
+        else
+        {
+            $comments = Communication::with([
+                'user',
+                'reply'=>function($query) { $query->with(['user']); }//,
+//                'dialogs'=>function($query) { $query->with([
+//                    'user',
+//                    'reply'=>function($query1) { $query1->with(['user']); }
+//                ])->orderBy('id','desc'); },
+            ])->withCount('dialogs')
+            ->where(['type'=>$type,'reply_id'=>0,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+        }
 
         if(!empty($post_data['min_id']) && $post_data['min_id'] != 0) $comments->where('id', '<', $post_data['min_id']);
 
         $comments = $comments->orderBy('id','desc')->paginate(10);
+
+        foreach ($comments as $comment)
+        {
+            if($comment->dialogs_count)
+            {
+                $comment->dialog_max_id = 0;
+                $comment->dialog_min_id = 0;
+                $comment->dialog_more = 'more';
+                $comment->dialog_more_text = '还有 <span class="text-blue">'.$comment->dialogs_count.'</span> 回复';
+            }
+            else
+            {
+                $comment->dialog_max_id = 0;
+                $comment->dialog_min_id = 0;
+                $comment->dialog_more = 'none';
+                $comment->dialog_more_text = '没有了';
+            }
+
+//            if(count($comment->dialogs))
+//            {
+//                $comment->dialogs = $comment->dialogs->take(1);
+//
+//                $comment->dialog_max_id = $comment->dialogs->first()->id;
+//                $comment->dialog_min_id = $comment->dialogs->last()->id;
+//                if($comment->dialogs->count() >= 1)
+//                {
+//                    $comment->dialog_more = 'more';
+//                    $comment->dialog_more_text = '更多';
+//                }
+//                else
+//                {
+//                    $comment->dialog_more = 'none';
+//                    $comment->dialog_more_text = '没有了';
+//                }
+//            }
+//            else
+//            {
+//                $comment->dialog_max_id = 0;
+//                $comment->dialog_min_id = 0;
+//                $comment->dialog_more = 'none';
+//                $comment->dialog_more_text = '没有了';
+//            }
+        }
 
         if(!$comments->isEmpty())
         {
@@ -641,6 +710,350 @@ class RootRepository {
         return response_success($html);
 
     }
+
+
+    // 添加回复
+    public function item_reply_save($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+            'comment_id.required' => '参数有误',
+            'content.required' => '回复不能为空',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required',
+            'comment_id' => 'required',
+            'content' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        if(Auth::check())
+        {
+            $course_encode = $post_data['course_id'];
+            $course_decode = decode($course_encode);
+            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+            $comment_encode = $post_data['comment_id'];
+            $comment_decode = decode($comment_encode);
+            if(!$comment_decode) return response_error([],"参数有误，刷新一下试试！");
+
+            $user = Auth::user();
+            $insert['type'] = $post_data['type'];
+            $insert['user_id'] = $user->id;
+            $insert['course_id'] = $course_decode;
+            $insert['content_id'] = $content_decode;
+            $insert['reply_id'] = $comment_decode;
+            $insert['content'] = $post_data['content'];
+
+            DB::beginTransaction();
+            try
+            {
+                $course = Course::find($course_decode);
+                if(!$course) return response_error([],"该课题不存在，刷新一下试试");
+
+                if($content_decode != 0)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+
+                    $content->timestamps = false;
+                    $content->increment('comment_num');
+                }
+                else
+                {
+                    $course->timestamps = false;
+                    $course->increment('comment_num');
+                }
+
+                $comment = Communication::find($comment_decode);
+                if(!$comment) return response_error([],"该评论不存在，刷新一下试试！");
+                $comment->timestamps = false;
+                $comment->increment('comment_num');
+
+                if($comment->dialog_id)
+                {
+                    $insert['dialog_id'] = $comment->dialog_id;
+                    $dialog = Communication::find($insert['dialog_id']);
+                    $dialog->timestamps = false;
+                    $dialog->increment('comment_num');
+                }
+                else
+                {
+                    $insert['dialog_id'] = $comment_decode;
+                }
+
+                $communication = new Communication;
+                $bool = $communication->fill($insert)->save();
+                if(!$bool) throw new Exception("insert--communication--fail");
+
+                $html["html"] = view('frontend.component.reply')->with("reply",$communication)->__toString();
+
+                DB::commit();
+                return response_success($html);
+            }
+            catch (Exception $e)
+            {
+                DB::rollback();
+//                exit($e->getMessage());
+//                $msg = $e->getMessage();
+                $msg = '添加失败，请重试！';
+                return response_fail([], $msg);
+            }
+        }
+        else return response_error([],"请先登录！");
+
+    }
+    // 获取回复
+    public function item_reply_get($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+            'comment_id.required' => '参数有误',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required',
+            'comment_id' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        $type = $post_data['type'];
+
+        $course_encode = $post_data['course_id'];
+        $course_decode = decode($course_encode);
+        if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+
+        $content_encode = $post_data['content_id'];
+        $content_decode = decode($content_encode);
+        if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+        $comment_encode = $post_data['comment_id'];
+        $comment_decode = decode($comment_encode);
+        if(!$comment_decode) return response_error([],"参数有误，刷新一下试试");
+
+        if(Auth::check())
+        {
+            $user = Auth::user();
+            $user_id = $user->id;
+            $comments = Communication::with([
+                'user',
+                'reply'=>function($query) { $query->with(['user']); },
+                'favors'=>function($query) use ($user_id) { $query->where(['type'=>5,'user_id'=>$user_id]); }
+            ])->where(['type'=>$type,'course_id'=>$course_decode,'content_id'=>$content_decode,'dialog_id'=>$comment_decode])
+                ->where('reply_id','<>',0);
+        }
+        else
+        {
+            $comments = Communication::with([
+                'user',
+                'reply'=>function($query) { $query->with(['user']); },
+            ])->where(['type'=>$type,'course_id'=>$course_decode,'content_id'=>$content_decode,'dialog_id'=>$comment_decode])
+                ->where('reply_id','<>',0);
+        }
+
+        if(!empty($post_data['min_id']) && $post_data['min_id'] != 0) $comments->where('id', '<', $post_data['min_id']);
+
+        $comments = $comments->orderBy('id','desc')->paginate(10);
+
+        if(!$comments->isEmpty())
+        {
+            $return["html"] = view('frontend.component.replies')->with("communications",$comments)->__toString();
+            $return["max_id"] = $comments->first()->id;
+            $return["min_id"] = $comments->last()->id;
+            $return["more"] = ($comments->count() >= 10) ? 'more' : 'none';
+        }
+        else
+        {
+            $return["html"] = '';
+            $return["max_id"] = 0;
+            $return["min_id"] = 0;
+            $return["more"] = 'none';
+        }
+
+        return response_success($return);
+
+    }
+
+
+    // 评论点赞
+    public function item_comment_favor_save($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+            'comment_id.required' => '参数有误',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required',
+            'comment_id' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        if(Auth::check())
+        {
+            $course_encode = $post_data['course_id'];
+            $course_decode = decode($course_encode);
+            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+            $comment_encode = $post_data['comment_id'];
+            $comment_decode = decode($comment_encode);
+            if(!$comment_decode) return response_error([],"参数有误，刷新一下试试！");
+
+            $user = Auth::user();
+            $insert['type'] = $post_data['type'];
+            $insert['user_id'] = $user->id;
+            $insert['course_id'] = $course_decode;
+            $insert['content_id'] = $content_decode;
+            $insert['reply_id'] = $comment_decode;
+
+            DB::beginTransaction();
+            try
+            {
+                $course = Course::find($course_decode);
+                if(!$course) return response_error([],"该课题不存在，刷新一下试试");
+
+                if($content_decode != 0)
+                {
+                    $content = Content::find($content_decode);
+                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+
+                    $content->timestamps = false;
+                    $content->increment('favor_num');
+                }
+                else
+                {
+                    $course->timestamps = false;
+                    $course->increment('favor_num');
+                }
+
+                $comment = Communication::find($comment_decode);
+                if(!$comment) return response_error([],"该评论不存在，刷新一下试试！");
+                $comment->timestamps = false;
+                $comment->increment('favor_num');
+
+                $communication = new Communication;
+                $bool = $communication->fill($insert)->save();
+                if(!$bool) throw new Exception("insert--communication--fail");
+
+                DB::commit();
+                return response_success();
+            }
+            catch (Exception $e)
+            {
+                DB::rollback();
+//                exit($e->getMessage());
+//                $msg = $e->getMessage();
+                $msg = '添加失败，请重试！';
+                return response_fail([], $msg);
+            }
+        }
+        else return response_error([],"请先登录！");
+
+    }
+
+    // 评论取消赞
+    public function item_comment_favor_cancel($post_data)
+    {
+        $messages = [
+            'type.required' => '参数有误',
+            'course_id.required' => '参数有误',
+            'content_id.required' => '参数有误',
+            'comment_id.required' => '参数有误',
+        ];
+        $v = Validator::make($post_data, [
+            'type' => 'required',
+            'course_id' => 'required',
+            'content_id' => 'required',
+            'comment_id' => 'required'
+        ], $messages);
+        if ($v->fails())
+        {
+            $errors = $v->errors();
+            return response_error([],$errors->first());
+        }
+
+        if(Auth::check())
+        {
+            $course_encode = $post_data['course_id'];
+            $course_decode = decode($course_encode);
+            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+
+            $content_encode = $post_data['content_id'];
+            $content_decode = decode($content_encode);
+            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+
+            $comment_encode = $post_data['comment_id'];
+            $comment_decode = decode($comment_encode);
+            if(!$comment_decode) return response_error([],"参数有误，刷新一下试试！");
+
+                DB::beginTransaction();
+                try
+                {
+                    $user = Auth::user();
+                    $user_id = $user->id;
+
+                    $comment = Communication::find($comment_decode);
+                    if(!$comment && $comment->user_id != $user_id) return response_error([],"参数有误，刷新一下试试");
+                    $comment->decrement('favor_num');
+
+                    $favors = Communication::where([
+                        'type'=>5,'user_id'=>$user_id,
+                        'course_id'=>$course_decode,'content_id'=>$content_decode,'reply_id'=>$comment_decode
+                    ]);
+                    $count = count($favors->get());
+                    if($count)
+                    {
+                        $num = $favors->delete();
+                        if($num != $count) throw new Exception("delete--commnucation--fail");
+                    }
+
+                    DB::commit();
+                    return response_success();
+                }
+                catch (Exception $e)
+                {
+                    DB::rollback();
+//                    exit($e->getMessage());
+//                    $msg = $e->getMessage();
+                    $msg = '操作失败，请重试！';
+                    return response_fail([], $msg);
+                }
+
+        }
+        else return response_error([],"请先登录！");
+
+    }
+
 
 
 
