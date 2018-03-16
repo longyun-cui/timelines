@@ -8,11 +8,11 @@
 
         <span class="pull-right text-muted disabled">{{ $comment->created_at->format('n月j日 H:i') }}</span>
 
-        <span class="pull-right text-muted disabled comment-reply-toggle" role="button">
+        <span class="pull-right text-muted disabled comment-reply-toggle" role="button" data-num="{{$comment->comment_num}}">
             回复 @if($comment->comment_num){{$comment->comment_num}}@endif
         </span>
 
-        <span class="comment-favor-btn" data-num="{{$comment->favor_num}}">
+        <span class="comment-favor-btn" data-num="{{$comment->favor_num or 0}}">
             @if(Auth::check())
                 @if(count($comment->favors))
                     <span class="pull-right text-muted disabled comment-favor-this-cancel" data-parent=".comment-option" role="button">

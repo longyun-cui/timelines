@@ -980,7 +980,6 @@ class RootRepository {
         else return response_error([],"请先登录！");
 
     }
-
     // 评论取消赞
     public function item_comment_favor_cancel($post_data)
     {

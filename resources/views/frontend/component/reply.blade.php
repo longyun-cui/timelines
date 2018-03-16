@@ -10,6 +10,7 @@
             回复 <a href="{{url('/u/'.encode($reply->reply->user->id))}}">{{$reply->reply->user->name}}</a> :
         @endif
         @endif
+
         {{ $reply->content }} <br>
 
     </div>
@@ -20,11 +21,11 @@
 
         <span class="pull-left text-muted disabled">{{ $reply->created_at->format('n月j日 H:i') }}</span>
 
-        <span class="pull-right text-muted disabled reply-toggle" role="button">
+        <span class="pull-right text-muted disabled reply-toggle" role="button" data-num="{{$reply->comment_num}}">
             回复 @if($reply->comment_num){{$reply->comment_num}}@endif
         </span>
 
-        <span class="comment-favor-btn" data-num="{{$reply->favor_num}}">
+        <span class="comment-favor-btn" data-num="{{$reply->favor_num or 0}}">
             @if(Auth::check())
                 @if(count($reply->favors))
                     <span class="pull-right text-muted disabled comment-favor-this-cancel" data-parent=".reply-option" role="button">
