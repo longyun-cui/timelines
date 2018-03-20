@@ -18,7 +18,7 @@
 .item-piece .pull-left {margin-right:12px;}
 .item-piece .pull-right {margin-left:12px;}
 
-.item-content-container {max-height:28px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.item-content-container {max-height:24px;overflow:hidden;}
 
 
 .comment-title-container {padding:4px 0}
