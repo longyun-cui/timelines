@@ -30,7 +30,7 @@
 
             {{--description--}}
             @if(!empty($course->description))
-                <div class="box-body text-muted">
+                <div class="box-body text-muted" style="padding-top:0;padding-bottom:0;">
                     <div class="colo-md-12"> {!! $course->description or '' !!} </div>
                 </div>
             @endif
@@ -38,7 +38,7 @@
             {{--content--}}
             @if(!empty($course->content))
                 <div class="box-body">
-                    <div class="colo-md-12"> {!! $course->content or '' !!} </div>
+                    <article class="colo-md-12 item-content-container"> {!! $course->content or '' !!} </article>
                 </div>
             @endif
 
@@ -94,7 +94,7 @@
             {{--comment--}}
             <div class="box-body comment-container" style="display:none;" >
 
-                <input type="hidden" class="get-comments get-comments-default">
+                <input type="hidden" class="comments-get comments-get-default">
 
                 <div class="box-body comment-input-container">
                     <form action="" method="post" class="form-horizontal form-bordered item-comment-form">

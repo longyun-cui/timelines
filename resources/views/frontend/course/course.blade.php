@@ -73,7 +73,7 @@
             {{--comment--}}
             <div class="box-body comment-container">
 
-                <input type="hidden" class="get-comments get-comments-default">
+                <input type="hidden" class="comments-get comments-get-default">
 
                 {{--添加评论--}}
                 <div class="box-body comment-input-container">
@@ -126,7 +126,7 @@
         $(function() {
 
             fold();
-            $(".get-comments-default").click();
+            $(".comments-get-default").click();
 
         });
     </script>

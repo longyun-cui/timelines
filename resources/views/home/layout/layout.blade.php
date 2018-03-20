@@ -151,14 +151,14 @@ desired effect
                     </li>
 
                     <!-- Notifications Menu -->
-                    <li class="dropdown notifications-menu" style="display:none;">
+                    <li class="dropdown notifications-menu _none" style="display:none;">
                         <!-- Menu toggle button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-bell-o"></i>
-                            <span class="label label-warning">10</span>
+                            <span class="label label-warning">{{$notification_count or ''}}</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="header">You have 10 notifications</li>
+                            <li class="header">你有 {{$notification_count or ''}} 未读消息</li>
                             <li>
                                 <!-- Inner Menu: contains the notifications -->
                                 <ul class="menu">
@@ -313,28 +313,58 @@ desired effect
 
 
 
-                <li class="header">课程</li>
+                <li class="header">其他</li>
 
                 <li class="treeview {{$menu_collect_course or ''}}">
-                    <a href="{{url('/home/collect/course/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏课程</span></a>
+                    <a href="{{url('/home/collect/course/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏「课程」</span></a>
                 </li>
 
                 <li class="treeview {{$menu_favor_course or ''}}">
-                    <a href="{{url('/home/favor/course/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞课程</span></a>
+                    <a href="{{url('/home/favor/course/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞「课程」</span></a>
                 </li>
 
-
-
-                <li class="header">内容</li>
-
                 <li class="treeview {{$menu_collect_chapter or ''}}">
-                    <a href="{{url('/home/collect/chapter/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏内容</span></a>
+                    <a href="{{url('/home/collect/chapter/list')}}"><i class="fa fa-heart text-blue"></i> <span>收藏内容</span></a>
                 </li>
 
                 <li class="treeview {{$menu_favor_chapter or ''}}">
-                    <a href="{{url('/home/favor/chapter/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞内容</span></a>
+                    <a href="{{url('/home/favor/chapter/list')}}"><i class="fa fa-thumbs-up text-blue"></i> <span>点赞内容</span></a>
                 </li>
 
+
+
+                <li class="header"><i class="fa fa-envelope"></i></li>
+
+                <li class="treeview {{$menu_notification_comment or ''}}">
+                    <a href="{{url('/home/notification/comment')}}">
+                        <i class="fa fa-bell"></i>消息
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-red">{{$notification_count or ''}}</small>
+                            <small class="label pull-right bg-blue _none">17</small>
+                        </span>
+                    </a>
+                </li>
+
+                <li class="treeview {{$menu_notification_favor or ''}} _none">
+                    <a href="{{url('/home/notification/favor')}}"><i class="fa fa-dot-circle-o"></i>点赞</a>
+                </li>
+
+                <li class="treeview {{$menu_notification_comment or ''}} {{$menu_notification_favor or ''}} _none">
+                    <a href="">
+                        <i class="fa fa-envelope"></i> <span>消息</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{$menu_notification_comment or ''}}">
+                            <a href="{{url('/home/notification/comment')}}"><i class="fa fa-dot-circle-o"></i>评论</a>
+                        </li>
+                        <li class="{{$menu_notification_favor or ''}}">
+                            <a href="{{url('/home/notification/favor')}}"><i class="fa fa-dot-circle-o"></i>点赞</a>
+                        </li>
+                    </ul>
+                </li>
                 
 
                 <li class="header">课程站</li>

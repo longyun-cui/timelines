@@ -1,5 +1,12 @@
 jQuery( function ($) {
 
+    $('article').readmore({
+        speed: 150,
+        moreLink: '<a href="#">更多</a>',
+        lessLink: '<a href="#">收起</a>'
+    });
+
+
     $(".user-logout").on("click",function() {
         location.href = "/logout";
     });
@@ -245,8 +252,9 @@ jQuery( function ($) {
     });
 
 
+
     // 查看评论
-    $(".item-option").off("click",".get-comments").on('click', ".get-comments", function() {
+    $(".item-option").off("click",".comments-get").on('click', ".comments-get", function() {
         var that = $(this);
         var item_option = $(this).parents('.item-option');
         var getSort = that.attr('data-getSort');
@@ -428,6 +436,7 @@ jQuery( function ($) {
             'json'
         );
     });
+
 
 
     // 更多回复

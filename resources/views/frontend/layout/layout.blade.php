@@ -312,6 +312,8 @@ desired effect
 
 <script src="https://cdn.bootcss.com/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
 
+<script src="https://cdn.bootcss.com/Readmore.js/2.2.0/readmore.min.js"></script>
+
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 
 <script>

@@ -5,6 +5,7 @@ use App\User;
 use App\Models\Course;
 use App\Models\Content;
 use App\Models\Communication;
+use App\Models\Notification;
 use App\Models\Pivot_User_Collection;
 use App\Models\Pivot_User_Course;
 
@@ -233,6 +234,15 @@ class RootRepository {
                     if($content_decode == 0) $course->increment('collect_num');
                     else $content->increment('collect_num');
 
+                    $insert['type'] = 11;
+                    $insert['user_id'] = $user->id;
+                    $insert['course_id'] = $course_decode;
+                    $insert['content_id'] = $content_decode;
+
+                    $communication = new Communication;
+                    $bool = $communication->fill($insert)->save();
+                    if(!$bool) throw new Exception("insert--communication--fail");
+
                     $html['html'] = $this->view_item_html($course_decode);
 
                     DB::commit();
@@ -306,6 +316,16 @@ class RootRepository {
                         if($content_decode == 0) $course->decrement('collect_num');
                         else $content->decrement('collect_num');
                     }
+
+                    $insert['type'] = 12;
+                    $insert['user_id'] = $user->id;
+                    $insert['course_id'] = $course_decode;
+                    $insert['content_id'] = $content_decode;
+
+                    $communication = new Communication;
+                    $bool = $communication->fill($insert)->save();
+                    if(!$bool) throw new Exception("insert--communication--fail");
+
                     $html['html'] = $this->view_item_html($course_decode);
 
                     DB::commit();
@@ -376,6 +396,30 @@ class RootRepository {
                     if($content_decode == 0) $course->increment('favor_num');
                     else $content->increment('favor_num');
 
+                    $insert['type'] = 3;
+                    $insert['user_id'] = $user->id;
+                    $insert['course_id'] = $course_decode;
+                    $insert['content_id'] = $content_decode;
+
+                    $communication = new Communication;
+                    $bool = $communication->fill($insert)->save();
+                    if(!$bool) throw new Exception("insert--communication--fail");
+
+//                    通知对方
+                    if($course->user_id != $user->id)
+                    {
+                        $notification_insert['type'] = 8;
+                        $notification_insert['sort'] = 3;
+                        $notification_insert['user_id'] = $course->user_id;
+                        $notification_insert['source_id'] = $user->id;
+                        $notification_insert['course_id'] = $course_decode;
+                        $notification_insert['content_id'] = $content_decode;
+                        $notification_insert['comment_id'] = $communication->id;
+
+                        $notification = new Notification;
+                        $bool = $notification->fill($notification_insert)->save();
+                        if(!$bool) throw new Exception("insert--notification--fail");
+                    }
 
                     $html['html'] = $this->view_item_html($course_decode);
 
@@ -450,6 +494,16 @@ class RootRepository {
                         if($content_decode == 0) $course->decrement('favor_num');
                         else $content->decrement('favor_num');
                     }
+
+                    $insert['type'] = 4;
+                    $insert['user_id'] = $user->id;
+                    $insert['course_id'] = $course_decode;
+                    $insert['content_id'] = $content_decode;
+
+                    $communication = new Communication;
+                    $bool = $communication->fill($insert)->save();
+                    if(!$bool) throw new Exception("insert--communication--fail");
+
                     $html['html'] = $this->view_item_html($course_decode);
 
                     DB::commit();
@@ -535,6 +589,22 @@ class RootRepository {
                 $communication = new Communication;
                 $bool = $communication->fill($insert)->save();
                 if(!$bool) throw new Exception("insert--communication--fail");
+
+//                通知对方
+                if($course->user_id != $user->id)
+                {
+                    $notification_insert['type'] = 8;
+                    $notification_insert['sort'] = 1;
+                    $notification_insert['user_id'] = $course->user_id;
+                    $notification_insert['source_id'] = $user->id;
+                    $notification_insert['course_id'] = $course_decode;
+                    $notification_insert['content_id'] = $content_decode;
+                    $notification_insert['comment_id'] = $communication->id;
+
+                    $notification = new Notification;
+                    $bool = $notification->fill($notification_insert)->save();
+                    if(!$bool) throw new Exception("insert--notification--fail");
+                }
 
                 $html["html"] = view('frontend.component.comment')->with("comment",$communication)->__toString();
 
@@ -798,6 +868,23 @@ class RootRepository {
                 $bool = $communication->fill($insert)->save();
                 if(!$bool) throw new Exception("insert--communication--fail");
 
+//                通知对方
+                if($comment->user_id != $user->id)
+                {
+                    $notification_insert['type'] = 8;
+                    $notification_insert['sort'] = 2;
+                    $notification_insert['user_id'] = $comment->user_id;
+                    $notification_insert['source_id'] = $user->id;
+                    $notification_insert['course_id'] = $course_decode;
+                    $notification_insert['content_id'] = $content_decode;
+                    $notification_insert['comment_id'] = $communication->id;
+                    $notification_insert['reply_id'] = $comment->id;
+
+                    $notification = new Notification;
+                    $bool = $notification->fill($notification_insert)->save();
+                    if(!$bool) throw new Exception("insert--notification--fail");
+                }
+
                 $html["html"] = view('frontend.component.reply')->with("reply",$communication)->__toString();
 
                 DB::commit();
@@ -964,6 +1051,23 @@ class RootRepository {
                 $communication = new Communication;
                 $bool = $communication->fill($insert)->save();
                 if(!$bool) throw new Exception("insert--communication--fail");
+
+//                通知对方
+                if($comment->user_id != $user->id)
+                {
+                    $notification_insert['type'] = 8;
+                    $notification_insert['sort'] = 5;
+                    $notification_insert['user_id'] = $comment->user_id;
+                    $notification_insert['source_id'] = $user->id;
+                    $notification_insert['course_id'] = $course_decode;
+                    $notification_insert['content_id'] = $content_decode;
+                    $notification_insert['comment_id'] = $communication->id;
+                    $notification_insert['reply_id'] = $comment_decode;
+
+                    $notification = new Notification;
+                    $bool = $notification->fill($notification_insert)->save();
+                    if(!$bool) throw new Exception("insert--notification--fail");
+                }
 
                 DB::commit();
                 return response_success();
