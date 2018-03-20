@@ -1,11 +1,5 @@
 jQuery( function ($) {
 
-    $('article').readmore({
-        speed: 150,
-        moreLink: '<a href="#">更多</a>',
-        lessLink: '<a href="#">收起</a>'
-    });
-
 
     $(".user-logout").on("click",function() {
         location.href = "/logout";
@@ -627,7 +621,6 @@ jQuery( function ($) {
 
 
 });
-
 
 // 初始化展开
 function fold()

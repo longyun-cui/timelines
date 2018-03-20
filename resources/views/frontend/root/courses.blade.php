@@ -30,6 +30,12 @@
 @section('js')
     <script>
         $(function() {
+            $('article').readmore({
+                speed: 150,
+                moreLink: '<a href="#">更多</a>',
+                lessLink: '<a href="#">收起</a>'
+            });
         });
     </script>
 @endsection
+
