@@ -30,7 +30,7 @@
 
             {{--description--}}
             @if(!empty($course->description))
-                <div class="box-body text-muted" style="padding-top:0;padding-bottom:0;">
+                <div class="box-body text-muted">
                     <div class="colo-md-12"> {!! $course->description or '' !!} </div>
                 </div>
             @endif
