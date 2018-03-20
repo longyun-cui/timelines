@@ -105,7 +105,7 @@ class RootRepository {
             ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
         }
 
-        return view('frontend.user.user')->with(['getType'=>'items','data'=>$user,'courses'=>$datas]);
+        return view('frontend.root.user')->with(['getType'=>'items','data'=>$user,'courses'=>$datas]);
     }
 
 
