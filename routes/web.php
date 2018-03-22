@@ -149,7 +149,7 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
             Route::post('chapter/delete', $controller.'@favor_chapter_deleteAction');
         });
 
-        // 点赞
+        // 消息
         Route::group(['prefix' => 'notification'], function () {
 
             $controller = 'NotificationController';

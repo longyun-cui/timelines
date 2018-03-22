@@ -1,27 +1,25 @@
 <div class="row item-option course-option item-piece" data-course="{{encode($course->id)}}" data-content="{{encode(0)}}">
-    <div class="col-md-9">
+    <div class="col-md-8 col-md-offset-2">
         <!-- BEGIN PORTLET-->
-        <div class="box panel-default box-default">
+        <div class="panel-default box-default item-entity-container">
 
             {{--header--}}
-            <div class="box-header" style="margin:8px 0 0;border-bottom:1px solid #f4f4f4;">
-                <h3 class="box-title">
-                    <a href="{{url('/course/'.encode($course->id))}}">{{$course->title or ''}}</a>
-                </h3>
-                <span>来自 <a href="{{url('/u/'.encode($course->user->id))}}">{{$course->user->name or ''}}</a></span>
-                <span class="pull-right"><a class="show-menu" style="cursor:pointer">查看目录</a></span>
+            <div class="box-body item-title-row">
+                <a href="{{url('/course/'.encode($course->id))}}">{{$course->title or ''}}</a>
             </div>
 
             <div class="box-body text-muted">
-                <span>阅读 <span class="text-blue">{{ $course->visit_num }}</span> 次</span>
-                <span class="pull-right">{{ $course->created_at->format('Y-n-j H:i') }}</span>
+                <span><a href="{{url('/u/'.encode($course->user->id))}}">{{$course->user->name or ''}}</a></span>
+                <span> • {{ $course->created_at->format('n月j日 H:i') }}</span>
+                <span> • 阅读 <span class="text-blue">{{ $course->visit_num }}</span> 次</span>
+                <span class="pull-right"><a class="show-menu" style="cursor:pointer">查看目录</a></span>
             </div>
 
             {{--menu--}}
-            <div class="box-body menu-container" style="display:none;border-bottom:1px solid #ddd;">
-                <div class="colo-md-12 text-muted" style="margin-bottom:16px;">目录结构</div>
+            <div class="box-body menu-container" style="display:none;padding-top:0;">
+                <div class="colo-md-12 text-muted" style="margin-bottom:8px;">目录结构</div>
                 @foreach($course->contents as $content)
-                    <div class="colo-md-12 box-body" style="padding:4px 10px;">
+                    <div class="box-body" style="padding:4px 10px;">
                         <a href="{{ url('course/'.encode($course->id).'?content='.encode($content->id)) }}">
                             <i class="fa fa-list-ol"></i> &nbsp; {{ $content->title or '' }}</a>
                     </div>
@@ -30,21 +28,21 @@
 
             {{--description--}}
             @if(!empty($course->description))
-                <div class="box-body text-muted">
+                <div class="box-body text-muted item-description-row">
                     <div class="colo-md-12"> {!! $course->description or '' !!} </div>
                 </div>
             @endif
 
             {{--content--}}
             @if(!empty($course->content))
-                <div class="box-body">
+                <div class="box-body item-content-row">
                     <article class="colo-md-12 item-content-container"> {!! $course->content or '' !!} </article>
                 </div>
             @endif
 
 
             {{--tools--}}
-            <div class="box-footer">
+            <div class="box-footer item-tools-row">
 
                 {{--点赞--}}
                 <a class="margin favor-btn" data-num="{{$course->favor_num}}" role="button">
