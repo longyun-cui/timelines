@@ -30,18 +30,18 @@
 .item-piece .pull-right {margin-left:12px;}
 .item-piece .text-red {color:#e21433}
 
-.item-content-container {max-height:22px;overflow:hidden;}
-
 
 .item-entity-container {background:#fff;}
 .item-title-row {border-bottom:1px solid #f4f4f4;}
 .item-title-row a {color:#494949;font-size:16px;font-weight:bold;}
-.item-info-row {}
+.item-info-row {font-size:13px;}
 .item-info-row a {color:#888}
-.item-description-row {padding-top:0;padding-bottom:0;}
-.item-content-row {}
-.item-tools-row {border-bottom:1px solid #eee}
+.item-description-row {padding-top:0;}
+.item-content-row {padding-top:0;}
+.item-tools-row {padding:8px 10px;}
 .item-tools-row a {color:#888}
+
+article {max-height:24px;}
 
 
 .comment-title-container {padding:4px 0}
