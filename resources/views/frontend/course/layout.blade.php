@@ -260,7 +260,7 @@ desired effect
                 <ul class="nav navbar-nav">
 
                     @if(!Auth::check())
-                        <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
+                        <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i> 登录</a></li>
                         <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
                     @else
                         <li class="header"><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> 返回我的后台</a></li>
@@ -275,10 +275,10 @@ desired effect
                             <li class="header"><a href="{{url('/u/'.$course->user->encode_id)}}"><i class="fa fa-home text-orange"></i>
                                     {{$course->user->name}}的主页</a></li>
                             @if(!Auth::check())
-                                <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i>注册</a></li>
-                                <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i>注册</a></li>
+                                <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i> 登录</a></li>
+                                <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
                             @else
-                                <li class="header"><a href="{{url('/home')}}"><i class="fa fa-circle-o text-default"></i>返回我的后台</a></li>
+                                <li class="header"><a href="{{url('/home')}}"><i class="fa fa-circle-o text-default"></i> 返回我的后台</a></li>
                             @endif
                             <li class="footer"><a href="#">See All Messages</a></li>
                         </ul>
