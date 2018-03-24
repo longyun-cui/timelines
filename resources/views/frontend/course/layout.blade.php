@@ -85,12 +85,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .recursion-user a:hover { color:#222;background-color:; }
         .recursion-text.active { background-color:#eee; }
         .recursion-text.active a { color:#222; }
-        @media (max-width: 767px) {
+        @media (max-width: 991px) {
             .content-wrapper, .right-side, .main-footer {
                 margin-left: 0;
             }
             .main-header .navbar {
                 margin: 0;
+                color:#fff;
             }
             .main-header .logo, .main-header .navbar {
                 width: 100%;
@@ -114,8 +115,54 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 -o-transform: translate(300px, 0);
                 transform: translate(300px, 0);
             }
+            .sidebar-mini.sidebar-collapse .main-sidebar {
+                -webkit-transform: translate(0, 0);
+                -ms-transform: translate(0, 0);
+                -o-transform: translate(0, 0);
+                transform: translate(0, 0);
+                width: 300px !important;
+                z-index: 850;
+            }
         }
-        @media (min-width: 768px) {
+        @media (max-width: 767px) {
+            .content-wrapper, .right-side, .main-footer {
+                margin-left: 0;
+            }
+            .main-header .navbar {
+                margin: 0;
+            }
+            .main-header .logo, .main-header .navbar {
+                width: 100%;
+                float: none;
+            }
+            .main-sidebar, .left-side {
+                -webkit-transform: translate(-300px, 0);
+                -ms-transform: translate(-300px, 0);
+                -o-transform: translate(-300px, 0);
+                transform: translate(-300px, 0);
+            }
+            .sidebar-open .main-sidebar, .sidebar-open .left-side {
+                -webkit-transform: translate(0, 0);
+                -ms-transform: translate(0, 0);
+                -o-transform: translate(0, 0);
+                transform: translate(0, 0);
+            }
+            .sidebar-open .content-wrapper, .sidebar-open .right-side, .sidebar-open .main-footer {
+                -webkit-transform: translate(300px, 0);
+                -ms-transform: translate(300px, 0);
+                -o-transform: translate(300px, 0);
+                transform: translate(300px, 0);
+            }
+            .sidebar-mini.sidebar-collapse .main-sidebar {
+                -webkit-transform: translate(0, 0);
+                -ms-transform: translate(0, 0);
+                -o-transform: translate(0, 0);
+                transform: translate(0, 0);
+                width: 300px !important;
+                z-index: 850;
+            }
+        }
+        @media (min-width: 992px) {
             .sidebar-mini.sidebar-collapse .main-sidebar {
                 -webkit-transform: translate(-300px, 0);
                 -ms-transform: translate(-300px, 0);
@@ -124,12 +171,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 width: 300px;
                 z-index: 850;
             }
+            .sidebar-open .content-wrapper, .sidebar-open .right-side, .sidebar-open .main-footer {
+                -webkit-transform: translate(300px, 0);
+                -ms-transform: translate(300px, 0);
+                -o-transform: translate(300px, 0);
+                transform: translate(300px, 0);
+            }
             .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .right-side, .sidebar-mini.sidebar-collapse .main-footer {
-                margin-left: 0 !important;
+                margin-left: 300px !important;
                 z-index: 840;
-            }.sidebar-mini.sidebar-collapse .main-header .navbar {
+            }
+            .sidebar-mini.sidebar-collapse .main-header .navbar {
                  margin-left: 0;
-             }
+            }
+        }
+        @media (min-width: 768px) {
+            .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .right-side, .sidebar-mini.sidebar-collapse .main-footer {
+                margin-left: 300px !important;
+                z-index: 840;
+            }
         }
     </style>
 
@@ -221,7 +281,7 @@ desired effect
 
 
     {{--<!-- Left side column. contains the logo and sidebar -->--}}
-    <aside class="main-sidebar visible-sm visible-xs" style="padding-top:50px !important;">
+    <aside class="main-sidebar" style="padding-top:50px !important;">
 
         {{--<!-- sidebar: style can be found in sidebar.less -->--}}
         <section class="sidebar" style="padding-bottom:32px;margin-top:0;">
