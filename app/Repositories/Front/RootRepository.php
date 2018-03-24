@@ -32,7 +32,7 @@ class RootRepository {
         {
             $user = Auth::user();
             $user_id = $user->id;
-            $data = Course::with([
+            $course = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
                 'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
@@ -40,12 +40,13 @@ class RootRepository {
         }
         else
         {
-            $data = Course::with([
+            $course = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
             ])->find($id);
         }
-        return view('frontend.component.course')->with(['course'=>$data])->__toString();
+        $courses[0] = $course;
+        return view('frontend.component.course')->with(['courses'=>$courses])->__toString();
     }
 
 
@@ -56,7 +57,7 @@ class RootRepository {
         {
             $user = Auth::user();
             $user_id = $user->id;
-            $datas = Course::with([
+            $courses = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
                 'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); },
@@ -65,12 +66,12 @@ class RootRepository {
         }
         else
         {
-            $datas = Course::with([
+            $courses = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
             ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         }
-        return view('frontend.root.courses')->with(['getType'=>'items','datas'=>$datas]);
+        return view('frontend.root.courses')->with(['getType'=>'items','courses'=>$courses]);
     }
 
 
@@ -84,13 +85,13 @@ class RootRepository {
 
         $user = User::with([
             'courses'=>function($query) { $query->orderBy('id','desc'); }
-        ])->find($user_decode);
+        ])->withCount('courses')->find($user_decode);
 
         if(Auth::check())
         {
             $me = Auth::user();
             $me_id = $me->id;
-            $datas = Course::with([
+            $courses = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
                 'collections'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'content_id' => 0]); },
@@ -99,13 +100,16 @@ class RootRepository {
         }
         else
         {
-            $datas = Course::with([
+            $courses = Course::with([
                 'user',
                 'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
             ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
         }
 
-        return view('frontend.root.user')->with(['getType'=>'items','data'=>$user,'courses'=>$datas]);
+        $user->timestamps = false;
+        $user->increment('visit_num');
+
+        return view('frontend.root.user')->with(['getType'=>'items','data'=>$user,'courses'=>$courses]);
     }
 
 
@@ -142,6 +146,7 @@ class RootRepository {
             $content->encode_id = encode($content->id);
             $content->user->encode_id = encode($content->user->id);
 
+            $content->timestamps = false;
             $content->increment('visit_num');
         }
 
@@ -164,7 +169,12 @@ class RootRepository {
             ])->find($course_decode);
         }
 
+        $course->timestamps = false;
         $course->increment('visit_num');
+
+        $author = User::find($course->user_id);
+        $author->timestamps = false;
+        $author->increment('visit_num');
 
         $course->encode_id = encode($course->id);
         $course->user->encode_id = encode($course->user->id);
@@ -231,8 +241,16 @@ class RootRepository {
                     $user = Auth::user();
                     $user->pivot_collection_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
 
-                    if($content_decode == 0) $course->increment('collect_num');
-                    else $content->increment('collect_num');
+                    if($content_decode == 0)
+                    {
+                        $course->timestamps = false;
+                        $course->increment('collect_num');
+                    }
+                    else
+                    {
+                        $content->timestamps = false;
+                        $content->increment('collect_num');
+                    }
 
                     $insert['type'] = 11;
                     $insert['user_id'] = $user->id;
@@ -393,8 +411,16 @@ class RootRepository {
                     $user = Auth::user();
                     $user->pivot_item_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
 
-                    if($content_decode == 0) $course->increment('favor_num');
-                    else $content->increment('favor_num');
+                    if($content_decode == 0)
+                    {
+                        $course->timestamps = false;
+                        $course->increment('favor_num');
+                    }
+                    else
+                    {
+                        $content->timestamps = false;
+                        $content->increment('favor_num');
+                    }
 
                     $insert['type'] = 3;
                     $insert['user_id'] = $user->id;

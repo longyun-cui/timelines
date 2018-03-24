@@ -1,46 +1,38 @@
-@foreach($courses as $num => $item)
-<div class="item-piece item-option course-option items" data-course="{{encode($item->id)}}" data-content="{{encode(0)}}">
-    <!-- BEGIN PORTLET-->
-    <div class="panel-default box-default item-entity-container">
+{{--内容--}}
+<div class="item-piece item-option course-option item"
+     data-course="{{$course->encode_id or encode(0)}}"
+     data-content="{{$content->encode_id or encode(0)}}"
+>
 
-        {{--header--}}
-        <div class="box-body item-title-row">
-            <a href="{{url('/course/'.encode($item->id))}}">{{$item->title or ''}}</a>
+    <div class="boxe panel-default box-default item-entity-container">
+
+        {{--@if(!empty($content))--}}
+        {{--@include('frontend.course.component.content')--}}
+        {{--@else--}}
+        {{--@include('frontend.course.component.course')--}}
+        {{--@endif--}}
+
+        <div class="box-header item-title-row with-border -panel-heading">
+            <h3 class="box-title"><b>{{$item->title or ''}}</b></h3>
         </div>
 
         <div class="box-body item-info-row text-muted">
             <span><a href="{{url('/u/'.encode($item->user->id))}}">{{$item->user->name or ''}}</a></span>
             <span> • {{ $item->created_at->format('n月j日 H:i') }}</span>
-            <span> • 阅读 <span class="text-blue">{{ $item->visit_num }}</span> 次</span>
-            <span class="pull-right"><a class="show-menu" style="cursor:pointer">查看目录</a></span>
+            <span> • 阅读 <span class="text-blue">{{ $item->visit_num or 0 }}</span> 次</span>
         </div>
 
-        {{--menu--}}
-        <div class="box-body item-menu-container menu-container">
-            <div class="colo-md-12 text-muted" style="margin-bottom:8px;">目录结构</div>
-            @foreach($item->contents as $content)
-                <div class="box-body" style="padding:2px 10px;">
-                    <a href="{{ url('course/'.encode($item->id).'?content='.encode($content->id)) }}">
-                        <i class="fa fa-list-ol"></i> &nbsp; {{ $content->title or '' }}
-                    </a>
-                </div>
-            @endforeach
-        </div>
-
-        {{--description--}}
         @if(!empty($item->description))
-            <div class="box-body item-description-row">
-                <div class="colo-md-12 text-muted"> {!! $item->description or '' !!} </div>
+            <div class="box-body item-description-row text-muted">
+                <div class="colo-md-12"> {!! $item->description or '' !!}  </div>
             </div>
         @endif
 
-        {{--content--}}
         @if(!empty($item->content))
             <div class="box-body item-content-row">
-                <article class="colo-md-12"> {!! $item->content or '' !!} </article>
+                <div class="colo-md-12"> {!! $item->content or '' !!}  </div>
             </div>
         @endif
-
 
         {{--tools--}}
         <div class="box-footer item-tools-row">
@@ -83,24 +75,24 @@
                 <i class="fa fa-share"></i> @if($item->share_num) {{$item->share_num}} @endif
             </a>
 
-            <a class="margin comment-toggle" role="button" data-num="{{$item->comment_num}}">
+            <a class="margin comment-btn" role="button" data-num="{{$item->comment_num}}">
                 <i class="fa fa-commenting-o"></i> @if($item->comment_num) {{$item->comment_num}} @endif
             </a>
 
         </div>
-
 
         {{--comment--}}
         <div class="box-body comment-container">
 
             <input type="hidden" class="comments-get comments-get-default">
 
+            {{--添加评论--}}
             <div class="box-body comment-input-container">
                 <form action="" method="post" class="form-horizontal form-bordered item-comment-form">
 
                     {{csrf_field()}}
-                    <input type="hidden" name="course_id" value="{{encode($item->id)}}" readonly>
-                    <input type="hidden" name="content_id" value="{{encode(0)}}" readonly>
+                    <input type="hidden" name="course_id" value="{{$course->encode_id or encode(0)}}" readonly>
+                    <input type="hidden" name="content_id" value="{{$content->encode_id or encode(0)}}" readonly>
                     <input type="hidden" name="type" value="1" readonly>
 
                     <div class="form-group">
@@ -118,7 +110,6 @@
                 </form>
             </div>
 
-
             {{--评论列表--}}
             <div class="box-body comment-entity-container">
 
@@ -126,9 +117,7 @@
                 </div>
 
                 <div class="col-md-12 more-box">
-                    <a href="{{url('/course/'.encode($item->id))}}" target="_blank">
-                        <button type="button" class="btn btn-block btn-flat btn-default item-more"></button>
-                    </a>
+                    <button type="button" class="btn btn-block btn-flat btn-default comments-more"></button>
                 </div>
 
             </div>
@@ -136,6 +125,5 @@
         </div>
 
     </div>
-    <!-- END PORTLET-->
+
 </div>
-@endforeach

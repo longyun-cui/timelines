@@ -8,114 +8,85 @@
 
 
 @section('content')
-<div style="display:none;">
+<div class="_none">
     <input type="hidden" id="" value="{{$_encode or ''}}" readonly>
 </div>
 
-{{--内容--}}
-<div class="row item-option course-option item-piece" data-course="{{$course->encode_id or encode(0)}}" data-content="{{$content->encode_id or encode(0)}}">
-    <div class="col-md-9">
-        <div class="box panel-default box-default">
 
-            @if(!empty($content))
-                @include('frontend.course.component.content')
-            @else
-                @include('frontend.course.component.course')
-            @endif
+<div class="container">
 
-            {{--tools--}}
-            <div class="box-footer">
+    <div class="col-sm-12 col-md-4 hidden-xs hidden-sm container-body-left sidebar">
 
-                {{--点赞--}}
-                <a class="margin favor-btn" data-num="{{$item->favor_num}}" role="button">
-                    @if(Auth::check())
-                        @if($item->others->contains('type', 1))
-                            <span class="favor-this-cancel"><i class="fa fa-thumbs-up text-red"></i>
-                        @else
-                            <span class="favor-this"><i class="fa fa-thumbs-o-up"></i>
-                        @endif
-                    @else
-                        <span class="favor-this"><i class="fa fa-thumbs-o-up"></i>
-                    @endif
+        <div class="box-body" style="background:#fff;">
+            <div class="col-md-12">
+                <span class="recursion-icon" style="color:orange;">
+                    <i class="fa fa-bookmark"></i>
+                </span>
+                <span class="recursion-text @if(empty($content)) active @endif">
+                    <a href="{{url('/course/'.encode($course->id))}}">
+                        {{ $course->title or '' }}
+                    </a>
+                </span>
+            </div>
+            <div class="col-md-12">
+                <span class="recursion-icon" style="color:orange;">
+                    <i class="fa fa-user"></i>
+                </span>
+                <span class="recursion-text recursion-user">
+                    <a href="{{url('/u/'.$course->user->encode_id)}}"><b class="text-blue">{{ $course->user->name }}</b></a>
+                </span>
+            </div>
+        </div>
 
-                    @if($item->favor_num) {{$item->favor_num}} @endif </span>
-                </a>
+        <div class="box-body sidebar" style="margin-top:12px;background:#fff;">
+            <div class="" style="color:#666;">
+                <div class="col-md-6 fold-button fold-down">
+                    <span class="">
+                        <i class="fa fa-plus-square"></i> &nbsp; 全部展开
+                    </span>
+                </div>
+                <div class="col-md-6 fold-button fold-up">
+                    <span class="">
+                        <i class="fa fa-minus-square"></i> &nbsp; 全部折叠
+                    </span>
+                </div>
+            </div>
+        </div>
 
-                {{--收藏--}}
-                <a class="margin collect-btn" data-num="{{$item->collect_num}}" role="button">
-                    @if(Auth::check())
-                        @if($item->user_id != Auth::id())
-                            @if(count($item->collections))
-                                <span class="collect-this-cancel"><i class="fa fa-heart text-red"></i>
+        <div class="box-body" style="margin-top:2px;color:#666;background:#fff;">
+        @foreach( $course->contents_recursion as $key => $recursion )
+            <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
+                 style="display:@if($recursion->level != 0) none @endif">
+                <div class="recursion-menu" style="margin-left:{{ $recursion->level*12 }}px">
+                    <span class="recursion-icon">
+                        @if($recursion->type == 1)
+                            @if($recursion->has_child == 1)
+                                <i class="fa fa-plus-square recursion-fold"></i>
                             @else
-                                <span class="collect-this"><i class="fa fa-heart-o"></i>
+                                <i class="fa fa-file-text"></i>
                             @endif
                         @else
-                            <span class="collect-mine"><i class="fa fa-heart-o"></i>
+                            <i class="fa fa-file-text"></i>
                         @endif
-                    @else
-                        <span class="collect-this"><i class="fa fa-heart-o"></i>
-                    @endif
-
-                    @if($item->collect_num) {{$item->collect_num}} @endif </span>
-                </a>
-
-                <a class="margin _none" role="button">
-                    <i class="fa fa-share"></i> @if($item->share_num) {{$item->share_num}} @endif
-                </a>
-
-                <a class="margin comment-btn" role="button" data-num="{{$item->comment_num}}">
-                    <i class="fa fa-commenting-o"></i> @if($item->comment_num) {{$item->comment_num}} @endif
-                </a>
-
-            </div>
-
-            {{--comment--}}
-            <div class="box-body comment-container">
-
-                <input type="hidden" class="comments-get comments-get-default">
-
-                {{--添加评论--}}
-                <div class="box-body comment-input-container">
-                    <form action="" method="post" class="form-horizontal form-bordered item-comment-form">
-
-                        {{csrf_field()}}
-                        <input type="hidden" name="course_id" value="{{$course->encode_id or encode(0)}}" readonly>
-                        <input type="hidden" name="content_id" value="{{$content->encode_id or encode(0)}}" readonly>
-                        <input type="hidden" name="type" value="1" readonly>
-
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <div><textarea class="form-control" name="content" rows="3" placeholder="请输入你的评论"></textarea></div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-12 ">
-                                <button type="button" class="btn btn-block btn-flat btn-primary comment-submit">提交</button>
-                            </div>
-                        </div>
-
-                    </form>
+                    </span>
+                    <span class="recursion-text @if(!empty($content)) @if($recursion->id == $content->id) active @endif @endif">
+                        <a href="{{url('/course/'.encode($course->id).'?content='.encode($recursion->id))}}">
+                            {{ $recursion->title or '' }}
+                        </a>
+                    </span>
                 </div>
-
-                {{--评论列表--}}
-                <div class="box-body comment-entity-container">
-
-                    <div class="comment-list-container">
-                    </div>
-
-                    <div class="col-md-12 more-box" style="margin-top:16px;">
-                        <button type="button" class="btn btn-block btn-flat btn-default comments-more"></button>
-                    </div>
-
-                </div>
-
             </div>
-
-
+        @endforeach
         </div>
+
     </div>
+
+    <div class="col-sm-12 col-md-8 container-body-right">
+
+        @include('frontend.course.component.item')
+
+    </div>
+
 </div>
 
 @endsection

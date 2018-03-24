@@ -73,16 +73,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .fold-button {height:24px;line-height:24px;cursor:pointer;}
         .fold-button:hover { color:#222;background-color:#ccc; }
 
-        .recursion-menu {height:28px;line-height:28px;margin:4px 0;}
+        .recursion-row {color:#666;padding:0 4px;}
+        .recursion-menu {height:28px;line-height:28px;margin:0;}
         .recursion-icon {margin-right:0;cursor:pointer;}
         .recursion-icon .fa-file-text {color:#bbb;}
         /*.recursion-icon .fa-plus-square {color:#3c8dbc;}*/
         /*.recursion-icon .fa-minus-square {color:green;}*/
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
-        .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#eee;float:right; }
+        .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#666;float:right; }
         .recursion-text a:hover { color:#222;background-color:#ccc; }
         .recursion-user a:hover { color:#222;background-color:; }
-        .recursion-text.active { background-color:#ccc; }
+        .recursion-text.active { background-color:#eee; }
         .recursion-text.active a { color:#222; }
         @media (max-width: 767px) {
             .content-wrapper, .right-side, .main-footer {
@@ -124,9 +125,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 z-index: 850;
             }
             .sidebar-mini.sidebar-collapse .content-wrapper, .sidebar-mini.sidebar-collapse .right-side, .sidebar-mini.sidebar-collapse .main-footer {
-                margin-left: 0px !important;
+                margin-left: 0 !important;
                 z-index: 840;
-            }
+            }.sidebar-mini.sidebar-collapse .main-header .navbar {
+                 margin-left: 0;
+             }
         }
     </style>
 
@@ -158,7 +161,7 @@ desired effect
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="{{url('/')}}" class="logo">
+        <a href="{{url('/')}}" class="logo" style="display:none;">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>师</b></span>
             <!-- logo for regular state and mobile devices -->
@@ -166,16 +169,28 @@ desired effect
         </a>
 
         <!-- Header Navbar -->
-        <nav class="navbar navbar-static-top" role="navigation">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-left:0;">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="#" class="sidebar-toggle visible-sm visible-xs" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
+
+            <div class="navbar-custom-menu" style="height:50px;float:left;">
+                <span class="logo-big"><a href="{{url('/')}}"><img src="/favicon_transparent.png" class="img-icon" alt="Image"> <b>课栈</b></a></span>
+            </div>
+
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    <li class="dropdown tasks-menu add-menu">
+                    @if(!Auth::check())
+                        <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
+                        <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
+                    @else
+                        <li class="header"><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> 返回我的后台</a></li>
+                    @endif
+
+                    <li class="dropdown tasks-menu add-menu" style="display:none;">
                         <!-- Menu toggle button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-home"></i>
@@ -206,10 +221,10 @@ desired effect
 
 
     {{--<!-- Left side column. contains the logo and sidebar -->--}}
-    <aside class="main-sidebar" style="">
+    <aside class="main-sidebar visible-sm visible-xs" style="padding-top:50px !important;">
 
         {{--<!-- sidebar: style can be found in sidebar.less -->--}}
-        <section class="sidebar" style="padding-bottom:32px;">
+        <section class="sidebar" style="padding-bottom:32px;margin-top:0;">
 
             <div class="col-md-12" style="color:#eee;">
                 <div class="row recursion-menu">
@@ -248,7 +263,7 @@ desired effect
             @foreach( $course->contents_recursion as $key => $recursion )
                 <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
                      style="color:#eee;display:@if($recursion->level != 0) none @endif">
-                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*24 }}px">
+                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*12 }}px">
                         <span class="recursion-icon">
                             @if($recursion->type == 1)
                                 @if($recursion->has_child == 1)
@@ -277,7 +292,7 @@ desired effect
 
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper" style="">
+    <div class="content-wrapper" style="margin-left:0;background:url(/bg.gif) repeat;">
         <!-- Content Header (Page header) -->
         <section class="content-header" style="display:none;">
             <h1>
