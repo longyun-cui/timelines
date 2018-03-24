@@ -6,8 +6,8 @@
 .container-body-left {padding-left:0;}
 .container-body-right {padding-left:0;padding-right:0;}
 
-.container-body-right .box-body {color:#444;}
-.container-body-right .box-body:hover {background:#eee;}
+.container-body-right {color:#444;}
+.container-body-right .hover-box:hover {background:#eee;}
 .container-body-right .active {background:#eee;}
 
 
@@ -42,6 +42,9 @@
 
 
 .more-box {margin-top:16px;padding:0;}
+.comment-more-box {margin-top:16px;padding:0;}
+.reply-more-box {margin:16px 16px 8px;padding:0;}
+.btn-more {border:1px solid #f4f4f4;background:#f8f8f8;}
 
 .item-piece {margin-bottom:8px;}
 .item-piece .pull-left {margin-right:12px;}
@@ -50,7 +53,7 @@
 
 
 .item-entity-container {background:#fff;}
-.item-title-row {padding-bottom:4px;border-bottom:1px solid #f4f4f4;}
+.item-title-row {border-bottom:1px solid #f4f4f4;}
 .item-title-row a {color:#494949;font-size:16px;font-weight:bold;}
 .item-info-row {font-size:13px;}
 .item-info-row a {}
@@ -66,14 +69,14 @@ article {max-height:22px;}
 .items .comment-container {display:none;}
 
 .comment-title-container {padding:4px 0}
-.comment-content-container {padding:8px;}
+.comment-content-container {padding:0;}
 .comment-input-container {border-top:2px solid #eee;border-bottom:2px solid #eee;}
 
 .comment-piece {padding:4px 8px;border-bottom:1px solid #f4f4f4;}
 
 .comment-reply-input-container {display:none;padding:2px 0;margin-bottom:16px;border-bottom:1px solid #fff;background:#f4f4f4;}
 
-.reply-piece {padding:16px 8px;border-top:1px solid #ccc;background:#f4f4f4;}
+.reply-piece {padding:16px 8px;border-top:1px solid #dddddd;background:#f4f4f4;}
 .reply-piece:first-child  {border-top:0;}
 .reply-title-container {padding:0 8px 8px}
 .reply-tools-container {padding:0 8px;}

@@ -169,6 +169,8 @@ class RootRepository {
             ])->find($course_decode);
         }
 
+        $course->comments_total = $course->comment_num + $course->contents->sum('comment_num');
+
         $course->timestamps = false;
         $course->increment('visit_num');
 

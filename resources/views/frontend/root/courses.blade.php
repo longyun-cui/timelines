@@ -25,12 +25,12 @@
 
         </div>
 
-        <div class="col-sm-12 col-md-3 hidden-xs hidden-sm container-body-right">
+        <div class="col-sm-12 col-md-3 hidden-xs hidden-sm container-body-right container-body-sidebar">
 
             <div class="box-body right-menu" style="background:#fff;">
 
                 <a href="{{url('/home')}}">
-                    <div class="box-body {{ $menu_all or '' }}">
+                    <div class="box-body hover-box {{ $menu_all or '' }}">
                         <i class="fa fa-home text-orange"></i> <span>&nbsp; 返回我的后台</span>
                     </div>
                 </a>

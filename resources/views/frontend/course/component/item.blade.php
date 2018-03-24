@@ -116,8 +116,8 @@
                 <div class="comment-list-container">
                 </div>
 
-                <div class="col-md-12 more-box">
-                    <button type="button" class="btn btn-block btn-flat btn-default comments-more"></button>
+                <div class="col-md-12 more-box comment-more-box">
+                    <button type="button" class="btn btn-block btn-flat btn-more comments-more"></button>
                 </div>
 
             </div>

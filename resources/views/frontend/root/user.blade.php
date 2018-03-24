@@ -27,10 +27,10 @@
 
         </div>
 
-        <div class="col-sm-12 col-md-3 hidden-xs hidden-sm container-body-right">
+        <div class="col-sm-12 col-md-3 hidden-xs hidden-sm container-body-right container-body-sidebar">
 
-            <div class="box-body" style="background:#fff;">
-                <b>{{ $data->name or '' }}</b>
+            <div class="box-body hover-box" style="background:#fff;">
+                <i class="fa fa-user text-orange"></i>&nbsp; <b>{{ $data->name or '' }}</b>
             </div>
 
             <div class="box-body" style="margin-top:8px;background:#fff;">
