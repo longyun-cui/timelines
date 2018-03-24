@@ -631,7 +631,9 @@ function fold()
     {
         var course_a = course_active.find('a').clone();
         $('.prev-content').find('.a-box').html('已经是封页了');
-        $('.next-content').find('.a-box').html(course_a);
+
+        var content_first = $('.course-menu-md-container .recursion-row').first();
+        $('.next-content').find('.a-box').html(content_first.find('a').clone());
     }
 
     $(".recursion-row .active").each(function() {
