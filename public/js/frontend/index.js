@@ -625,31 +625,70 @@ jQuery( function ($) {
 // 初始化展开
 function fold()
 {
-    var this_row = $('.recursion-row .active').parents('.recursion-row');
-    var this_level = this_row.attr('data-level');
-    this_row.find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
 
-    if(this_level == 0)
+    var course_active = $('.course-menu-md-container .recursion-course.active');
+    if(course_active.length > 0)
     {
-        this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
-            if($(this).attr('data-level') <= this_level ) return false;
-            $(this).show();
-            $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-        });
+        var course_a = course_active.find('a').clone();
+        $('.prev-content').find('.a-box').html('已经是封页了');
+        $('.next-content').find('.a-box').html(course_a);
     }
-    else if(this_level > 0)
-    {
-        this_row.prevUntil().each( function ()
+
+    $(".recursion-row .active").each(function() {
+
+        var this_row = $(this).parents('.recursion-row');
+        var this_level = this_row.attr('data-level');
+        this_row.find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+
+        var prev_row = this_row.prev(".recursion-row");
+        var next_row = this_row.next(".recursion-row");
+
+        if(prev_row.length == 0)
         {
-            if( $(this).attr('data-level') == 0 )
-            {
-                $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+            var course_a = $('.course-menu-md-container .recursion-course').find('a').clone();
+            $('.prev-content').find('.a-box').html(course_a);
+        }
+        else
+        {
+            $('.prev-content').find('.a-box').html(prev_row.find('a').clone());
+        }
 
-                $(this).nextUntil('.recursion-row[data-level=0]').show();
-                $(this).nextUntil('.recursion-row[data-level=0]').find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-                return false;
-            }
-        });
-    }
+        if(next_row.length == 0)
+        {
+            $('.next-content').find('.a-box').html('已经是最后了');
+        }
+        else
+        {
+            $('.next-content').find('.a-box').html(next_row.find('a').clone());
+        }
+
+
+        console.log(prev_row);
+
+        if(this_level == 0)
+        {
+            this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
+                if($(this).attr('data-level') <= this_level ) return false;
+                $(this).show();
+                $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+            });
+        }
+        else if(this_level > 0)
+        {
+            this_row.prevUntil().each( function ()
+            {
+                if( $(this).attr('data-level') == 0 )
+                {
+                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+
+                    $(this).nextUntil('.recursion-row[data-level=0]').show();
+                    $(this).nextUntil('.recursion-row[data-level=0]').find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
+                    return false;
+                }
+            });
+        }
+
+    });
+
 }
 

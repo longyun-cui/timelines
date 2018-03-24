@@ -16,18 +16,7 @@
 
     <div class="container">
 
-        <div class="col-sm-12 col-md-9 container-body-left">
-
-            {{--@foreach($courses as $num => $course)--}}
-                {{--@include('frontend.component.course')--}}
-            {{--@endforeach--}}
-            @include('frontend.component.course')
-
-            {{ $courses->links() }}
-
-        </div>
-
-        <div class="col-sm-12 col-md-3 hidden-xs hidden-sm container-body-right container-body-sidebar">
+        <div class="col-xs-12 col-sm-12 col-md-3 container-body-right container-body-sidebar pull-right" style="margin-bottom:16px;">
 
             <div class="box-body hover-box" style="background:#fff;">
                 <i class="fa fa-user text-orange"></i>&nbsp; <b>{{ $data->name or '' }}</b>
@@ -37,6 +26,17 @@
                 <div class="margin">课程数：{{ $data->courses_count or 0 }}</div>
                 <div class="margin">访问量：{{ $data->visit_num or 0 }}</div>
             </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-9 container-body-left">
+
+            {{--@foreach($courses as $num => $course)--}}
+                {{--@include('frontend.component.course')--}}
+            {{--@endforeach--}}
+            @include('frontend.component.course')
+
+            {{ $courses->links() }}
 
         </div>
 

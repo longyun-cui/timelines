@@ -24,15 +24,20 @@
 
         @if(!empty($item->description))
             <div class="box-body item-description-row text-muted">
-                <div class="colo-md-12"> {!! $item->description or '' !!}  </div>
+                <div class="colo-md-12"> {!! $item->description or '' !!} </div>
             </div>
         @endif
 
         @if(!empty($item->content))
             <div class="box-body item-content-row">
-                <div class="colo-md-12"> {!! $item->content or '' !!}  </div>
+                <div class="colo-md-12"> {!! $item->content or '' !!} </div>
             </div>
         @endif
+
+        <div class="box-footer">
+            <div class="colo-md-12 prev-content"> 上一篇 : <span class="a-box"></span> </div>
+            <div class="colo-md-12 next-content" style="margin-top:10px;"> 下一篇 : <span class="a-box"></span> </div>
+        </div>
 
         {{--tools--}}
         <div class="box-footer item-tools-row">

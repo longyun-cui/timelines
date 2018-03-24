@@ -73,16 +73,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .fold-button {height:24px;line-height:24px;cursor:pointer;}
         .fold-button:hover { color:#222;background-color:#ccc; }
 
-        .recursion-row {color:#666;padding:0 4px;}
-        .recursion-menu {height:28px;line-height:28px;margin:0;}
+        .recursion-row {color:#eee;padding:0 4px;}
+        .recursion-menu {min-height:28px;line-height:28px;margin:0;}
         .recursion-icon {margin-right:0;cursor:pointer;}
         .recursion-icon .fa-file-text {color:#bbb;}
         /*.recursion-icon .fa-plus-square {color:#3c8dbc;}*/
         /*.recursion-icon .fa-minus-square {color:green;}*/
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
-        .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#666;float:right; }
+        .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#ccc;float:right; }
+        .container-body-left .recursion-text a {color:#666;}
         .recursion-text a:hover { color:#222;background-color:#ccc; }
-        .recursion-user a:hover { color:#222;background-color:; }
+        .recursion-user a:hover { color:#222; }
         .recursion-text.active { background-color:#eee; }
         .recursion-text.active a { color:#222; }
 
@@ -251,7 +252,7 @@ desired effect
                 <span class="sr-only">Toggle navigation</span>
             </a>
 
-            <div class="navbar-custom-menu" style="height:50px;float:left;">
+            <div class="navbar-custom-menu" style="height:50px;color:#f39c12 !important;float:left;">
                 <span class="logo-big"><a href="{{url('/')}}"><img src="/favicon_transparent.png" class="img-icon" alt="Image"> <b>课栈</b></a></span>
             </div>
 
@@ -300,36 +301,51 @@ desired effect
     <aside class="main-sidebar hidden-md hidden-lg" style="padding-top:50px !important;">
 
         {{--<!-- sidebar: style can be found in sidebar.less -->--}}
-        <section class="sidebar" style="padding-bottom:32px;margin-top:0;">
+        <section class="sidebar course-menu-sm-container" style="padding-bottom:32px;margin-top:0;">
 
-            <div class="col-md-12" style="color:#eee;">
-                <div class="row recursion-menu">
-                    <span class="recursion-icon" style="color:orange;">
-                        <i class="fa fa-bookmark"></i>
-                    </span>
-                    <span class="recursion-text @if(empty($content)) active @endif">
-                        <a href="{{url('/course/'.encode($course->id))}}">
-                            {{ $course->title or '' }}
-                        </a>
-                    </span>
-                </div>
-                <div class="row recursion-menu">
-                    <span class="recursion-icon" style="color:orange;">
-                        <i class="fa fa-user"></i>
-                    </span>
-                    <span class="recursion-text recursion-user">
-                        <a href="{{url('/u/'.$course->user->encode_id)}}"><b class="text-blue">{{ $course->user->name }}</b></a>
-                    </span>
-                </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 recursion-menu" style="color:#eee;">
+                <span class="recursion-icon" style="color:orange;">
+                    <i class="fa fa-bookmark"></i>
+                </span>
+                <span class="recursion-text @if(empty($content)) active @endif">
+                    <a href="{{url('/course/'.encode($course->id))}}">
+                        {{ $course->title or '' }}
+                    </a>
+                </span>
             </div>
 
-            <div class="col-md-12" style="margin:8px 0;color:#666;">
-                <div class="col-md-6 fold-button fold-down">
+            <div class="col-xs-12 col-sm-12 col-md-12 recursion-menu" style="color:#eee;">
+                <span class="recursion-icon" style="color:orange;">
+                    <i class="fa fa-user"></i>
+                </span>
+                <span class="recursion-text recursion-user">
+                    <a href="{{url('/u/'.$course->user->encode_id)}}"><b class="text-white">{{ $course->user->name }}</b></a>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 recursion-menu">
+                <span class="recursion-icon" style="color:orange;">
+                    <i class="fa fa-tv"></i>
+                </span>
+                <span class="recursion-text">
+                    <a href="javascript:void(0)">浏览 <span class="text-white">{{ $course->visit_num or 0 }}</span> 次</a>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 recursion-menu">
+                <span class="recursion-icon" style="color:orange;">
+                    <i class="fa fa-commenting-o"></i>
+                </span>
+                <span class="recursion-text">
+                    <a href="javascript:void(0)">评论 <span class="text-white">{{ $course->comments_total or 0 }}</span> 个</a>
+                </span>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12" style="margin:8px 0;color:#666;">
+                <div class="col-xs-6 col-sm-6 col-md-6 fold-button fold-down">
                     <span class="">
                         <i class="fa fa-plus-square"></i> &nbsp; 全部展开
                     </span>
                 </div>
-                <div class="col-md-6 fold-button fold-up">
+                <div class="col-xs-6 col-sm-6 col-md-6 fold-button fold-up">
                     <span class="">
                         <i class="fa fa-minus-square"></i> &nbsp; 全部折叠
                     </span>
@@ -337,13 +353,13 @@ desired effect
             </div>
 
             @foreach( $course->contents_recursion as $key => $recursion )
-                <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
-                     style="color:#eee;display:@if($recursion->level != 0) none @endif">
-                    <div class="row recursion-menu" style="margin-left:{{ $recursion->level*12 }}px">
+                <div class="col-xs-12 col-sm-12 col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
+                     style="padding:0 15px;color:#eee;">
+                    <div class="recursion-menu" style="margin-left:{{ $recursion->level*12 }}px">
                         <span class="recursion-icon">
                             @if($recursion->type == 1)
                                 @if($recursion->has_child == 1)
-                                    <i class="fa fa-plus-square recursion-fold"></i>
+                                    <i class="fa fa-minus-square recursion-fold"></i>
                                 @else
                                     <i class="fa fa-file-text"></i>
                                 @endif

@@ -111,11 +111,11 @@ desired effect
         {{--<!-- Header Navbar -->--}}
         <nav class="navbar navbar-static-top" role="navigation" style="margin-left:0;background-color:#1a2226;">
             {{--<!-- Sidebar toggle button-->--}}
-            <a href="#" class="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" style="display:none;">
                 <span class="sr-only">Toggle navigation</span>
             </a>
 
-            <div class="navbar-custom-menu" style="height:50px;float:left;">
+            <div class="navbar-custom-menu" style="height:50px;color:#f39c12 !important;float:left;">
                 <span class="logo-big"><a href="{{url('/')}}"><img src="/favicon_transparent.png" class="img-icon" alt="Image"> <b>课栈</b></a></span>
             </div>
 
@@ -127,8 +127,14 @@ desired effect
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
+                    @if(!Auth::check())
+                        <li><a href="{{url('/login')}}"><i class="fa fa-circle-o"></i> <span>登录</span></a></li>
+                        <li><a href="{{url('/register')}}"><i class="fa fa-circle-o"></i> <span>注册</span></a></li>
+                    @else
+                        <li><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> <span>返回后台</span></a></li>
+                    @endif
 
-                    <li class="dropdown notifications-menu">
+                    <li class="dropdown notifications-menu" style="display:none;">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-home"></i>
                             {{--<span class="label label-warning">10</span>--}}

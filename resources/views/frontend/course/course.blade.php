@@ -15,14 +15,14 @@
 
 <div class="container">
 
-    <div class="col-sm-12 col-md-4 hidden-xs hidden-sm container-body-left container-body-sidebar sidebar">
+    <div class="col-sm-12 col-md-4 hidden-xs hidden-sm container-body-left container-body-sidebar course-menu-md-container sidebar">
 
         <div class="box-body" style="background:#fff;">
             <div class="col-md-12">
                 <span class="recursion-icon" style="color:orange;">
                     <i class="fa fa-bookmark"></i>
                 </span>
-                <span class="recursion-text @if(empty($content)) active @endif">
+                <span class="recursion-text recursion-course @if(empty($content)) active @endif">
                     <a href="{{url('/course/'.encode($course->id))}}">
                         {{ $course->title or '' }}
                     </a>
