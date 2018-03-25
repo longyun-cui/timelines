@@ -5,7 +5,7 @@
 @section('content')
 <div class="register-box">
     <div class="register-logo">
-        <a href="/"><b>三人行</b> 注册</a>
+        <a href="/"><b>课栈</b> 注册</a>
     </div>
 
     <div class="register-box-body">
@@ -35,7 +35,7 @@
                 <input type="text" class="form-control" name="captcha" placeholder="验证码">
                 <span class="_pointer change_captcha" style="cursor: pointer;">{!! captcha_img() !!}</span>
             </div>
-            <div class="row">
+            <div class="row" style="display:none;">
                 <div class="col-xs-8">
                     <div class="checkbox icheck">
                         <label>
@@ -49,17 +49,42 @@
                 </div>
                 <!-- /.col -->
             </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="checkbox icheck">
+                        <label>
+                            <input type="checkbox" name="agree"> 阅读并接受 <a href="#">《用户协议》</a>及<a href="#">《隐私权保护声明》</a>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit">注册</button>
+                </div>
+            </div>
         </form>
 
-        <div class="social-auth-links text-center" style="display: none">
+        <div class="social-auth-links text-center" style="display:none">
             <p>- OR -</p>
             <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> 微信登陆</a>
             <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i> 支付宝登陆</a>
         </div>
 
-        <a href="/login" class="text-center">返回登陆</a>
+        <div class="social-auth-links text-center">
+            <a href="/login" class="text-center">返回登陆</a>
+        </div>
     </div>
     <!-- /.form-box -->
+
+    <div class="register-box-body" style="display:none;">
+        <a href="{{url('/login')}}"><button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit">返回登陆</button></a>
+    </div>
+
+    <div class="register-box-body">
+        <a href="{{url('/')}}"><button type="button" class="btn btn-default btn-block btn-flat" id="register-submit">游客访问</button></a>
+    </div>
+
 </div>
 @endsection
 

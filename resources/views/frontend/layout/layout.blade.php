@@ -127,11 +127,11 @@ desired effect
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
 
-                    @if(!Auth::check())
-                        <li><a href="{{url('/login')}}"><i class="fa fa-circle-o"></i> <span>登录</span></a></li>
-                        <li><a href="{{url('/register')}}"><i class="fa fa-circle-o"></i> <span>注册</span></a></li>
+                    @if(Auth::check())
+                        <li><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> <span>{{Auth::user()->name}}</span></a></li>
                     @else
-                        <li><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> <span>返回后台</span></a></li>
+                        {{--<li><a href="{{url('/login')}}"><i class="fa fa-circle-o"></i> <span>登录</span></a></li>--}}
+                        {{--<li><a href="{{url('/register')}}"><i class="fa fa-circle-o"></i> <span>注册</span></a></li>--}}
                     @endif
 
                     <li class="dropdown notifications-menu" style="display:none;">
@@ -144,11 +144,11 @@ desired effect
                             <li>
                                 <!-- inner menu: contains the actual data -->
                                 <ul class="menu">
-                                    @if(!Auth::check())
+                                    @if(Auth::check())
+                                        <li><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> <span>{{Auth::user()->name}}</span></a></li>
+                                    @else
                                         <li><a href="{{url('/login')}}"><i class="fa fa-circle-o"></i> <span>登录</span></a></li>
                                         <li><a href="{{url('/register')}}"><i class="fa fa-circle-o"></i> <span>注册</span></a></li>
-                                    @else
-                                        <li><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> <span>返回后台</span></a></li>
                                     @endif
                                 </ul>
                             </li>

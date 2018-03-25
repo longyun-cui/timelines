@@ -82,7 +82,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         .recursion-text { width:calc(100% - 16px);width:-moz-calc(100% - 16px);width:-webkit-calc(100% - 16px);float:right; }
         .recursion-text a { width:100%;padding:6px 8px;line-height:16px;color:#ccc;float:right; }
         .container-body-left .recursion-text a {color:#666;}
-        .recursion-text a:hover { color:#222;background-color:#ccc; }
+        .recursion-text a:hover { color:#222;background-color:#eee; }
         .recursion-user a:hover { color:#222; }
         .recursion-text.active { background-color:#eee; }
         .recursion-text.active a { color:#222; }
@@ -264,7 +264,7 @@ desired effect
                         <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i> 登录</a></li>
                         <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
                     @else
-                        <li class="header"><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> 返回我的后台</a></li>
+                        <li class="header"><a href="{{url('/home')}}"><i class="fa fa-home text-default"></i> {{Auth::user()->name}}</a></li>
                     @endif
 
                     <li class="dropdown tasks-menu add-menu" style="display:none;">
@@ -279,7 +279,7 @@ desired effect
                                 <li class="header"><a href="{{url('/login')}}"><i class="fa fa-circle-o text-default"></i> 登录</a></li>
                                 <li class="header"><a href="{{url('/register')}}"><i class="fa fa-circle-o text-default"></i> 注册</a></li>
                             @else
-                                <li class="header"><a href="{{url('/home')}}"><i class="fa fa-circle-o text-default"></i> 返回我的后台</a></li>
+                                <li class="header"><a href="{{url('/home')}}"><i class="fa fa-circle-o text-default"></i> {{Auth::user()->name}}</a></li>
                             @endif
                             <li class="footer"><a href="#">See All Messages</a></li>
                         </ul>

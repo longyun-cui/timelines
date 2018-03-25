@@ -14,7 +14,36 @@
 
     <div class="container">
 
-        <div class="col-sm-12 col-md-9 container-body-left">
+        <div class="col-xs-12 col-sm-12 col-md-3 container-body-right container-body-sidebar pull-right">
+
+            <div class="box-body right-menu" style="background:#fff;">
+
+                @if(!Auth::check())
+
+                    <a href="{{url('/login')}}">
+                        <div class="box-body hover-box">
+                            <i class="fa fa-circle-o text-default"></i> <span>&nbsp; 登录</span>
+                        </div>
+                    </a>
+
+                    <a href="{{url('/register')}}">
+                        <div class="box-body hover-box">
+                            <i class="fa fa-circle-o text-default"></i> <span>&nbsp; 注册</span>
+                        </div>
+                    </a>
+                @else
+                    <a href="{{url('/home')}}">
+                        <div class="box-body hover-box">
+                            <i class="fa fa-home text-orange"></i> <span>&nbsp; 返回我的后台</span>
+                        </div>
+                    </a>
+                @endif
+
+            </div>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-9 container-body-left pull-left">
 
             {{--@foreach($courses as $num => $course)--}}
             {{--@include('frontend.component.course')--}}
@@ -22,20 +51,6 @@
             @include('frontend.component.course')
 
             {{ $courses->links() }}
-
-        </div>
-
-        <div class="col-sm-12 col-md-3 hidden-xs hidden-sm container-body-right container-body-sidebar">
-
-            <div class="box-body right-menu" style="background:#fff;">
-
-                <a href="{{url('/home')}}">
-                    <div class="box-body hover-box {{ $menu_all or '' }}">
-                        <i class="fa fa-home text-orange"></i> <span>&nbsp; 返回我的后台</span>
-                    </div>
-                </a>
-
-            </div>
 
         </div>
 

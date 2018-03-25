@@ -23,7 +23,7 @@
             </div>
 
             <div class="box-body" style="margin-top:8px;background:#fff;">
-                <div class="margin">课程数：{{ $data->courses_count or 0 }}</div>
+                <div class="margin">课程数：{{ $data->topics_count or 0 }}</div>
                 <div class="margin">访问量：{{ $data->visit_num or 0 }}</div>
             </div>
 

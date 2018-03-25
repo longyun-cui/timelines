@@ -5,7 +5,7 @@
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        <a href="/"><b>三人行</b> </a>
+        <a href="/"><b>课栈</b> </a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -49,6 +49,15 @@
 
     </div>
     <!-- /.login-box-body -->
+
+    <div class="login-box-body" style="display:none;">
+        <a href="{{url('/register')}}"><button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit">注册新用户</button></a>
+    </div>
+
+    <div class="login-box-body">
+        <a href="{{url('/')}}"><button type="button" class="btn btn-default btn-block btn-flat" id="register-submit">游客访问</button></a>
+    </div>
+
 </div>
 @endsection
 
