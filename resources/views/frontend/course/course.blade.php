@@ -73,7 +73,7 @@
         @foreach( $course->contents_recursion as $key => $recursion )
             <div class="col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
                  style="display:@if($recursion->level != 0) none @endif">
-                <div class="recursion-menu" style="margin-left:{{ $recursion->level*12 }}px">
+                <div class="recursion-menu" style="margin-left:{{ $recursion->level*24 }}px">
                     <span class="recursion-icon">
                         @if($recursion->type == 1)
                             @if($recursion->has_child == 1)

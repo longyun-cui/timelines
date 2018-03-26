@@ -355,7 +355,7 @@ desired effect
             @foreach( $course->contents_recursion as $key => $recursion )
                 <div class="col-xs-12 col-sm-12 col-md-12 recursion-row" data-level="{{$recursion->level or 0}}" data-id="{{$recursion->id or 0}}"
                      style="padding:0 15px;color:#eee;">
-                    <div class="recursion-menu" style="margin-left:{{ $recursion->level*12 }}px">
+                    <div class="recursion-menu" style="margin-left:{{ $recursion->level*24 }}px">
                         <span class="recursion-icon">
                             @if($recursion->type == 1)
                                 @if($recursion->has_child == 1)
