@@ -316,19 +316,19 @@ desired effect
                 <li class="header">其他</li>
 
                 <li class="treeview {{$menu_collect_line or ''}}">
-                    <a href="{{url('/home/collect/course/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏「时间线」</span></a>
+                    <a href="{{url('/home/collect/line/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏「时间线」</span></a>
                 </li>
 
                 <li class="treeview {{$menu_favor_line or ''}}">
-                    <a href="{{url('/home/favor/course/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞「时间线」</span></a>
+                    <a href="{{url('/home/favor/line/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞「时间线」</span></a>
                 </li>
 
                 <li class="treeview {{$menu_collect_point or ''}}">
-                    <a href="{{url('/home/collect/chapter/list')}}"><i class="fa fa-heart text-blue"></i> <span>收藏内容</span></a>
+                    <a href="{{url('/home/collect/point/list')}}"><i class="fa fa-heart text-blue"></i> <span>收藏内容</span></a>
                 </li>
 
                 <li class="treeview {{$menu_favor_point or ''}}">
-                    <a href="{{url('/home/favor/chapter/list')}}"><i class="fa fa-thumbs-up text-blue"></i> <span>点赞内容</span></a>
+                    <a href="{{url('/home/favor/point/list')}}"><i class="fa fa-thumbs-up text-blue"></i> <span>点赞内容</span></a>
                 </li>
 
 

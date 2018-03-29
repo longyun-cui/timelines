@@ -10,8 +10,8 @@
             ],
 
             'online' => [
-                'root' => 'http://tinyline.pub',
-                'cdn' => 'http://cdn.tinyline.pub',
+                'root' => 'http://tinyline.cn',
+                'cdn' => 'http://cdn.tinyline.cn',
             ],
         ],
 

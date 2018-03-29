@@ -11,7 +11,7 @@
     <div class="login-box-body">
         <p class="login-box-msg">用户登录</p>
 
-        <form action="/admin/login" method="post" id="form-admin-login">
+        <form action="" method="post" id="form-login">
             {{ csrf_field() }}
             <div class="form-group has-feedback">
                 <input type="email" class="form-control" name="email" placeholder="邮箱">
@@ -31,7 +31,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-primary btn-block btn-flat" id="admin-login-submit">登陆</button>
+                    <button type="button" class="btn btn-primary btn-block btn-flat" id="login-submit">登陆</button>
                 </div>
                 <!-- /.col -->
             </div>
@@ -51,11 +51,11 @@
     <!-- /.login-box-body -->
 
     <div class="login-box-body" style="display:none;">
-        <a href="{{url('/register')}}"><button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit">注册新用户</button></a>
+        <a href="{{url('/register')}}"><button type="button" class="btn btn-primary btn-block btn-flat">注册新用户</button></a>
     </div>
 
     <div class="login-box-body">
-        <a href="{{url('/')}}"><button type="button" class="btn btn-default btn-block btn-flat" id="register-submit">游客访问</button></a>
+        <a href="{{url('/')}}"><button type="button" class="btn btn-default btn-block btn-flat">游客访问</button></a>
     </div>
 
 </div>
@@ -72,7 +72,7 @@
         });
 
         // 提交表单
-        $("#admin-login-submit").on('click', function() {
+        $("#login-submit").on('click', function() {
             var options = {
                 url: "/login",
                 type: "post",
@@ -87,7 +87,7 @@
                     }
                 }
             };
-            $("#form-admin-login").ajaxSubmit(options);
+            $("#form-login").ajaxSubmit(options);
         });
     });
 </script>

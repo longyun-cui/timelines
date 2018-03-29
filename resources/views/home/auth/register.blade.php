@@ -5,7 +5,7 @@
 @section('content')
 <div class="register-box">
     <div class="register-logo">
-        <a href="/"><b>课栈</b> 注册</a>
+        <a href="/"><b>时间线</b> 注册</a>
     </div>
 
     <div class="register-box-body">
@@ -78,11 +78,11 @@
     <!-- /.form-box -->
 
     <div class="register-box-body" style="display:none;">
-        <a href="{{url('/login')}}"><button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit">返回登陆</button></a>
+        <a href="{{url('/login')}}"><button type="button" class="btn btn-primary btn-block btn-flat">返回登陆</button></a>
     </div>
 
     <div class="register-box-body">
-        <a href="{{url('/')}}"><button type="button" class="btn btn-default btn-block btn-flat" id="register-submit">游客访问</button></a>
+        <a href="{{url('/')}}"><button type="button" class="btn btn-default btn-block btn-flat">游客访问</button></a>
     </div>
 
 </div>
