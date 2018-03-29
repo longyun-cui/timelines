@@ -2,12 +2,12 @@
 namespace App\Repositories\Home;
 
 use App\User;
-use App\Models\Course;
-use App\Models\Content;
+use App\Models\Line;
+use App\Models\Point;
 use App\Models\Communication;
 use App\Models\Notification;
 use App\Models\Pivot_User_Collection;
-use App\Models\Pivot_User_Course;
+use App\Models\Pivot_User_Item;
 
 use App\Repositories\Common\CommonRepository;
 use Response, Auth, Validator, DB, Exception;
@@ -27,8 +27,8 @@ class NotificationRepository {
         $user = Auth::user();
         $query = Notification::with([
             'source'=>function($query) { $query->select('id','name'); },
-            'course'=>function($query) { $query->select('id','title'); },
-            'chapter'=>function($query) { $query->select('id','title'); },
+            'line'=>function($query) { $query->select('id','title'); },
+            'point'=>function($query) { $query->select('id','title'); },
             'comment'=>function($query) { $query->select('id','content'); },
             'reply'=>function($query) { $query->select('id','user_id','reply_id','content')
                 ->with(['user','reply'=>function($query) { $query->with(['user']); } ]); }
@@ -52,8 +52,8 @@ class NotificationRepository {
         $user = Auth::user();
         $query = Notification::with([
             'source'=>function($query) { $query->select('id','name'); },
-            'course'=>function($query) { $query->select('id','title'); },
-            'chapter'=>function($query) { $query->select('id','title'); },
+            'line'=>function($query) { $query->select('id','title'); },
+            'point'=>function($query) { $query->select('id','title'); },
             'comment'=>function($query) { $query->select('id','content'); },
             'reply'=>function($query) { $query->select('id','user_id','reply_id','content')
                 ->with(['user','reply'=>function($query) { $query->with(['user']); } ]); }

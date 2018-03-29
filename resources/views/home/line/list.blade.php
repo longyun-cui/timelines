@@ -31,7 +31,7 @@
                 <table class='table table-striped table-bordered' id='datatable_ajax'>
                     <thead>
                     <tr role='row' class='heading'>
-                        <th>课程名</th>
+                        <th>标题</th>
                         <th>浏览数</th>
                         <th>分享数</th>
                         <th>收藏数</th>

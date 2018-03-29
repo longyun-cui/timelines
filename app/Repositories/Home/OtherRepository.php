@@ -1,10 +1,10 @@
 <?php
 namespace App\Repositories\Home;
 
-use App\Models\Course;
-use App\Models\Content;
+use App\Models\Line;
+use App\Models\Point;
 use App\Models\Communication;
-use App\Models\Pivot_User_Course;
+use App\Models\Pivot_User_Item;
 use App\Models\Pivot_User_Collection;
 
 use App\Repositories\Common\CommonRepository;
@@ -27,13 +27,13 @@ class OtherRepository {
 
 
 
-    // 返回【收藏】【课程】列表数据
-    public function collect_course_get_list_datatable($post_data)
+    // 返回【收藏】【线】列表数据
+    public function collect_line_get_list_datatable($post_data)
     {
         $user = Auth::user();
         $query = Pivot_User_Collection::with([
-                'course'=>function($query) { $query->with(['user']); }
-            ])->where(['type'=>1,'user_id'=>$user->id,'content_id'=>0]);
+                'line'=>function($query) { $query->with(['user']); }
+            ])->where(['type'=>1,'user_id'=>$user->id,'point_id'=>0]);
         $total = $query->count();
 
         $draw  = isset($post_data['draw'])  ? $post_data['draw']  : 1;
@@ -58,16 +58,16 @@ class OtherRepository {
         foreach ($list as $k => $v)
         {
             $list[$k]->encode_id = encode($v->id);
-            if($list[$k]->course)
+            if($list[$k]->line)
             {
-                $list[$k]->course->encode_id = encode($v->course->id);
-                $list[$k]->course->user->encode_id = encode($v->course->user->id);
+                $list[$k]->line->encode_id = encode($v->line->id);
+                $list[$k]->line->user->encode_id = encode($v->line->user->id);
             }
         }
         return datatable_response($list, $draw, $total);
     }
-    // 删除【收藏】【课程】
-    public function collect_course_delete($post_data)
+    // 删除【收藏】【线】
+    public function collect_line_delete($post_data)
     {
         $user = Auth::user();
         $id = decode($post_data["id"]);
@@ -79,11 +79,11 @@ class OtherRepository {
         DB::beginTransaction();
         try
         {
-            $course_id = $collection->course_id;
-            $course = Course::find($course_id);
-            if($course)
+            $line_id = $collection->line_id;
+            $line = Line::find($line_id);
+            if($line)
             {
-                $course->decrement('collect_num');
+                $line->decrement('collect_num');
             }
 
             $bool = $collection->delete();
@@ -102,13 +102,13 @@ class OtherRepository {
 
 
 
-    // 返回【收藏】【章节】列表数据
-    public function collect_chapter_get_list_datatable($post_data)
+    // 返回【收藏】【点】列表数据
+    public function collect_point_get_list_datatable($post_data)
     {
         $user = Auth::user();
         $query = Pivot_User_Collection::with([
-            'chapter'=>function($query) { $query->with(['user','course']); }
-        ])->where(['type'=>1,'user_id'=>$user->id])->where('content_id','<>',0);
+            'point'=>function($query) { $query->with(['user','line']); }
+        ])->where(['type'=>1,'user_id'=>$user->id])->where('point_id','<>',0);
         $total = $query->count();
 
         $draw  = isset($post_data['draw'])  ? $post_data['draw']  : 1;
@@ -133,17 +133,17 @@ class OtherRepository {
         foreach ($list as $k => $v)
         {
             $list[$k]->encode_id = encode($v->id);
-            if($list[$k]->chapter)
+            if($list[$k]->point)
             {
-                $list[$k]->chapter->encode_id = encode($v->chapter->id);
-                $list[$k]->chapter->course->encode_id = encode($v->chapter->course->id);
-                $list[$k]->chapter->user->encode_id = encode($v->chapter->user->id);
+                $list[$k]->point->encode_id = encode($v->point->id);
+                $list[$k]->point->line->encode_id = encode($v->point->line->id);
+                $list[$k]->point->user->encode_id = encode($v->point->user->id);
             }
         }
         return datatable_response($list, $draw, $total);
     }
-    // 删除【收藏】【章节】
-    public function collect_chapter_delete($post_data)
+    // 删除【收藏】【点】
+    public function collect_point_delete($post_data)
     {
         $user = Auth::user();
         $id = decode($post_data["id"]);
@@ -155,11 +155,11 @@ class OtherRepository {
         DB::beginTransaction();
         try
         {
-            $content_id = $collection->content_id;
-            $content = Content::find($content_id);
-            if($content)
+            $point_id = $collection->point_id;
+            $point = Point::find($point_id);
+            if($point)
             {
-                $content->decrement('collect_num');
+                $point->decrement('collect_num');
             }
 
             $bool = $collection->delete();
@@ -179,13 +179,13 @@ class OtherRepository {
 
 
 
-    // 返回【点赞】【课程】列表数据
-    public function favor_course_get_list_datatable($post_data)
+    // 返回【点赞】【线】列表数据
+    public function favor_line_get_list_datatable($post_data)
     {
         $user = Auth::user();
-        $query = Pivot_User_Course::with([
-            'course'=>function($query) { $query->with(['user']); }
-        ])->where(['type'=>1,'user_id'=>$user->id,'content_id'=>0]);
+        $query = Pivot_User_Item::with([
+            'line'=>function($query) { $query->with(['user']); }
+        ])->where(['type'=>1,'user_id'=>$user->id,'point_id'=>0]);
         $total = $query->count();
 
         $draw  = isset($post_data['draw'])  ? $post_data['draw']  : 1;
@@ -210,32 +210,32 @@ class OtherRepository {
         foreach ($list as $k => $v)
         {
             $list[$k]->encode_id = encode($v->id);
-            if($list[$k]->course)
+            if($list[$k]->line)
             {
-                $list[$k]->course->encode_id = encode($v->course->id);
-                $list[$k]->course->user->encode_id = encode($v->course->user->id);
+                $list[$k]->line->encode_id = encode($v->line->id);
+                $list[$k]->line->user->encode_id = encode($v->line->user->id);
             }
         }
         return datatable_response($list, $draw, $total);
     }
-    // 删除【点赞】【课程】
-    public function favor_course_delete($post_data)
+    // 删除【点赞】【线】
+    public function favor_line_delete($post_data)
     {
         $user = Auth::user();
         $id = decode($post_data["id"]);
         if(intval($id) !== 0 && !$id) return response_error([],"该课程不存在，刷新页面试试");
 
-        $other = Pivot_User_Course::find($id);
+        $other = Pivot_User_Item::find($id);
         if($other->user_id != $user->id) return response_error([],"你没有操作权限");
 
         DB::beginTransaction();
         try
         {
-            $course_id = $other->course_id;
-            $course = Course::find($course_id);
-            if($course)
+            $line_id = $other->line_id;
+            $line = Line::find($line_id);
+            if($line)
             {
-                $course->decrement('favor_num');
+                $line->decrement('favor_num');
             }
 
             $bool = $other->delete();
@@ -253,13 +253,13 @@ class OtherRepository {
     }
 
 
-    // 返回【点赞】【课程】列表数据
-    public function favor_chapter_get_list_datatable($post_data)
+    // 返回【点赞】【点】列表数据
+    public function favor_point_get_list_datatable($post_data)
     {
         $user = Auth::user();
-        $query = Pivot_User_Course::with([
-            'chapter'=>function($query) { $query->with(['user','course']); }
-        ])->where(['type'=>1,'user_id'=>$user->id])->where('content_id','<>',0);
+        $query = Pivot_User_Item::with([
+            'point'=>function($query) { $query->with(['user','line']); }
+        ])->where(['type'=>1,'user_id'=>$user->id])->where('point_id','<>',0);
         $total = $query->count();
 
         $draw  = isset($post_data['draw'])  ? $post_data['draw']  : 1;
@@ -284,33 +284,33 @@ class OtherRepository {
         foreach ($list as $k => $v)
         {
             $list[$k]->encode_id = encode($v->id);
-            if($list[$k]->chapter)
+            if($list[$k]->point)
             {
-                $list[$k]->chapter->encode_id = encode($v->chapter->id);
-                $list[$k]->chapter->course->encode_id = encode($v->chapter->course->id);
-                $list[$k]->chapter->user->encode_id = encode($v->chapter->user->id);
+                $list[$k]->point->encode_id = encode($v->point->id);
+                $list[$k]->point->line->encode_id = encode($v->point->line->id);
+                $list[$k]->point->user->encode_id = encode($v->point->user->id);
             }
         }
         return datatable_response($list, $draw, $total);
     }
-    // 删除【点赞】【课程】
-    public function favor_chapter_delete($post_data)
+    // 删除【点赞】【点】
+    public function favor_point_delete($post_data)
     {
         $user = Auth::user();
         $id = decode($post_data["id"]);
         if(intval($id) !== 0 && !$id) return response_error([],"该课程不存在，刷新页面试试");
 
-        $other = Pivot_User_Course::find($id);
+        $other = Pivot_User_Item::find($id);
         if($other->user_id != $user->id) return response_error([],"你没有操作权限");
 
         DB::beginTransaction();
         try
         {
-            $content_id = $other->content_id;
-            $content = Content::find($content_id);
-            if($content)
+            $point_id = $other->point_id;
+            $point = Point::find($point_id);
+            if($point)
             {
-                $content->decrement('favor_num');
+                $point->decrement('favor_num');
             }
 
             $bool = $other->delete();

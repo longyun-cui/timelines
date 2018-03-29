@@ -7,7 +7,7 @@ class Pivot_User_Collection extends Model
     //
     protected $table = "pivot_user_collection";
     protected $fillable = [
-        'sort', 'type', 'user_id', 'line_id', 'event_id'
+        'sort', 'type', 'user_id', 'line_id', 'point_id'
     ];
     protected $dateFormat = 'U';
 

@@ -31,54 +31,54 @@ class OtherController extends Controller
 
 
     // 【课程】收藏 列表
-    public function collect_course_viewList()
+    public function collect_line_viewList()
     {
-        if(request()->isMethod('get')) return view('home.others.collection.course')->with(['menu_collect_course'=>'active']);
-        else if(request()->isMethod('post')) return $this->repo->collect_course_get_list_datatable(request()->all());
+        if(request()->isMethod('get')) return view('home.others.collection.line')->with(['menu_collect_line'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->collect_line_get_list_datatable(request()->all());
     }
     // 【课程】收藏【删除】
-    public function collect_course_deleteAction()
+    public function collect_line_deleteAction()
     {
-        return $this->repo->collect_course_delete(request()->all());
+        return $this->repo->collect_line_delete(request()->all());
     }
     // 【课程】收藏 列表
-    public function collect_chapter_viewList()
+    public function collect_point_viewList()
     {
-        if(request()->isMethod('get')) return view('home.others.collection.chapter')->with(['menu_collect_chapter'=>'active']);
-        else if(request()->isMethod('post')) return $this->repo->collect_chapter_get_list_datatable(request()->all());
+        if(request()->isMethod('get')) return view('home.others.collection.point')->with(['menu_collect_point'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->collect_point_get_list_datatable(request()->all());
     }
     // 【章节】收藏【删除】
-    public function collect_chapter_deleteAction()
+    public function collect_point_deleteAction()
     {
-        return $this->repo->collect_chapter_delete(request()->all());
+        return $this->repo->collect_point_delete(request()->all());
     }
 
 
 
 
     // 【课程】点赞 列表
-    public function favor_course_viewList()
+    public function favor_line_viewList()
     {
-        if(request()->isMethod('get')) return view('home.others.favor.course')->with(['menu_favor_course'=>'active']);
-        else if(request()->isMethod('post')) return $this->repo->favor_course_get_list_datatable(request()->all());
+        if(request()->isMethod('get')) return view('home.others.favor.line')->with(['menu_favor_line'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->favor_line_get_list_datatable(request()->all());
     }
     // 【课程】点赞【删除】
-    public function favor_course_deleteAction()
+    public function favor_line_deleteAction()
     {
-        return $this->repo->favor_course_delete(request()->all());
+        return $this->repo->favor_line_delete(request()->all());
     }
 
 
     // 【章节】点赞 列表
-    public function favor_chapter_viewList()
+    public function favor_point_viewList()
     {
-        if(request()->isMethod('get')) return view('home.others.favor.chapter')->with(['menu_favor_chapter'=>'active']);
-        else if(request()->isMethod('post')) return $this->repo->favor_chapter_get_list_datatable(request()->all());
+        if(request()->isMethod('get')) return view('home.others.favor.point')->with(['menu_favor_point'=>'active']);
+        else if(request()->isMethod('post')) return $this->repo->favor_point_get_list_datatable(request()->all());
     }
     // 【章节】点赞【删除】
-    public function favor_chapter_deleteAction()
+    public function favor_point_deleteAction()
     {
-        return $this->repo->favor_chapter_delete(request()->all());
+        return $this->repo->favor_point_delete(request()->all());
     }
 
 

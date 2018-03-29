@@ -28,7 +28,7 @@
                     <thead>
                     <tr role='row' class='heading'>
                         <th>标题</th>
-                        <th>所属课程</th>
+                        <th>所属时间线</th>
                         <th>作者</th>
                         <th>浏览数</th>
                         <th>收藏数</th>
@@ -93,7 +93,7 @@
                 "serverSide": true,
                 "searching": false,
                 "ajax": {
-                    'url': '/home/favor/chapter/list',
+                    'url': '/home/favor/point/list',
                     "type": 'POST',
                     "dataType" : 'json',
                     "data": function (d) {
@@ -111,43 +111,43 @@
                         "data": "encode_id",
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.chapter == null ?
-                                '该课程已经不在了！' : '<a target="_blank" href="/course/'+row.chapter.course.encode_id+'/?content='+row.chapter.encode_id+'">'+row.chapter.title+'</a>';
+                            return row.point == null ?
+                                '该课程已经不在了！' : '<a target="_blank" href="/point/'+row.point.encode_id+'">'+row.point.title+'</a>';
                         }
                     },
                     {
-                        'data': 'course',
+                        'data': 'line',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.chapter == null ? '' : '<a target="_blank" href="/course/'+row.chapter.course.encode_id+'">'+row.chapter.course.title+'</a>';
+                            return row.point == null ? '' : '<a target="_blank" href="/line/'+row.point.line.encode_id+'">'+row.point.line.title+'</a>';
                         }
                     },
                     {
                         'data': 'user',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.chapter == null ? '' : '<a target="_blank" href="/u/'+row.chapter.user.encode_id+'">'+row.chapter.user.name+'</a>';
+                            return row.point == null ? '' : '<a target="_blank" href="/u/'+row.point.user.encode_id+'">'+row.point.user.name+'</a>';
                         }
                     },
                     {
                         'data': 'visit_num',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.chapter == null ? 0 : row.chapter.visit_num;
+                            return row.point == null ? 0 : row.point.visit_num;
                         }
                     },
                     {
                         'data': 'collect_num',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.chapter == null ? 0 : row.chapter.collect_num;
+                            return row.point == null ? 0 : row.point.collect_num;
                         }
                     },
                     {
                         'data': 'favor_num',
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return row.chapter == null ? 0 : row.chapter.favor_num;
+                            return row.point == null ? 0 : row.point.favor_num;
                         }
                     },
                     {
@@ -246,7 +246,7 @@
                 ,btn: ['确定', '取消']
                 ,yes: function(index){
                     $.post(
-                            "/home/favor/chapter/delete",
+                            "/home/favor/point/delete",
                             {
                                 _token: $('meta[name="_token"]').attr('content'),
                                 id:that.attr('data-id')
