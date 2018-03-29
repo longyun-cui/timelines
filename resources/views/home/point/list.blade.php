@@ -18,7 +18,7 @@
 
             <div class="box-header with-border" style="margin:16px 0;">
                 <h3 class="box-title">
-                    <a href="{{url('/line/'.$line->encode)}}">{{$line->title or ''}}</a> 时间点列表
+                    <a target="_blank" href="{{url('/line/'.$line->encode)}}">{{$line->title or ''}}</a> 时间点列表
                 </h3>
 
                 <div class="pull-right">
