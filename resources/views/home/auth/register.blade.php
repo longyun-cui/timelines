@@ -45,7 +45,7 @@
                 </div>
                 <!-- /.col -->
                 <div class="col-xs-4">
-                    <button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit">注册</button>
+                    <button type="button" class="btn btn-primary btn-block btn-flat" id="register-submit-">注册</button>
                 </div>
                 <!-- /.col -->
             </div>
