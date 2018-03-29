@@ -17,7 +17,9 @@
         <div class="box box-info">
 
             <div class="box-header with-border" style="margin:16px 0;">
-                <h3 class="box-title">{{$line->title or ''}} 时间点列表</h3>
+                <h3 class="box-title">
+                    <a href="{{url('/line/'.$line->encode)}}">{{$line->title or ''}}</a> 时间点列表
+                </h3>
 
                 <div class="pull-right">
                     <a href="{{url('/home/point/create?line_id='.$line->encode)}}">
