@@ -136,11 +136,16 @@ class RootRepository {
             if($line->orderby == 1) $orderby = 'asc';
             else $orderby = 'desc';
 
-            $points = Point::with([
+            $query = Point::with([
                 'user',
                 'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); },
                 'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
-            ])->where('line_id',$line_decode)->orderBy('time',$orderby)->get();
+            ])->where('line_id',$line_decode);
+
+            $query->orderByRaw(DB::raw('cast(time as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(time as decimal) '.$orderby));
+            $query->orderBy('time',$orderby);
+            $points = $query->get();
         }
         else
         {
@@ -152,9 +157,12 @@ class RootRepository {
             if($line->orderby == 1) $orderby = 'asc';
             else $orderby = 'desc';
 
-            $points = Point::with([
-                'user',
-            ])->where('line_id',$line_decode)->orderBy('time',$orderby)->get();
+            $query = Point::with(['user'])->where('line_id',$line_decode);
+
+            $query->orderByRaw(DB::raw('cast(time as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(time as decimal) '.$orderby));
+            $query->orderBy('time',$orderby);
+            $points = $query->get();
         }
 
         $line->comments_total = $line->comment_num + $line->points->sum('comment_num');
