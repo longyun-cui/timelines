@@ -1,8 +1,8 @@
 @foreach($datas as $data)
 <div class="row notification-option notification-piece"
      data-id="{{ encode($data->id) or '' }}"
-     data-course="{{ encode($data->id) or '' }}"
-     data-content="{{ encode(0) }}"
+     data-line="{{ encode($data->id) or '' }}"
+     data-point="{{ encode(0) }}"
 >
 
     <div class="col-md-9">
@@ -30,11 +30,10 @@
             <div class="box-body text-muted margin" style="background-color: #f4f4f4;">
 
                 <div class="box-body">
-                    @if($data->content_id)
-                        <a target="_blank" href="{{url('/course/'.encode($data->course_id).'?content='.encode($data->content_id))}}">
-                            {{$data->chapter->title or ''}}</a>
+                    @if($data->point_id)
+                        <a target="_blank" href="{{url('/point/'.encode($data->point_id))}}">{{$data->point->title or ''}}</a>
                     @else
-                        <a target="_blank" href="{{url('/course/'.encode($data->course_id))}}">{{$data->course->title or ''}}</a>
+                        <a target="_blank" href="{{url('/line/'.encode($data->line_id))}}">{{$data->line->title or ''}}</a>
                     @endif
                 </div>
 
