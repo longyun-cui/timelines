@@ -2,12 +2,12 @@
 namespace App\Repositories\Front;
 
 use App\User;
-use App\Models\Course;
-use App\Models\Content;
+use App\Models\Line;
+use App\Models\Point;
 use App\Models\Communication;
 use App\Models\Notification;
 use App\Models\Pivot_User_Collection;
-use App\Models\Pivot_User_Course;
+use App\Models\Pivot_User_Item;
 
 use App\Repositories\Common\CommonRepository;
 
@@ -32,167 +32,189 @@ class RootRepository {
         {
             $user = Auth::user();
             $user_id = $user->id;
-            $course = Course::with([
+            $line = Line::with([
                 'user',
-                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
+                'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); },
                 'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
             ])->find($id);
         }
         else
         {
-            $course = Course::with([
+            $line = Line::with([
                 'user',
-                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+                'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); }
             ])->find($id);
         }
-        $courses[0] = $course;
-        return view('frontend.component.course')->with(['courses'=>$courses])->__toString();
+        $lines[0] = $line;
+        return view('frontend.component.line')->with(['lines'=>$lines])->__toString();
     }
 
 
     // 平台主页
-    public function view_courses($post_data)
+    public function view_lines($post_data)
     {
         if(Auth::check())
         {
             $user = Auth::user();
             $user_id = $user->id;
-            $courses = Course::with([
+            $lines = Line::with([
                 'user',
-                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
-                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); },
-                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); }
+                'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); },
+                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'point_id' => 0]); },
+                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'point_id' => 0]); }
             ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         }
         else
         {
-            $courses = Course::with([
+            $lines = Line::with([
                 'user',
-                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+                'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); }
             ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         }
-        return view('frontend.root.courses')->with(['getType'=>'items','courses'=>$courses]);
+        return view('frontend.root.lines')->with(['line_magnitude'=>'item-plural','lines'=>$lines]);
     }
 
 
     // 用户首页
     public function view_user($post_data,$id=0)
     {
-//        $course_encode = $post_data['id'];
+//        $line_encode = $post_data['id'];
         $user_encode = $id;
         $user_decode = decode($user_encode);
         if(!$user_decode) return view('frontend.404');
 
         $user = User::with([
-            'courses'=>function($query) { $query->orderBy('id','desc'); }
-        ])->withCount('courses')->find($user_decode);
+            'lines'=>function($query) { $query->orderBy('id','desc'); }
+        ])->withCount('lines')->find($user_decode);
 
         if(Auth::check())
         {
             $me = Auth::user();
             $me_id = $me->id;
-            $courses = Course::with([
+            $lines = Line::with([
                 'user',
-                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); },
-                'collections'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'content_id' => 0]); },
-                'others'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'content_id' => 0]); }
+                'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); },
+                'collections'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'point_id' => 0]); },
+                'others'=>function($query) use ($me_id) { $query->where(['user_id' => $me_id,'point_id' => 0]); }
             ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
         }
         else
         {
-            $courses = Course::with([
+            $lines = Line::with([
                 'user',
-                'contents'=>function($query) { $query->where('p_id',0)->orderBy('id','asc'); }
+                'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); }
             ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
         }
 
         $user->timestamps = false;
         $user->increment('visit_num');
 
-        return view('frontend.root.user')->with(['getType'=>'items','data'=>$user,'courses'=>$courses]);
+        return view('frontend.root.user')->with(['line_magnitude'=>'item-plural','data'=>$user,'lines'=>$lines]);
     }
 
 
     // 课程详情
-    public function view_course($post_data,$id=0)
+    public function view_line($post_data,$id=0)
     {
-//        $course_encode = $post_data['id'];
-        $course_encode = $id;
-        $course_decode = decode($course_encode);
-        if(!$course_decode) return view('frontend.404');
+//        $line_encode = $post_data['id'];
+        $line_encode = $id;
+        $line_decode = decode($line_encode);
+        if(!$line_decode) return view('frontend.404');
 
-        $content = [];
-        if(!empty($post_data['content']))
-        {
-            $content_encode = $post_data['content'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode) return view('frontend.404');
-
-            if(Auth::check())
-            {
-                $user = Auth::user();
-                $user_id = $user->id;
-                $content = Content::with([
-                    'collections'=>function($query) use ($user_id,$content_decode) { $query->where(['user_id' => $user_id,'content_id' => $content_decode]); },
-                    'others'=>function($query) use ($user_id,$content_decode) { $query->where(['user_id' => $user_id,'content_id' => $content_decode]); }
-                ])->find($content_decode);
-            }
-            else
-            {
-                $content = Content::find($content_decode);
-            }
-            if(!$content) return view('frontend.404');
-
-            $content->encode_id = encode($content->id);
-            $content->user->encode_id = encode($content->user->id);
-
-            $content->timestamps = false;
-            $content->increment('visit_num');
-        }
 
         if(Auth::check())
         {
             $user = Auth::user();
             $user_id = $user->id;
-            $course = Course::with([
+            $line = Line::with([
                 'user',
-                'contents'=>function($query) { $query->orderBy('id','asc'); },
-                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); },
-                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'content_id' => 0]); }
-            ])->find($course_decode);
+                'points'=>function($query) { $query->with(['user'])->where(['active'=>1])->orderBy('time','desc'); },
+                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'point_id' => 0]); },
+                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id,'point_id' => 0]); }
+            ])->find($line_decode);
+
+            if($line->orderby == 1) $orderby = 'asc';
+            else $orderby = 'desc';
+
+            $points = Point::with([
+                'user',
+                'collections'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); },
+                'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
+            ])->where('line_id',$line_decode)->orderBy('time',$orderby)->get();
         }
         else
         {
-            $course = Course::with([
+            $line = Line::with([
                 'user',
-                'contents'=>function($query) { $query->orderBy('id','asc'); }
-            ])->find($course_decode);
+                'points'=>function($query) { $query->with(['user'])->where(['active'=>1])->orderBy('time','desc'); }
+            ])->find($line_decode);
+
+            if($line->orderby == 1) $orderby = 'asc';
+            else $orderby = 'desc';
+
+            $points = Point::with([
+                'user',
+            ])->where('line_id',$line_decode)->orderBy('time',$orderby)->get();
         }
 
-        $course->comments_total = $course->comment_num + $course->contents->sum('comment_num');
+        $line->comments_total = $line->comment_num + $line->points->sum('comment_num');
 
-        $course->timestamps = false;
-        $course->increment('visit_num');
+        $line->timestamps = false;
+        $line->increment('visit_num');
 
-        $author = User::find($course->user_id);
+        $author = User::find($line->user_id);
         $author->timestamps = false;
         $author->increment('visit_num');
 
-        $course->encode_id = encode($course->id);
-        $course->user->encode_id = encode($course->user->id);
+        $line->encode_id = encode($line->id);
+        $line->user->encode_id = encode($line->user->id);
+        $lines[0] = $line;
 
-        $course->contents_recursion = $this->get_recursion($course->contents,0);
+        return view('frontend.root.line')
+            ->with(['line_magnitude'=>'item-singular','point_magnitude'=>'item-plural','line'=>$line,'lines'=>$lines,'points'=>$points]);
+    }
 
 
-        if(!empty($post_data['content']))
+    // 课程详情
+    public function view_point($post_data,$id=0)
+    {
+//        $point_encode = $post_data['id'];
+        $point_encode = $id;
+        $point_decode = decode($point_encode);
+        if(!$point_decode) return view('frontend.404');
+
+
+        if(Auth::check())
         {
-            if($content->user_id == $course->user_id) $item = $content;
-            else return view('frontend.404');
-
+            $user = Auth::user();
+            $user_id = $user->id;
+            $point = Point::with([
+                'user',
+                'line',
+                'collections'=>function($query) use ($user_id,$point_decode) { $query->where(['user_id' => $user_id]); },
+                'others'=>function($query) use ($user_id,$point_decode) { $query->where(['user_id' => $user_id]); }
+            ])->find($point_decode);
         }
-        else $item = $course;
+        else
+        {
+            $point = Point::with([
+                'user',
+                'line'
+            ])->find($point_decode);
+        }
 
-        return view('frontend.course.course')->with(['getType'=>'item','course'=>$course,'content'=>$content,'item'=>$item]);
+        $point->timestamps = false;
+        $point->increment('visit_num');
+
+        $author = User::find($point->user_id);
+        $author->timestamps = false;
+        $author->increment('visit_num');
+
+        $point->encode_id = encode($point->id);
+        $point->user->encode_id = encode($point->user->id);
+        $points[0] = $point;
+
+        return view('frontend.root.point')->with(['point_magnitude'=>'item-singular','point'=>$point]);
     }
 
 
@@ -203,13 +225,13 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required'
+            'line_id' => 'required',
+            'point_id' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -219,21 +241,21 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"参数有误，请重试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"参数有误，请重试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
-            $course = Course::find($course_decode);
-            if($course)
+            $line = Line::find($line_decode);
+            if($line)
             {
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
                 }
 
                 DB::beginTransaction();
@@ -241,32 +263,30 @@ class RootRepository {
                 {
                     $time = time();
                     $user = Auth::user();
-                    $user->pivot_collection_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
+                    $user->pivot_collection_lines()->attach($line_decode,['type'=>1,'point_id'=>$point_decode,'created_at'=>$time,'updated_at'=>$time]);
 
-                    if($content_decode == 0)
+                    if($point_decode == 0)
                     {
-                        $course->timestamps = false;
-                        $course->increment('collect_num');
+                        $line->timestamps = false;
+                        $line->increment('collect_num');
                     }
                     else
                     {
-                        $content->timestamps = false;
-                        $content->increment('collect_num');
+                        $point->timestamps = false;
+                        $point->increment('collect_num');
                     }
 
                     $insert['type'] = 11;
                     $insert['user_id'] = $user->id;
-                    $insert['course_id'] = $course_decode;
-                    $insert['content_id'] = $content_decode;
+                    $insert['line_id'] = $line_decode;
+                    $insert['point_id'] = $point_decode;
 
                     $communication = new Communication;
                     $bool = $communication->fill($insert)->save();
                     if(!$bool) throw new Exception("insert--communication--fail");
 
-                    $html['html'] = $this->view_item_html($course_decode);
-
                     DB::commit();
-                    return response_success($html);
+                    return response_success();
                 }
                 catch (Exception $e)
                 {
@@ -287,13 +307,13 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required'
+            'line_id' => 'required',
+            'point_id' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -303,21 +323,21 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
-            $course = Course::find($course_decode);
-            if($course)
+            $line = Line::find($line_decode);
+            if($line)
             {
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
                 }
 
                 DB::beginTransaction();
@@ -326,30 +346,28 @@ class RootRepository {
                     $user = Auth::user();
                     $user_id = $user->id;
 
-                    $collections = Pivot_User_Collection::where(['type'=>1,'user_id'=>$user_id,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+                    $collections = Pivot_User_Collection::where(['type'=>1,'user_id'=>$user_id,'line_id'=>$line_decode,'point_id'=>$point_decode]);
                     $count = count($collections->get());
                     if($count)
                     {
                         $num = $collections->delete();
                         if($num != $count) throw new Exception("delete--pivot--fail");
 
-                        if($content_decode == 0) $course->decrement('collect_num');
-                        else $content->decrement('collect_num');
+                        if($point_decode == 0) $line->decrement('collect_num');
+                        else $point->decrement('collect_num');
                     }
 
                     $insert['type'] = 12;
                     $insert['user_id'] = $user->id;
-                    $insert['course_id'] = $course_decode;
-                    $insert['content_id'] = $content_decode;
+                    $insert['line_id'] = $line_decode;
+                    $insert['point_id'] = $point_decode;
 
                     $communication = new Communication;
                     $bool = $communication->fill($insert)->save();
                     if(!$bool) throw new Exception("insert--communication--fail");
 
-                    $html['html'] = $this->view_item_html($course_decode);
-
                     DB::commit();
-                    return response_success($html);
+                    return response_success();
                 }
                 catch (Exception $e)
                 {
@@ -373,13 +391,13 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required'
+            'line_id' => 'required',
+            'point_id' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -389,21 +407,21 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"参数有误，请重试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"参数有误，请重试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
-            $course = Course::find($course_decode);
-            if($course)
+            $line = Line::find($line_decode);
+            if($line)
             {
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
                 }
 
                 DB::beginTransaction();
@@ -411,37 +429,37 @@ class RootRepository {
                 {
                     $time = time();
                     $user = Auth::user();
-                    $user->pivot_item_courses()->attach($course_decode,['type'=>1,'content_id'=>$content_decode,'created_at'=>$time,'updated_at'=>$time]);
+                    $user->pivot_item_lines()->attach($line_decode,['type'=>1,'point_id'=>$point_decode,'created_at'=>$time,'updated_at'=>$time]);
 
-                    if($content_decode == 0)
+                    if($point_decode == 0)
                     {
-                        $course->timestamps = false;
-                        $course->increment('favor_num');
+                        $line->timestamps = false;
+                        $line->increment('favor_num');
                     }
                     else
                     {
-                        $content->timestamps = false;
-                        $content->increment('favor_num');
+                        $point->timestamps = false;
+                        $point->increment('favor_num');
                     }
 
                     $insert['type'] = 3;
                     $insert['user_id'] = $user->id;
-                    $insert['course_id'] = $course_decode;
-                    $insert['content_id'] = $content_decode;
+                    $insert['line_id'] = $line_decode;
+                    $insert['point_id'] = $point_decode;
 
                     $communication = new Communication;
                     $bool = $communication->fill($insert)->save();
                     if(!$bool) throw new Exception("insert--communication--fail");
 
 //                    通知对方
-                    if($course->user_id != $user->id)
+                    if($line->user_id != $user->id)
                     {
                         $notification_insert['type'] = 8;
                         $notification_insert['sort'] = 3;
-                        $notification_insert['user_id'] = $course->user_id;
+                        $notification_insert['user_id'] = $line->user_id;
                         $notification_insert['source_id'] = $user->id;
-                        $notification_insert['course_id'] = $course_decode;
-                        $notification_insert['content_id'] = $content_decode;
+                        $notification_insert['line_id'] = $line_decode;
+                        $notification_insert['point_id'] = $point_decode;
                         $notification_insert['comment_id'] = $communication->id;
 
                         $notification = new Notification;
@@ -449,17 +467,15 @@ class RootRepository {
                         if(!$bool) throw new Exception("insert--notification--fail");
                     }
 
-                    $html['html'] = $this->view_item_html($course_decode);
-
                     DB::commit();
-                    return response_success($html);
+                    return response_success();
                 }
                 catch (Exception $e)
                 {
                     DB::rollback();
-//                    exit($e->getMessage());
-//                    $msg = $e->getMessage();
                     $msg = '添加失败，请重试！';
+//                    $msg = $e->getMessage();
+//                    exit($e->getMessage());
                     return response_fail([], $msg);
                 }
             }
@@ -473,13 +489,13 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required'
+            'line_id' => 'required',
+            'point_id' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -489,21 +505,21 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
-            $course = Course::find($course_decode);
-            if($course)
+            $line = Line::find($line_decode);
+            if($line)
             {
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
                 }
 
                 DB::beginTransaction();
@@ -512,37 +528,35 @@ class RootRepository {
                     $user = Auth::user();
                     $user_id = $user->id;
 
-                    $favors = Pivot_User_Course::where(['type'=>1,'user_id'=>$user_id,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+                    $favors = Pivot_User_Item::where(['type'=>1,'user_id'=>$user_id,'line_id'=>$line_decode,'point_id'=>$point_decode]);
                     $count = count($favors->get());
                     if($count)
                     {
                         $num = $favors->delete();
                         if($num != $count) throw new Exception("delete--pivot--fail");
 
-                        if($content_decode == 0) $course->decrement('favor_num');
-                        else $content->decrement('favor_num');
+                        if($point_decode == 0) $line->decrement('favor_num');
+                        else $point->decrement('favor_num');
                     }
 
                     $insert['type'] = 4;
                     $insert['user_id'] = $user->id;
-                    $insert['course_id'] = $course_decode;
-                    $insert['content_id'] = $content_decode;
+                    $insert['line_id'] = $line_decode;
+                    $insert['point_id'] = $point_decode;
 
                     $communication = new Communication;
                     $bool = $communication->fill($insert)->save();
                     if(!$bool) throw new Exception("insert--communication--fail");
 
-                    $html['html'] = $this->view_item_html($course_decode);
-
                     DB::commit();
-                    return response_success($html);
+                    return response_success();
                 }
                 catch (Exception $e)
                 {
                     DB::rollback();
-//                    exit($e->getMessage());
-//                    $msg = $e->getMessage();
                     $msg = '操作失败，请重试！';
+                    $msg = $e->getMessage();
+//                    exit($e->getMessage());
                     return response_fail([], $msg);
                 }
             }
@@ -561,14 +575,14 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
             'content.required' => '内容不能为空',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required',
+            'line_id' => 'required',
+            'point_id' => 'required',
             'content' => 'required'
         ], $messages);
         if ($v->fails())
@@ -579,39 +593,39 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"参数有误，刷新一下试试");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
             $user = Auth::user();
             $insert['type'] = $post_data['type'];
             $insert['user_id'] = $user->id;
-            $insert['course_id'] = $course_decode;
-            $insert['content_id'] = $content_decode;
+            $insert['line_id'] = $line_decode;
+            $insert['point_id'] = $point_decode;
             $insert['content'] = $post_data['content'];
 
             DB::beginTransaction();
             try
             {
-                $course = Course::find($course_decode);
-                if(!$course) return response_error([],"该课题不存在，刷新一下试试");
+                $line = Line::find($line_decode);
+                if(!$line) return response_error([],"该课题不存在，刷新一下试试");
 
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
 
-                    $content->timestamps = false;
-                    $content->increment('comment_num');
+                    $point->timestamps = false;
+                    $point->increment('comment_num');
                 }
                 else
                 {
-                    $course->timestamps = false;
-                    $course->increment('comment_num');
+                    $line->timestamps = false;
+                    $line->increment('comment_num');
                 }
 
                 $communication = new Communication;
@@ -619,14 +633,14 @@ class RootRepository {
                 if(!$bool) throw new Exception("insert--communication--fail");
 
 //                通知对方
-                if($course->user_id != $user->id)
+                if($line->user_id != $user->id)
                 {
                     $notification_insert['type'] = 8;
                     $notification_insert['sort'] = 1;
-                    $notification_insert['user_id'] = $course->user_id;
+                    $notification_insert['user_id'] = $line->user_id;
                     $notification_insert['source_id'] = $user->id;
-                    $notification_insert['course_id'] = $course_decode;
-                    $notification_insert['content_id'] = $content_decode;
+                    $notification_insert['line_id'] = $line_decode;
+                    $notification_insert['point_id'] = $point_decode;
                     $notification_insert['comment_id'] = $communication->id;
 
                     $notification = new Notification;
@@ -634,7 +648,8 @@ class RootRepository {
                     if(!$bool) throw new Exception("insert--notification--fail");
                 }
 
-                $html["html"] = view('frontend.component.comment')->with("comment",$communication)->__toString();
+                $communications[0] = $communication;
+                $html["html"] = view('frontend.component.comment')->with("communications",$communications)->__toString();
 
                 DB::commit();
                 return response_success($html);
@@ -656,13 +671,13 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required'
+            'line_id' => 'required',
+            'point_id' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -672,13 +687,13 @@ class RootRepository {
 
         $type = $post_data['type'];
 
-        $course_encode = $post_data['course_id'];
-        $course_decode = decode($course_encode);
-        if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+        $line_encode = $post_data['line_id'];
+        $line_decode = decode($line_encode);
+        if(!$line_decode) return response_error([],"参数有误，刷新一下试试");
 
-        $content_encode = $post_data['content_id'];
-        $content_decode = decode($content_encode);
-        if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+        $point_encode = $post_data['point_id'];
+        $point_decode = decode($point_encode);
+        if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
         if(Auth::check())
         {
@@ -694,7 +709,7 @@ class RootRepository {
 //                ])->orderBy('id','desc'); },
                 'favors'=>function($query) use ($user_id) { $query->where(['type'=>5,'user_id'=>$user_id]); }
             ])->withCount('dialogs')
-            ->where(['type'=>$type,'reply_id'=>0,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+            ->where(['type'=>$type,'reply_id'=>0,'line_id'=>$line_decode,'point_id'=>$point_decode]);
         }
         else
         {
@@ -706,7 +721,7 @@ class RootRepository {
 //                    'reply'=>function($query1) { $query1->with(['user']); }
 //                ])->orderBy('id','desc'); },
             ])->withCount('dialogs')
-            ->where(['type'=>$type,'reply_id'=>0,'course_id'=>$course_decode,'content_id'=>$content_decode]);
+            ->where(['type'=>$type,'reply_id'=>0,'line_id'=>$line_decode,'point_id'=>$point_decode]);
         }
 
         if(!empty($post_data['min_id']) && $post_data['min_id'] != 0) $comments->where('id', '<', $post_data['min_id']);
@@ -758,7 +773,7 @@ class RootRepository {
 
         if(!$comments->isEmpty())
         {
-            $return["html"] = view('frontend.component.comments')->with("communications",$comments)->__toString();
+            $return["html"] = view('frontend.component.comment')->with("communications",$comments)->__toString();
             $return["max_id"] = $comments->first()->id;
             $return["min_id"] = $comments->last()->id;
             $return["more"] = ($comments->count() >= 10) ? 'more' : 'none';
@@ -779,13 +794,13 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required'
+            'line_id' => 'required',
+            'point_id' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -793,16 +808,16 @@ class RootRepository {
             return response_error([],$errors->first());
         }
 
-        $course_encode = $post_data['course_id'];
-        $course_decode = decode($course_encode);
-        if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+        $line_encode = $post_data['line_id'];
+        $line_decode = decode($line_encode);
+        if(!$line_decode) return response_error([],"参数有误，刷新一下试试");
 
-        $content_encode = $post_data['content_id'];
-        $content_decode = decode($content_encode);
-        if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+        $point_encode = $post_data['point_id'];
+        $point_decode = decode($point_encode);
+        if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
         $communications = Communication::with(['user'])
-            ->where(['course_id'=>$course_decode,'content_id'=>$content_decode])->orderBy('id','desc')->get();
+            ->where(['line_id'=>$line_decode,'point_id'=>$point_decode])->orderBy('id','desc')->get();
 
         $html["html"] = view('frontend.component.comments')->with("communications",$communications)->__toString();
         return response_success($html);
@@ -815,15 +830,15 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
             'comment_id.required' => '参数有误',
             'content.required' => '回复不能为空',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required',
+            'line_id' => 'required',
+            'point_id' => 'required',
             'comment_id' => 'required',
             'content' => 'required'
         ], $messages);
@@ -835,13 +850,13 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
             $comment_encode = $post_data['comment_id'];
             $comment_decode = decode($comment_encode);
@@ -850,29 +865,29 @@ class RootRepository {
             $user = Auth::user();
             $insert['type'] = $post_data['type'];
             $insert['user_id'] = $user->id;
-            $insert['course_id'] = $course_decode;
-            $insert['content_id'] = $content_decode;
+            $insert['line_id'] = $line_decode;
+            $insert['point_id'] = $point_decode;
             $insert['reply_id'] = $comment_decode;
             $insert['content'] = $post_data['content'];
 
             DB::beginTransaction();
             try
             {
-                $course = Course::find($course_decode);
-                if(!$course) return response_error([],"该课题不存在，刷新一下试试");
+                $line = Line::find($line_decode);
+                if(!$line) return response_error([],"该课题不存在，刷新一下试试");
 
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
 
-                    $content->timestamps = false;
-                    $content->increment('comment_num');
+                    $point->timestamps = false;
+                    $point->increment('comment_num');
                 }
                 else
                 {
-                    $course->timestamps = false;
-                    $course->increment('comment_num');
+                    $line->timestamps = false;
+                    $line->increment('comment_num');
                 }
 
                 $comment = Communication::find($comment_decode);
@@ -903,8 +918,8 @@ class RootRepository {
                     $notification_insert['sort'] = 2;
                     $notification_insert['user_id'] = $comment->user_id;
                     $notification_insert['source_id'] = $user->id;
-                    $notification_insert['course_id'] = $course_decode;
-                    $notification_insert['content_id'] = $content_decode;
+                    $notification_insert['line_id'] = $line_decode;
+                    $notification_insert['point_id'] = $point_decode;
                     $notification_insert['comment_id'] = $communication->id;
                     $notification_insert['reply_id'] = $comment->id;
 
@@ -913,7 +928,8 @@ class RootRepository {
                     if(!$bool) throw new Exception("insert--notification--fail");
                 }
 
-                $html["html"] = view('frontend.component.reply')->with("reply",$communication)->__toString();
+                $communications[0] = $communication;
+                $html["html"] = view('frontend.component.reply')->with("communications",$communications)->__toString();
 
                 DB::commit();
                 return response_success($html);
@@ -935,14 +951,14 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
             'comment_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required',
+            'line_id' => 'required',
+            'point_id' => 'required',
             'comment_id' => 'required'
         ], $messages);
         if ($v->fails())
@@ -953,13 +969,13 @@ class RootRepository {
 
         $type = $post_data['type'];
 
-        $course_encode = $post_data['course_id'];
-        $course_decode = decode($course_encode);
-        if(!$course_decode) return response_error([],"参数有误，刷新一下试试");
+        $line_encode = $post_data['line_id'];
+        $line_decode = decode($line_encode);
+        if(!$line_decode) return response_error([],"参数有误，刷新一下试试");
 
-        $content_encode = $post_data['content_id'];
-        $content_decode = decode($content_encode);
-        if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+        $point_encode = $post_data['point_id'];
+        $point_decode = decode($point_encode);
+        if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
         $comment_encode = $post_data['comment_id'];
         $comment_decode = decode($comment_encode);
@@ -973,7 +989,7 @@ class RootRepository {
                 'user',
                 'reply'=>function($query) { $query->with(['user']); },
                 'favors'=>function($query) use ($user_id) { $query->where(['type'=>5,'user_id'=>$user_id]); }
-            ])->where(['type'=>$type,'course_id'=>$course_decode,'content_id'=>$content_decode,'dialog_id'=>$comment_decode])
+            ])->where(['type'=>$type,'line_id'=>$line_decode,'point_id'=>$point_decode,'dialog_id'=>$comment_decode])
                 ->where('reply_id','<>',0);
         }
         else
@@ -981,7 +997,7 @@ class RootRepository {
             $comments = Communication::with([
                 'user',
                 'reply'=>function($query) { $query->with(['user']); },
-            ])->where(['type'=>$type,'course_id'=>$course_decode,'content_id'=>$content_decode,'dialog_id'=>$comment_decode])
+            ])->where(['type'=>$type,'line_id'=>$line_decode,'point_id'=>$point_decode,'dialog_id'=>$comment_decode])
                 ->where('reply_id','<>',0);
         }
 
@@ -991,7 +1007,7 @@ class RootRepository {
 
         if(!$comments->isEmpty())
         {
-            $return["html"] = view('frontend.component.replies')->with("communications",$comments)->__toString();
+            $return["html"] = view('frontend.component.reply')->with("communications",$comments)->__toString();
             $return["max_id"] = $comments->first()->id;
             $return["min_id"] = $comments->last()->id;
             $return["more"] = ($comments->count() >= 10) ? 'more' : 'none';
@@ -1014,14 +1030,14 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
             'comment_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required',
+            'line_id' => 'required',
+            'point_id' => 'required',
             'comment_id' => 'required'
         ], $messages);
         if ($v->fails())
@@ -1032,13 +1048,13 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
             $comment_encode = $post_data['comment_id'];
             $comment_decode = decode($comment_encode);
@@ -1047,28 +1063,28 @@ class RootRepository {
             $user = Auth::user();
             $insert['type'] = $post_data['type'];
             $insert['user_id'] = $user->id;
-            $insert['course_id'] = $course_decode;
-            $insert['content_id'] = $content_decode;
+            $insert['line_id'] = $line_decode;
+            $insert['point_id'] = $point_decode;
             $insert['reply_id'] = $comment_decode;
 
             DB::beginTransaction();
             try
             {
-                $course = Course::find($course_decode);
-                if(!$course) return response_error([],"该课题不存在，刷新一下试试");
+                $line = Line::find($line_decode);
+                if(!$line) return response_error([],"该课题不存在，刷新一下试试");
 
-                if($content_decode != 0)
+                if($point_decode != 0)
                 {
-                    $content = Content::find($content_decode);
-                    if(!$course && $content->course_id != $course_decode) return response_error([],"参数有误，刷新一下试试");
+                    $point = Point::find($point_decode);
+                    if(!$line && $point->line_id != $line_decode) return response_error([],"参数有误，刷新一下试试");
 
-                    $content->timestamps = false;
-                    $content->increment('favor_num');
+                    $point->timestamps = false;
+                    $point->increment('favor_num');
                 }
                 else
                 {
-                    $course->timestamps = false;
-                    $course->increment('favor_num');
+                    $line->timestamps = false;
+                    $line->increment('favor_num');
                 }
 
                 $comment = Communication::find($comment_decode);
@@ -1087,8 +1103,8 @@ class RootRepository {
                     $notification_insert['sort'] = 5;
                     $notification_insert['user_id'] = $comment->user_id;
                     $notification_insert['source_id'] = $user->id;
-                    $notification_insert['course_id'] = $course_decode;
-                    $notification_insert['content_id'] = $content_decode;
+                    $notification_insert['line_id'] = $line_decode;
+                    $notification_insert['point_id'] = $point_decode;
                     $notification_insert['comment_id'] = $communication->id;
                     $notification_insert['reply_id'] = $comment_decode;
 
@@ -1117,14 +1133,14 @@ class RootRepository {
     {
         $messages = [
             'type.required' => '参数有误',
-            'course_id.required' => '参数有误',
-            'content_id.required' => '参数有误',
+            'line_id.required' => '参数有误',
+            'point_id.required' => '参数有误',
             'comment_id.required' => '参数有误',
         ];
         $v = Validator::make($post_data, [
             'type' => 'required',
-            'course_id' => 'required',
-            'content_id' => 'required',
+            'line_id' => 'required',
+            'point_id' => 'required',
             'comment_id' => 'required'
         ], $messages);
         if ($v->fails())
@@ -1135,13 +1151,13 @@ class RootRepository {
 
         if(Auth::check())
         {
-            $course_encode = $post_data['course_id'];
-            $course_decode = decode($course_encode);
-            if(!$course_decode) return response_error([],"该话题不存在，刷新一下试试！");
+            $line_encode = $post_data['line_id'];
+            $line_decode = decode($line_encode);
+            if(!$line_decode) return response_error([],"该话题不存在，刷新一下试试！");
 
-            $content_encode = $post_data['content_id'];
-            $content_decode = decode($content_encode);
-            if(!$content_decode && $content_decode != 0) return response_error([],"参数有误，刷新一下试试");
+            $point_encode = $post_data['point_id'];
+            $point_decode = decode($point_encode);
+            if(!$point_decode && $point_decode != 0) return response_error([],"参数有误，刷新一下试试");
 
             $comment_encode = $post_data['comment_id'];
             $comment_decode = decode($comment_encode);
@@ -1159,7 +1175,7 @@ class RootRepository {
 
                     $favors = Communication::where([
                         'type'=>5,'user_id'=>$user_id,
-                        'course_id'=>$course_decode,'content_id'=>$content_decode,'reply_id'=>$comment_decode
+                        'line_id'=>$line_decode,'point_id'=>$point_decode,'reply_id'=>$comment_decode
                     ]);
                     $count = count($favors->get());
                     if($count)

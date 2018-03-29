@@ -64,10 +64,13 @@
 .item-tools-row {padding:8px 10px;}
 .item-tools-row a {color:#888}
 
-article {max-height:22px;}
+
+.item-plural article {max-height:22px;overflow:hidden;}
+
 
 
 .items .comment-container {display:none;}
+.item-plural .comment-container {display:none;}
 
 .comment-title-container {padding:4px 0}
 .comment-content-container {padding:0;}

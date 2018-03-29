@@ -5,13 +5,13 @@
         'host' => [
 
             'local' => [
-                'root' => 'http://courses.com',
-                'cdn' => 'http://cdn.courses.com',
+                'root' => 'http://lines.com',
+                'cdn' => 'http://cdn.lines.com',
             ],
 
             'online' => [
-                'root' => 'http://softdoc.pub',
-                'cdn' => 'http://cdn.softdoc.pub',
+                'root' => 'http://tinyline.pub',
+                'cdn' => 'http://cdn.tinyline.pub',
             ],
         ],
 

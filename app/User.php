@@ -30,28 +30,34 @@ class User extends Authenticatable
     protected $dateFormat = 'U';
 
 
-    // 课程
-    function courses()
+    // 线
+    function lines()
     {
-        return $this->hasMany('App\Models\Course','user_id','id');
+        return $this->hasMany('App\Models\Line','user_id','id');
     }
 
-    // 与我相关的话题
-    function pivot_collection_courses()
+    // 与我相关的【线】
+    function pivot_collection_lines()
     {
-        return $this->belongsToMany('App\Models\Course','pivot_user_collection','user_id','course_id');
+        return $this->belongsToMany('App\Models\Line','pivot_user_collection','user_id','line_id');
     }
 
-    // 与我相关的话题
-    function pivot_collection_chapters()
+    // 与我相关的【点】
+    function pivot_collection_points()
     {
-        return $this->belongsToMany('App\Models\Content','pivot_user_collection','user_id','content_id');
+        return $this->belongsToMany('App\Models\Point','pivot_user_collection','user_id','point_id');
     }
 
-    // 与我相关的话题
-    function pivot_item_courses()
+    // 与我相关的【线】
+    function pivot_item_lines()
     {
-        return $this->belongsToMany('App\Models\Course','pivot_user_course','user_id','course_id');
+        return $this->belongsToMany('App\Models\Line','pivot_user_item','user_id','line_id');
+    }
+
+    // 与我相关的【点】
+    function pivot_item_points()
+    {
+        return $this->belongsToMany('App\Models\Point','pivot_user_item','user_id','point_id');
     }
 
 

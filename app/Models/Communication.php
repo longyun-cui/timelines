@@ -7,7 +7,7 @@ class Communication extends Model
     //
     protected $table = "communications";
     protected $fillable = [
-        'sort', 'type', 'active', 'support', 'user_id', 'course_id', 'content_id', 'is_anonymous', 'reply_id', 'dialog_id', 'order',
+        'sort', 'type', 'active', 'support', 'user_id', 'line_id', 'point_id', 'is_anonymous', 'reply_id', 'dialog_id', 'order',
         'title', 'content',
         'is_shared', 'favor_num', 'comment_num'
     ];
@@ -21,15 +21,15 @@ class Communication extends Model
     }
 
     // 课程
-    function course()
+    function line()
     {
-        return $this->belongsTo('App\Models\Course','course_id','id');
+        return $this->belongsTo('App\Models\Line','line_id','id');
     }
 
     //
-    function chapter()
+    function point()
     {
-        return $this->belongsTo('App\Models\Content','content_id','id');
+        return $this->belongsTo('App\Models\Point','point_id','id');
     }
 
     // 父节点

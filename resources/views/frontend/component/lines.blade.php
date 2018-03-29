@@ -1,30 +1,20 @@
-@foreach($courses as $num => $item)
-<div class="item-piece item-option course-option items" data-course="{{encode($item->id)}}" data-content="{{encode(0)}}">
+@foreach($lines as $num => $item)
+<div class="item-piece line-piece item-option line-option {{$line_magnitude or 'item-plural'}}"
+     data-line="{{encode($item->id)}}"
+     data-point="{{encode(0)}}"
+>
     <!-- BEGIN PORTLET-->
     <div class="panel-default box-default item-entity-container">
 
         {{--header--}}
         <div class="box-body item-title-row">
-            <a href="{{url('/course/'.encode($item->id))}}">{{$item->title or ''}}</a>
+            <a href="{{url('/line/'.encode($item->id))}}">{{$item->title or ''}}</a>
         </div>
 
         <div class="box-body item-info-row text-muted">
             <span><a href="{{url('/u/'.encode($item->user->id))}}">{{$item->user->name or ''}}</a></span>
             <span> • {{ $item->created_at->format('n月j日 H:i') }}</span>
             <span> • 阅读 <span class="text-blue">{{ $item->visit_num }}</span> 次</span>
-            <span class="pull-right"><a class="show-menu" style="cursor:pointer">查看目录</a></span>
-        </div>
-
-        {{--menu--}}
-        <div class="box-body item-menu-container menu-container">
-            <div class="colo-md-12 text-muted" style="margin-bottom:8px;">目录结构</div>
-            @foreach($item->contents as $content)
-                <div class="box-body" style="padding:2px 10px;">
-                    <a href="{{ url('course/'.encode($item->id).'?content='.encode($content->id)) }}">
-                        <i class="fa fa-list-ol"></i> &nbsp; {{ $content->title or '' }}
-                    </a>
-                </div>
-            @endforeach
         </div>
 
         {{--description--}}
@@ -99,8 +89,8 @@
                 <form action="" method="post" class="form-horizontal form-bordered item-comment-form">
 
                     {{csrf_field()}}
-                    <input type="hidden" name="course_id" value="{{encode($item->id)}}" readonly>
-                    <input type="hidden" name="content_id" value="{{encode(0)}}" readonly>
+                    <input type="hidden" name="line_id" value="{{encode($item->id)}}" readonly>
+                    <input type="hidden" name="point_id" value="{{encode(0)}}" readonly>
                     <input type="hidden" name="type" value="1" readonly>
 
                     <div class="form-group">
@@ -125,10 +115,8 @@
                 <div class="comment-list-container">
                 </div>
 
-                <div class="col-md-12 more-box">
-                    <a href="{{url('/course/'.encode($item->id))}}" target="_blank">
-                        <button type="button" class="btn btn-block btn-flat btn-default item-more"></button>
-                    </a>
+                <div class="col-md-12 more-box comment-more-box">
+                    <button type="button" class="btn btn-block btn-flat btn-more item-more comments-more"></button>
                 </div>
 
             </div>

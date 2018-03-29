@@ -90,7 +90,7 @@ desired effect
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>Me</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>三人行后台</b></span>
+            <span class="logo-lg"><b>时间线后台</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -301,33 +301,33 @@ desired effect
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
 
-                <li class="header">课程管理</li>
+                <li class="header">时间线列表</li>
 
-                <li class="treeview {{$menu_course_list or ''}}">
-                    <a href="{{url('/home/course/list')}}"><i class="fa fa-table text-green"></i> <span>课程管理</span></a>
+                <li class="treeview {{$menu_line_list or ''}}">
+                    <a href="{{url('/home/line/list')}}"><i class="fa fa-table text-green"></i> <span>时间线列表</span></a>
                 </li>
 
-                <li class="treeview {{$menu_course_create or ''}}">
-                    <a href="{{url('/home/course/create')}}"><i class="fa fa-plus text-green"></i> <span>添加课程</span></a>
+                <li class="treeview {{$menu_line_create or ''}}">
+                    <a href="{{url('/home/line/create')}}"><i class="fa fa-plus text-green"></i> <span>添加时间线</span></a>
                 </li>
 
 
 
                 <li class="header">其他</li>
 
-                <li class="treeview {{$menu_collect_course or ''}}">
-                    <a href="{{url('/home/collect/course/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏「课程」</span></a>
+                <li class="treeview {{$menu_collect_line or ''}}">
+                    <a href="{{url('/home/collect/course/list')}}"><i class="fa fa-heart text-red"></i> <span>收藏「时间线」</span></a>
                 </li>
 
-                <li class="treeview {{$menu_favor_course or ''}}">
-                    <a href="{{url('/home/favor/course/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞「课程」</span></a>
+                <li class="treeview {{$menu_favor_line or ''}}">
+                    <a href="{{url('/home/favor/course/list')}}"><i class="fa fa-thumbs-up text-red"></i> <span>点赞「时间线」</span></a>
                 </li>
 
-                <li class="treeview {{$menu_collect_chapter or ''}}">
+                <li class="treeview {{$menu_collect_point or ''}}">
                     <a href="{{url('/home/collect/chapter/list')}}"><i class="fa fa-heart text-blue"></i> <span>收藏内容</span></a>
                 </li>
 
-                <li class="treeview {{$menu_favor_chapter or ''}}">
+                <li class="treeview {{$menu_favor_point or ''}}">
                     <a href="{{url('/home/favor/chapter/list')}}"><i class="fa fa-thumbs-up text-blue"></i> <span>点赞内容</span></a>
                 </li>
 

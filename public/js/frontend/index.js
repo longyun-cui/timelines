@@ -43,8 +43,8 @@ jQuery( function ($) {
                     "/item/collect/save",
                     {
                         _token: $('meta[name="_token"]').attr('content'),
-                        course_id: item_option.attr('data-course'),
-                        content_id: item_option.attr('data-content'),
+                        line_id: item_option.attr('data-line'),
+                        point_id: item_option.attr('data-point'),
                         type: 1
                     },
                     function(data){
@@ -81,8 +81,8 @@ jQuery( function ($) {
                     "/item/collect/cancel",
                     {
                         _token: $('meta[name="_token"]').attr('content'),
-                        course_id: item_option.attr('data-course'),
-                        content_id: item_option.attr('data-content'),
+                        line_id: item_option.attr('data-line'),
+                        point_id: item_option.attr('data-point'),
                         type: 1
                     },
                     function(data){
@@ -122,8 +122,8 @@ jQuery( function ($) {
             "/item/favor/save",
             {
                 _token: $('meta[name="_token"]').attr('content'),
-                course_id: item_option.attr('data-course'),
-                content_id: item_option.attr('data-content'),
+                line_id: item_option.attr('data-line'),
+                point_id: item_option.attr('data-point'),
                 type: 1
             },
             function(data){
@@ -157,8 +157,8 @@ jQuery( function ($) {
                     "/item/favor/cancel",
                     {
                         _token: $('meta[name="_token"]').attr('content'),
-                        course_id: item_option.attr('data-course'),
-                        content_id: item_option.attr('data-content'),
+                        line_id: item_option.attr('data-line'),
+                        point_id: item_option.attr('data-point'),
                         type: 1
                     },
                     function(data){
@@ -196,32 +196,7 @@ jQuery( function ($) {
 
         if(!item_option.find(".comment-container").is(":hidden"))
         {
-            $.post(
-                "/item/comment/get",
-                {
-                    _token: $('meta[name="_token"]').attr('content'),
-                    course_id: item_option.attr('data-course'),
-                    content_id: item_option.attr('data-content'),
-                    type: 1
-                },
-                function(data){
-                    if(!data.success) layer.msg(data.msg);
-                    else
-                    {
-                        item_option.find('.comment-list-container').html(data.data.html);
-                        if(data.data.more == 'more')
-                        {
-                            item_option.find('.item-more').html("查看更多");
-                        }
-                        else if(data.data.more == 'none')
-                        {
-                            item_option.find('.item-more').html("没有更多评论了");
-                        }
-
-                    }
-                },
-                'json'
-            );
+            item_option.find('.comments-get-default').click();
         }
     });
     // 发布评论
@@ -257,8 +232,8 @@ jQuery( function ($) {
             "/item/comment/get",
             {
                 _token: $('meta[name="_token"]').attr('content'),
-                course_id: item_option.attr('data-course'),
-                content_id: item_option.attr('data-content'),
+                line_id: item_option.attr('data-line'),
+                point_id: item_option.attr('data-point'),
                 type: 1
             },
             function(data){
@@ -300,8 +275,8 @@ jQuery( function ($) {
                 "/item/comment/get",
                 {
                     _token: $('meta[name="_token"]').attr('content'),
-                    course_id: item_option.attr('data-course'),
-                    content_id: item_option.attr('data-content'),
+                    line_id: item_option.attr('data-line'),
+                    point_id: item_option.attr('data-point'),
                     min_id: min_id,
                     type: 1
                 },
@@ -347,8 +322,8 @@ jQuery( function ($) {
         var item_option = $(this).parents('.item-option');
         var comment_option = $(this).parents('.comment-option');
 
-        var course_id = item_option.attr('data-course');
-        var content_id = item_option.attr('data-content');
+        var line_id = item_option.attr('data-line');
+        var point_id = item_option.attr('data-point');
         var comment_id = comment_option.attr('data-id');
 
         var content_input = comment_option.find('.comment-reply-content');
@@ -365,8 +340,8 @@ jQuery( function ($) {
             {
                 _token: $('meta[name="_token"]').attr('content'),
                 type: 1,
-                course_id: course_id,
-                content_id: content_id,
+                line_id: line_id,
+                point_id: point_id,
                 comment_id: comment_id,
                 content: content
             },
@@ -396,8 +371,8 @@ jQuery( function ($) {
         var comment_option = $(this).parents('.comment-option');
         var reply_option = $(this).parents('.reply-option');
 
-        var course_id = item_option.attr('data-course');
-        var content_id = item_option.attr('data-content');
+        var line_id = item_option.attr('data-line');
+        var point_id = item_option.attr('data-point');
         var reply_id = reply_option.attr('data-id');
 
         var content_input = reply_option.find('.reply-content');
@@ -414,8 +389,8 @@ jQuery( function ($) {
             {
                 _token: $('meta[name="_token"]').attr('content'),
                 type: 1,
-                course_id: course_id,
-                content_id: content_id,
+                line_id: line_id,
+                point_id: point_id,
                 comment_id: reply_id,
                 content: content
             },
@@ -450,8 +425,8 @@ jQuery( function ($) {
                 "/item/reply/get",
                 {
                     _token: $('meta[name="_token"]').attr('content'),
-                    course_id: item_option.attr('data-course'),
-                    content_id: item_option.attr('data-content'),
+                    line_id: item_option.attr('data-line'),
+                    point_id: item_option.attr('data-point'),
                     comment_id: comment_option.attr('data-id'),
                     min_id: min_id,
                     type: 1
@@ -472,7 +447,7 @@ jQuery( function ($) {
                         }
                         else if(data.data.more == 'none')
                         {
-                            comment_option.find('.replies-more').html("没有更多回复了");
+                            comment_option.find('.replies-more').html("没有了");
                         }
                     }
                 },
@@ -494,8 +469,8 @@ jQuery( function ($) {
         var reply_option = $(this).parents(that_parent);
         var item_option = $(this).parents('.item-option');
 
-        var course_id = item_option.attr('data-course');
-        var content_id = item_option.attr('data-content');
+        var line_id = item_option.attr('data-line');
+        var point_id = item_option.attr('data-point');
         var comment_id = reply_option.attr('data-id');
 
         $.post(
@@ -503,8 +478,8 @@ jQuery( function ($) {
             {
                 _token: $('meta[name="_token"]').attr('content'),
                 type: 5,
-                course_id: course_id,
-                content_id: content_id,
+                line_id: line_id,
+                point_id: point_id,
                 comment_id: comment_id
             },
             function(data){
@@ -533,8 +508,8 @@ jQuery( function ($) {
         var reply_option = $(this).parents(that_parent);
         var item_option = $(this).parents('.item-option');
 
-        var course_id = item_option.attr('data-course');
-        var content_id = item_option.attr('data-content');
+        var line_id = item_option.attr('data-line');
+        var point_id = item_option.attr('data-point');
         var comment_id = reply_option.attr('data-id');
 
         layer.msg('取消"点赞"？', {
@@ -546,8 +521,8 @@ jQuery( function ($) {
                     {
                         _token: $('meta[name="_token"]').attr('content'),
                         type: 5,
-                        course_id: course_id,
-                        content_id: content_id,
+                        line_id: line_id,
+                        point_id: point_id,
                         comment_id: comment_id
                     },
                     function(data){
@@ -618,79 +593,6 @@ jQuery( function ($) {
 
 
 
-
-
 });
 
-// 初始化展开
-function fold()
-{
-
-    var course_active = $('.course-menu-md-container .recursion-course.active');
-    if(course_active.length > 0)
-    {
-        var course_a = course_active.find('a').clone();
-        $('.prev-content').find('.a-box').html('已经是封页了');
-
-        var content_first = $('.course-menu-md-container .recursion-row').first();
-        $('.next-content').find('.a-box').html(content_first.find('a').clone());
-    }
-
-    $(".recursion-row .active").each(function() {
-
-        var this_row = $(this).parents('.recursion-row');
-        var this_level = this_row.attr('data-level');
-        this_row.find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-
-        var prev_row = this_row.prev(".recursion-row");
-        var next_row = this_row.next(".recursion-row");
-
-        if(prev_row.length == 0)
-        {
-            var course_a = $('.course-menu-md-container .recursion-course').find('a').clone();
-            $('.prev-content').find('.a-box').html(course_a);
-        }
-        else
-        {
-            $('.prev-content').find('.a-box').html(prev_row.find('a').clone());
-        }
-
-        if(next_row.length == 0)
-        {
-            $('.next-content').find('.a-box').html('已经是最后了');
-        }
-        else
-        {
-            $('.next-content').find('.a-box').html(next_row.find('a').clone());
-        }
-
-
-        console.log(prev_row);
-
-        if(this_level == 0)
-        {
-            this_row.nextUntil('.recursion-row[data-level='+this_level+']').each( function () {
-                if($(this).attr('data-level') <= this_level ) return false;
-                $(this).show();
-                $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-            });
-        }
-        else if(this_level > 0)
-        {
-            this_row.prevUntil().each( function ()
-            {
-                if( $(this).attr('data-level') == 0 )
-                {
-                    $(this).find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-
-                    $(this).nextUntil('.recursion-row[data-level=0]').show();
-                    $(this).nextUntil('.recursion-row[data-level=0]').find('.recursion-fold').removeClass('fa-plus-square').addClass('fa-minus-square');
-                    return false;
-                }
-            });
-        }
-
-    });
-
-}
 

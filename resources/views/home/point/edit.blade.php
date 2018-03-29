@@ -1,20 +1,20 @@
 @extends('home.layout.layout')
 
 @section('title')
-    @if(empty($encode_id)) 添加课程 @else 编辑课程 @endif
+    @if(empty($encode_id)) 添加时间点 @else 编辑时间点 @endif
 @endsection
 
 @section('header')
-    @if(empty($encode_id)) 添加课程 @else 编辑课程 @endif
+    @if(empty($encode_id)) 添加时间点 @else 编辑时间点 @endif
 @endsection
 
 @section('description')
-    @if(empty($encode_id)) 添加课程 @else 编辑课程 @endif
+    @if(empty($encode_id)) 添加时间点 @else 编辑时间点 @endif
 @endsection
 
 @section('breadcrumb')
     <li><a href="{{url('/home')}}"><i class="fa fa-dashboard"></i>首页</a></li>
-    <li><a href="{{url('/home/course/list')}}"><i class="fa "></i>课程列表</a></li>
+    <li><a href="{{url('/home/line/list')}}"><i class="fa "></i>时间线列表</a></li>
     <li><a href="#"><i class="fa "></i>Here</a></li>
 @endsection
 
@@ -26,17 +26,18 @@
         <div class="box box-info">
 
             <div class="box-header with-border" style="margin:16px 0;">
-                <h3 class="box-title"> @if(empty($encode_id)) 添加课程 @else 编辑课程 @endif </h3>
+                <h3 class="box-title"> @if(empty($encode_id)) 添加时间点 @else 编辑时间点 @endif </h3>
                 <div class="box-tools pull-right">
                 </div>
             </div>
 
-            <form action="" method="post" class="form-horizontal form-bordered" id="form-edit-course">
+            <form action="" method="post" class="form-horizontal form-bordered" id="form-edit-line">
             <div class="box-body">
 
                 {{csrf_field()}}
                 <input type="hidden" name="operate" value="{{$operate or 'create'}}" readonly>
                 <input type="hidden" name="id" value="{{$encode_id or encode(0)}}" readonly>
+                <input type="hidden" name="line_id" value="{{$line->encode or encode(0)}}" readonly>
 
                 {{--标题--}}
                 <div class="form-group">
@@ -50,6 +51,13 @@
                     <label class="control-label col-md-2">描述</label>
                     <div class="col-md-8 ">
                         <div><textarea class="form-control" name="description" rows="3" placeholder="描述">{{$data->description or ''}}</textarea></div>
+                    </div>
+                </div>
+                {{--时间--}}
+                <div class="form-group">
+                    <label class="control-label col-md-2">时间点</label>
+                    <div class="col-md-8 ">
+                        <div><input type="text" class="form-control" name="time" placeholder="时间点" value="{{$data->time or ''}}"></div>
                     </div>
                 </div>
                 {{--内容--}}
@@ -99,7 +107,7 @@
             <div class="box-footer">
                 <div class="row" style="margin:16px 0;">
                     <div class="col-md-8 col-md-offset-2">
-                        <button type="button" class="btn btn-primary" id="edit-course-submit"><i class="fa fa-check"></i> 提交</button>
+                        <button type="button" class="btn btn-primary" id="edit-line-submit"><i class="fa fa-check"></i> 提交</button>
                         <button type="button" onclick="history.go(-1);" class="btn btn-default">返回</button>
                     </div>
                 </div>
@@ -114,10 +122,10 @@
 @section('js')
 <script>
     $(function() {
-        // 修改幻灯片信息
-        $("#edit-course-submit").on('click', function() {
+        // 修改信息
+        $("#edit-line-submit").on('click', function() {
             var options = {
-                url: "/home/course/edit",
+                url: "/home/point/edit",
                 type: "post",
                 dataType: "json",
                 // target: "#div2",
@@ -126,11 +134,11 @@
                     else
                     {
                         layer.msg(data.msg);
-                        location.href = "/home/course/list";
+                        location.href = "/home/point/list?line_id={{$line->encode or encode(0)}}";
                     }
                 }
             };
-            $("#form-edit-course").ajaxSubmit(options);
+            $("#form-edit-line").ajaxSubmit(options);
         });
     });
 </script>

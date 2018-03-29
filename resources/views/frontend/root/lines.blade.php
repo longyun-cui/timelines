@@ -2,9 +2,9 @@
 
 @section('header_title')  @endsection
 
-@section('title','三人行')
-@section('header','三人行必有我师焉')
-@section('description','课程集')
+@section('title','时间线')
+@section('header','时间线')
+@section('description','时间线')
 
 @section('content')
 
@@ -45,12 +45,8 @@
 
         <div class="col-xs-12 col-sm-12 col-md-9 container-body-left pull-left">
 
-            {{--@foreach($courses as $num => $course)--}}
-            {{--@include('frontend.component.course')--}}
-            {{--@endforeach--}}
-            @include('frontend.component.course')
-
-            {{ $courses->links() }}
+            @include('frontend.component.lines')
+            {{ $lines->links() }}
 
         </div>
 

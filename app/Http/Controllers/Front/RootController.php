@@ -20,14 +20,19 @@ class RootController extends Controller
     }
 
 
-    public function view_courses()
+    public function view_lines()
     {
-        return $this->repo->view_courses(request()->all());
+        return $this->repo->view_lines(request()->all());
     }
 
-    public function view_course($id=0)
+    public function view_line($id=0)
     {
-        return $this->repo->view_course(request()->all(),$id);
+        return $this->repo->view_line(request()->all(),$id);
+    }
+
+    public function view_point($id=0)
+    {
+        return $this->repo->view_point(request()->all(),$id);
     }
 
     public function view_user($id=0)

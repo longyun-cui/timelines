@@ -2,12 +2,12 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Line extends Model
 {
     //
-    protected $table = "courses";
+    protected $table = "lines";
     protected $fillable = [
-        'sort', 'type', 'active', 'user_id', 'title', 'description', 'content', 'cover_pic',
+        'sort', 'type', 'active', 'user_id', 'title', 'description', 'content', 'orderby', 'cover_pic',
         'is_shared', 'visit_num', 'share_num'
     ];
     protected $dateFormat = 'U';
@@ -27,45 +27,45 @@ class Course extends Model
     }
 
     // 内容
-    function contents()
+    function points()
     {
-        return $this->hasMany('App\Models\Content','course_id','id');
+        return $this->hasMany('App\Models\Point','line_id','id');
     }
 
     // 评论
     function communications()
     {
-        return $this->hasMany('App\Models\Communication','course_id','id');
+        return $this->hasMany('App\Models\Communication','line_id','id');
     }
 
     // 评论
     function comments()
     {
-        return $this->hasMany('App\Models\Communication','course_id','id');
+        return $this->hasMany('App\Models\Communication','line_id','id');
     }
 
     // 收藏
     function collections()
     {
-        return $this->hasMany('App\Models\Pivot_User_Collection','course_id','id');
+        return $this->hasMany('App\Models\Pivot_User_Collection','line_id','id');
     }
 
     // 其他人的
     function others()
     {
-        return $this->hasMany('App\Models\Pivot_User_Course','course_id','id');
+        return $this->hasMany('App\Models\Pivot_User_Item','line_id','id');
     }
 
     // 与我相关的话题
-    function pivot_collection_course_users()
+    function pivot_collection_line_users()
     {
-        return $this->belongsToMany('App\User','pivot_user_collection','course_id','user_id');
+        return $this->belongsToMany('App\User','pivot_user_collection','line_id','user_id');
     }
 
     // 与我相关的话题
-    function pivot_collection_chapter_users()
+    function pivot_collection_point_users()
     {
-        return $this->belongsToMany('App\User','pivot_user_collection','content_id','user_id');
+        return $this->belongsToMany('App\User','pivot_user_collection','line_id','user_id');
     }
 
     /**

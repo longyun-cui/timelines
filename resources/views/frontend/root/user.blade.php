@@ -23,7 +23,7 @@
             </div>
 
             <div class="box-body" style="margin-top:8px;background:#fff;">
-                <div class="margin">课程数：{{ $data->topics_count or 0 }}</div>
+                <div class="margin">课程数：{{ $data->lines_count or 0 }}</div>
                 <div class="margin">访问量：{{ $data->visit_num or 0 }}</div>
             </div>
 
@@ -31,12 +31,8 @@
 
         <div class="col-xs-12 col-sm-12 col-md-9 container-body-left">
 
-            {{--@foreach($courses as $num => $course)--}}
-                {{--@include('frontend.component.course')--}}
-            {{--@endforeach--}}
-            @include('frontend.component.course')
-
-            {{ $courses->links() }}
+            @include('frontend.component.lines')
+            {{ $lines->links() }}
 
         </div>
 
@@ -60,18 +56,6 @@
             lessLink: '<a href="#">收起</a>'
         });
 
-        $('.course-option').on('click', '.show-menu', function () {
-            var course_option = $(this).parents('.course-option');
-            course_option.find('.menu-container').show();
-            $(this).removeClass('show-menu').addClass('hide-menu');
-            $(this).html('隐藏目录');
-        });
-        $('.course-option').on('click', '.hide-menu', function () {
-            var course_option = $(this).parents('.course-option');
-            course_option.find('.menu-container').hide();
-            $(this).removeClass('hide-menu').addClass('show-menu');
-            $(this).html('查看目录');
-        });
     });
 </script>
 @endsection

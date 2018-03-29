@@ -1,11 +1,11 @@
 @extends('home.layout.layout')
 
-@section('title','课程列表')
-@section('header','课程列表')
-@section('description','课程列表')
+@section('title','时间线列表')
+@section('header'){{$line->title or ''}}@endsection
+@section('description','时间点列表')
 @section('breadcrumb')
     <li><a href="{{url('/home')}}"><i class="fa fa-home"></i>首页</a></li>
-    <li><a href="{{url('/home/course/list')}}"><i class="fa "></i>作者列表</a></li>
+    <li><a href="{{url('/home/line/list')}}"><i class="fa "></i>时间线列表</a></li>
     <li><a href="#"><i class="fa "></i>Here</a></li>
 @endsection
 
@@ -17,21 +17,22 @@
         <div class="box box-info">
 
             <div class="box-header with-border" style="margin:16px 0;">
-                <h3 class="box-title">课程列表</h3>
+                <h3 class="box-title">{{$line->title or ''}} 时间点列表</h3>
 
                 <div class="pull-right">
-                    <a href="{{url('/home/course/create')}}">
-                        <button type="button" onclick="" class="btn btn-success pull-right"><i class="fa fa-plus"></i> 添加课程</button>
+                    <a href="{{url('/home/point/create?line_id='.$line->encode)}}">
+                        <button type="button" onclick="" class="btn btn-success pull-right"><i class="fa fa-plus"></i> 添加时间点</button>
                     </a>
                 </div>
             </div>
 
-            <div class="box-body" id="course-list-body">
+            <div class="box-body" id="point-list-body">
                 <!-- datatable start -->
                 <table class='table table-striped table-bordered' id='datatable_ajax'>
                     <thead>
                     <tr role='row' class='heading'>
-                        <th>课程名</th>
+                        <th>标题</th>
+                        <th>时间点</th>
                         <th>浏览数</th>
                         <th>分享数</th>
                         <th>收藏数</th>
@@ -39,7 +40,6 @@
                         <th>状态</th>
                         <th>创建时间</th>
                         <th>修改时间</th>
-                        <th>内容管理</th>
                         <th>操作</th>
                     </tr>
                     <tr>
@@ -101,11 +101,12 @@
                 "serverSide": true,
                 "searching": false,
                 "ajax": {
-                    'url': '/home/course/list',
+                    'url': '/home/point/list',
                     "type": 'POST',
                     "dataType" : 'json',
                     "data": function (d) {
                         d._token = $('meta[name="_token"]').attr('content');
+                        d.line_id = "{{ $line->encode or encode(0) }}";
                         d.title 	= $('input[name="title"]').val();
 //                        d.major 	= $('input[name="major"]').val();
 //                        d.nation 	= $('input[name="nation"]').val();
@@ -119,7 +120,14 @@
                         "data": "encode_id",
                         'orderable': false,
                         render: function(data, type, row, meta) {
-                            return '<a target="_blank" href="/course/'+data+'">'+row.title+'</a>';
+                            return '<a target="_blank" href="/point/'+data+'">'+row.title+'</a>';
+                        }
+                    },
+                    {
+                        'data': 'time',
+                        'orderable': true,
+                        render: function(val) {
+                            return val == null ? 0 : val;
                         }
                     },
                     {
@@ -154,8 +162,8 @@
                         'data': 'active',
                         'orderable': false,
                         render: function(val) {
-                            if(val == 1) return '<small class="label bg-green">启</small>';
-                            else return '<small class="label bg-red">禁</small>';
+                            if(val == 1) return '<small class="label bg-green">公开</small>';
+                            else return '<small class="label bg-red">私密</small>';
                         }
                     },
                     {
@@ -179,19 +187,12 @@
                     {
                         'data': 'encode_id',
                         'orderable': false,
-                        render: function(data) {
-                            return '<a href="/home/course/content?id='+data+'"><button type="button" class="btn btn-sm bg-purple">内容管理</button></a>';
-                        }
-                    },
-                    {
-                        'data': 'encode_id',
-                        'orderable': false,
                         render: function(data, type, row, meta) {
                             var active_html = '';
                             if(row.active == 1)
-                                active_html = '<li><a class="course-disable-submit" data-id="'+data+'">禁用</a></li>';
+                                active_html = '<li><a class="point-disable-submit" data-id="'+data+'">设为私密</a></li>';
                             else
-                                active_html = '<li><a class="course-enable-submit" data-id="'+data+'">启用</a></li>';
+                                active_html = '<li><a class="point-enable-submit" data-id="'+data+'">公开分享</a></li>';
 
                             var html =
                                 '<div class="btn-group">'+
@@ -201,12 +202,12 @@
                                 '<span class="sr-only">Toggle Dropdown</span>'+
                                 '</button>'+
                                 '<ul class="dropdown-menu" role="menu">'+
-                                '<li><a href="/home/course/edit?id='+data+'">编辑</a></li>'+
-                                '<li><a href="/home/course/content?id='+data+'">内容管理</a></li>'+
+                                '<li><a href="/home/point/edit?id='+data+'">编辑</a></li>'+
+//                                '<li><a href="/home/point/point?id='+data+'">内容管理</a></li>'+
                                 active_html+
 //                                '<li><a href="/admin/statistics/page?module=2&id='+data+'">流量统计</a></li>'+
 //                                '<li><a class="download-qrcode" data-id="'+data+'">下载二维码</a></li>'+
-                                '<li><a class="course-delete-submit" data-id="'+data+'" >删除</a></li>'+
+                                '<li><a class="point-delete-submit" data-id="'+data+'" >删除</a></li>'+
                                 '<li class="divider"></li>'+
                                 '<li><a href="#">Separated link</a></li>'+
                                 '</ul>'+
@@ -287,14 +288,14 @@
     $(function() {
 
         // 表格【删除】
-        $("#course-list-body").on('click', ".course-delete-submit", function() {
+        $("#point-list-body").on('click', ".point-delete-submit", function() {
             var that = $(this);
-            layer.msg('确定要删除该"课程"么', {
+            layer.msg('确定要删除该"时间点"么', {
                 time: 0
                 ,btn: ['确定', '取消']
                 ,yes: function(index){
                     $.post(
-                            "/home/course/delete",
+                            "/home/point/delete",
                             {
                                 _token: $('meta[name="_token"]').attr('content'),
                                 id:that.attr('data-id')
@@ -310,14 +311,14 @@
         });
 
         // 表格【分享】
-        $("#course-list-body").on('click', ".course-enable-submit", function() {
+        $("#point-list-body").on('click', ".point-enable-submit", function() {
             var that = $(this);
-            layer.msg('确定启用该"课程"？', {
+            layer.msg('确定公开分享该"时间点"？', {
                 time: 0
                 ,btn: ['确定', '取消']
                 ,yes: function(index){
                     $.post(
-                            "/home/course/enable",
+                            "/home/point/enable",
                             {
                                 _token: $('meta[name="_token"]').attr('content'),
                                 id:that.attr('data-id')
@@ -333,14 +334,14 @@
         });
 
         // 表格【取消分享】
-        $("#course-list-body").on('click', ".course-disable-submit", function() {
+        $("#point-list-body").on('click', ".point-disable-submit", function() {
             var that = $(this);
-            layer.msg('确定禁用该"课程"？', {
+            layer.msg('确定设为私密该"时间点"？', {
                 time: 0
                 ,btn: ['确定', '取消']
                 ,yes: function(index){
                     $.post(
-                            "/home/course/disable",
+                            "/home/point/disable",
                             {
                                 _token: $('meta[name="_token"]').attr('content'),
                                 id:that.attr('data-id')

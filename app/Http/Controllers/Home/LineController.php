@@ -7,19 +7,19 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-//use App\Services\Home\CourseService;
-use App\Repositories\Home\CourseRepository;
+//use App\Services\Home\LineService;
+use App\Repositories\Home\LineRepository;
 
 
-class CourseController extends Controller
+class LineController extends Controller
 {
     //
     private $service;
     private $repo;
     public function __construct()
     {
-//        $this->service = new ProductService;
-        $this->repo = new CourseRepository;
+//        $this->service = new LineService;
+        $this->repo = new LineRepository;
     }
 
 
@@ -31,7 +31,7 @@ class CourseController extends Controller
     // 列表
     public function viewList()
     {
-        if(request()->isMethod('get')) return view('home.course.list')->with(['menu_course_list'=>'active']);
+        if(request()->isMethod('get')) return view('home.line.list')->with(['menu_line_list'=>'active']);
         else if(request()->isMethod('post')) return $this->repo->get_list_datatable(request()->all());
     }
 

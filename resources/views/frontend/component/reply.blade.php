@@ -1,3 +1,4 @@
+@foreach($communications as $reply)
 <div class="colo-md-12 box-body reply-piece reply-option" data-id="{{encode($reply->id)}}">
 
     {{--回复头部--}}
@@ -58,4 +59,4 @@
     </div>
 
 </div>
-
+@endforeach

@@ -7,7 +7,7 @@ class Notification extends Model
     //
     protected $table = "notifications";
     protected $fillable = [
-        'sort', 'type', 'is_read', 'user_id', 'source_id', 'course_id', 'content_id', 'comment_id', 'reply_id', 'content', 'ps'
+        'sort', 'type', 'is_read', 'user_id', 'source_id', 'line_id', 'point_id', 'comment_id', 'reply_id', 'content', 'ps'
     ];
     protected $dateFormat = 'U';
 
@@ -21,14 +21,14 @@ class Notification extends Model
         return $this->belongsTo('App\User','source_id','id');
     }
 
-    function course()
+    function line()
     {
-        return $this->belongsTo('App\Models\Course','course_id','id');
+        return $this->belongsTo('App\Models\Line','line_id','id');
     }
 
-    function chapter()
+    function point()
     {
-        return $this->belongsTo('App\Models\Content','content_id','id');
+        return $this->belongsTo('App\Models\Point','point_id','id');
     }
 
     function comment()

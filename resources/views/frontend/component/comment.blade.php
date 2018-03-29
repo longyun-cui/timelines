@@ -1,5 +1,5 @@
+@foreach($communications as $comment)
 <div class="colo-md-12 box-body comment-piece comment-option" style="padding:8px 8px;" data-id="{{encode($comment->id)}}">
-
 
     {{--评论头部--}}
     <div class="box-body comment-title-container">
@@ -77,4 +77,5 @@
     </div>
 
 </div>
+@endforeach
 

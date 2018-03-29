@@ -39,13 +39,14 @@ Route::group(['prefix' => 'common'], function () {
 Route::group(['namespace' => 'Front'], function () {
 
     Route::get('/', function () {
-        return redirect('/courses');
+        return redirect('/lines');
     });
 
-    Route::get('courses', 'RootController@view_courses');
-//    Route::get('course', 'RootController@view_course');
-    Route::get('course/{id?}', 'RootController@view_course');
-
+    Route::get('lines', 'RootController@view_lines');
+    Route::get('line/{id?}', 'RootController@view_line');
+//    Route::get('line', 'RootController@view_line');
+    Route::get('point/{id?}', 'RootController@view_point');
+//    Route::get('point', 'RootController@view_point');
 
     Route::get('u/{id?}', 'RootController@view_user');
 
@@ -98,10 +99,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
         Route::get('/', $controller.'@index');
 
 
-        // 作者
-        Route::group(['prefix' => 'course'], function () {
+        // 【线】
+        Route::group(['prefix' => 'line'], function () {
 
-            $controller = 'CourseController';
+            $controller = 'LineController';
 
             Route::get('/', $controller.'@index');
             Route::get('create', $controller.'@createAction');
@@ -111,18 +112,23 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
             Route::post('enable', $controller.'@enableAction');
             Route::post('disable', $controller.'@disableAction');
 
-            // 作者
-            Route::group(['prefix' => 'content'], function () {
+            Route::match(['get','post'], 'point', $controller.'@viewPointList');
 
-                $controller = 'CourseController';
+        });
 
-                Route::match(['get','post'], '/', $controller.'@course_content_view_index');
-                Route::match(['get','post'], 'edit', $controller.'@course_content_editAction');
-                Route::post('get', $controller.'@course_content_getAction');
-                Route::post('delete', $controller.'@course_content_deleteAction');
-            });
+        // 【点】
+        Route::group(['prefix' => 'point'], function () {
 
-            Route::get('select2_menus', $controller.'@select2_menus');
+            $controller = 'PointController';
+
+            Route::get('/', $controller.'@index');
+            Route::get('create', $controller.'@createAction');
+            Route::match(['get','post'], 'edit', $controller.'@editAction');
+            Route::match(['get','post'], 'list', $controller.'@viewList');
+            Route::post('delete', $controller.'@deleteAction');
+            Route::post('enable', $controller.'@enableAction');
+            Route::post('disable', $controller.'@disableAction');
+
         });
 
 
@@ -132,10 +138,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
 
             $controller = 'OtherController';
 
-            Route::match(['get','post'], 'course/list', $controller.'@collect_course_viewList');
-            Route::match(['get','post'], 'chapter/list', $controller.'@collect_chapter_viewList');
-            Route::post('course/delete', $controller.'@collect_course_deleteAction');
-            Route::post('chapter/delete', $controller.'@collect_chapter_deleteAction');
+            Route::match(['get','post'], 'line/list', $controller.'@collect_line_viewList');
+            Route::match(['get','post'], 'point/list', $controller.'@collect_point_viewList');
+            Route::post('line/delete', $controller.'@collect_line_deleteAction');
+            Route::post('point/delete', $controller.'@collect_point_deleteAction');
         });
 
         // 点赞
@@ -143,10 +149,10 @@ Route::group(['prefix' => 'home', 'namespace' => 'Home'], function () {
 
             $controller = 'OtherController';
 
-            Route::match(['get','post'], 'course/list', $controller.'@favor_course_viewList');
-            Route::match(['get','post'], 'chapter/list', $controller.'@favor_chapter_viewList');
-            Route::post('course/delete', $controller.'@favor_course_deleteAction');
-            Route::post('chapter/delete', $controller.'@favor_chapter_deleteAction');
+            Route::match(['get','post'], 'line/list', $controller.'@favor_line_viewList');
+            Route::match(['get','post'], 'point/list', $controller.'@favor_point_viewList');
+            Route::post('line/delete', $controller.'@favor_line_deleteAction');
+            Route::post('point/delete', $controller.'@favor_point_deleteAction');
         });
 
         // 消息

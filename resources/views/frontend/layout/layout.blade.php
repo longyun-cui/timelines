@@ -116,7 +116,7 @@ desired effect
             </a>
 
             <div class="navbar-custom-menu" style="height:50px;color:#f39c12 !important;float:left;">
-                <span class="logo-big"><a href="{{url('/')}}"><img src="/favicon_transparent.png" class="img-icon" alt="Image"> <b>课栈</b></a></span>
+                <span class="logo-big"><a href="{{url('/')}}"><img src="/favicon_transparent.png" class="img-icon" alt="Image"> <b>时间线</b></a></span>
             </div>
 
 
