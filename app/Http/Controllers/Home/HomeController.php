@@ -44,4 +44,14 @@ class HomeController extends Controller
 
 
 
+
+    // 【密码】【修改】
+    public function passwordResetAction()
+    {
+        if(request()->isMethod('get')) return $this->repo->view_password_reset();
+        else if (request()->isMethod('post')) return $this->repo->password_reset(request()->all());
+    }
+
+
+
 }

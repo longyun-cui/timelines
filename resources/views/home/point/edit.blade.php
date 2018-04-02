@@ -46,18 +46,18 @@
                         <div><input type="text" class="form-control" name="title" placeholder="请输入标题" value="{{$data->title or ''}}"></div>
                     </div>
                 </div>
-                {{--说明--}}
-                <div class="form-group">
-                    <label class="control-label col-md-2">描述</label>
-                    <div class="col-md-8 ">
-                        <div><textarea class="form-control" name="description" rows="3" placeholder="描述">{{$data->description or ''}}</textarea></div>
-                    </div>
-                </div>
                 {{--时间--}}
                 <div class="form-group">
                     <label class="control-label col-md-2">时间点</label>
                     <div class="col-md-8 ">
                         <div><input type="text" class="form-control" name="time" placeholder="时间点" value="{{$data->time or ''}}"></div>
+                    </div>
+                </div>
+                {{--说明--}}
+                <div class="form-group">
+                    <label class="control-label col-md-2">描述</label>
+                    <div class="col-md-8 ">
+                        <div><textarea class="form-control" name="description" rows="3" placeholder="描述">{{$data->description or ''}}</textarea></div>
                     </div>
                 </div>
                 {{--内容--}}
