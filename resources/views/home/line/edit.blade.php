@@ -57,8 +57,8 @@
                             </select>
                             @else
                                 <select class="form-control" name="orderby">
-                                    <option value="1">正序</option>
-                                    <option value="2" selected="selected">倒叙</option>
+                                    <option value="1" selected="selected">正序</option>
+                                    <option value="2">倒叙</option>
                                 </select>
                             @endif
                         </div>
