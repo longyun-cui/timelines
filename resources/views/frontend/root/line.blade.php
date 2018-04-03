@@ -60,7 +60,7 @@
                 {{--<!-- /.timeline-label -->--}}
 
                 {{--<!-- timeline item -->--}}
-                <li class="item-option {{$point_magnitude or 'item-plural'}}"
+                <li class="item-piece item-option point-option {{$point_magnitude or 'item-plural'}}"
                     data-line="{{encode($line->id)}}"
                     data-point="{{encode($po->id)}}"
                 >
@@ -73,7 +73,19 @@
                         <h3 class="timeline-header"><a target="_blank" href="{{url('/point/'.encode($po->id))}}">{{$po->title or ''}}</a></h3>
 
                         <div class="timeline-body">
-                            <article class="colo-md-12 point-content"> {!! $po->content or '' !!} </article>
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <img src="{!! $po->img_tags[2][0] or '' !!}" alt="" class="media-object">
+                                </div>
+                                <div class="media-body">
+                                    <div class="clearfix">
+                                        <article class="colo-md-12"> {!! $po->content_show or '' !!} </article>
+                                    </div>
+                                </div>
+                            </div>
+                            {{--<article class="colo-md-12 point-content"> {!! $po->content or '' !!} </article>--}}
+
                         </div>
 
                         <div class="timeline-footer box-footer item-tools-row">
@@ -191,11 +203,11 @@
 <script>
     $(function() {
 
-        $('article.point-content').readmore({
-            speed: 150,
-            moreLink: '<a href="#">展开更多</a>',
-            lessLink: '<a href="#">收起</a>'
-        });
+//        $('article.point-content').readmore({
+//            speed: 150,
+//            moreLink: '<a href="#">展开更多</a>',
+//            lessLink: '<a href="#">收起</a>'
+//        });
 
     });
 </script>

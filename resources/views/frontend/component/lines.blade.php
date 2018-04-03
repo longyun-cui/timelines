@@ -27,7 +27,18 @@
         {{--content--}}
         @if(!empty($item->content))
             <div class="box-body item-content-row">
-                <article class="colo-md-12"> {!! $item->content or '' !!} </article>
+
+                <div class="media">
+                    <div class="media-left">
+                        <img src="{!! $item->img_tags[2][0] or '' !!}" alt="" class="media-object">
+                    </div>
+                    <div class="media-body">
+                        <div class="clearfix">
+                            <article class="colo-md-12"> {!! $item->content_show or '' !!} </article>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         @endif
 

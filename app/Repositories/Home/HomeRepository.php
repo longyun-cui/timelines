@@ -15,7 +15,6 @@ class HomeRepository {
 
 
 
-
     // 返回【个人资料】 视图
     public function view_info_index()
     {
@@ -66,6 +65,8 @@ class HomeRepository {
         }
         else return response_fail();
     }
+
+
 
     // 返回【密码】【编辑】视图
     public function view_password_reset()

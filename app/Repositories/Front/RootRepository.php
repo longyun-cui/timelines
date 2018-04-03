@@ -71,6 +71,15 @@ class RootRepository {
                 'points'=>function($query) { $query->where(['active'=>1])->orderBy('id','desc'); }
             ])->where('active', 1)->orderBy('id','desc')->paginate(20);
         }
+
+        foreach ($lines as $item)
+        {
+            $item->content_show = strip_tags($item->content);
+            $img_tags = get_html_img($item->content);
+            $item->img_tags = $img_tags;
+        }
+//        dd($lines->toArray());
+
         return view('frontend.root.lines')->with(['line_magnitude'=>'item-plural','lines'=>$lines]);
     }
 
@@ -86,6 +95,8 @@ class RootRepository {
         $user = User::with([
             'lines'=>function($query) { $query->orderBy('id','desc'); }
         ])->withCount('lines')->find($user_decode);
+        $user->timestamps = false;
+        $user->increment('visit_num');
 
         if(Auth::check())
         {
@@ -106,8 +117,13 @@ class RootRepository {
             ])->where(['user_id'=>$user_decode,'active'=>1])->orderBy('id','desc')->paginate(20);
         }
 
-        $user->timestamps = false;
-        $user->increment('visit_num');
+        foreach ($lines as $item)
+        {
+            $item->content_show = strip_tags($item->content);
+            $img_tags = get_html_img($item->content);
+            $item->img_tags = $img_tags;
+        }
+//        dd($lines->toArray());
 
         return view('frontend.root.user')->with(['line_magnitude'=>'item-plural','data'=>$user,'lines'=>$lines]);
     }
@@ -167,8 +183,19 @@ class RootRepository {
 
         $line->comments_total = $line->comment_num + $line->points->sum('comment_num');
 
+        $line->content_show = $line->content;
+        $img_tags = get_html_img($line->content);
+        $line->img_tags = $img_tags;
+
         $line->timestamps = false;
         $line->increment('visit_num');
+
+        foreach ($points as $item)
+        {
+            $item->content_show = strip_tags($item->content);
+            $img_tags = get_html_img($item->content);
+            $item->img_tags = $img_tags;
+        }
 
         $author = User::find($line->user_id);
         $author->timestamps = false;
