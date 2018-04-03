@@ -175,9 +175,9 @@ class RootRepository {
 
             $query = Point::with(['user'])->where('line_id',$line_decode);
 
-            $query->orderByRaw(DB::raw('cast(time as decimal) '.$orderby));
-            $query->orderByRaw(DB::raw('cast(time as SIGNED) '.$orderby));
             $query->orderBy('time',$orderby);
+            $query->orderByRaw(DB::raw('cast(time as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(time as decimal) '.$orderby));
             $points = $query->get();
         }
 
