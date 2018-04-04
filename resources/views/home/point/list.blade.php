@@ -1,6 +1,6 @@
 @extends('home.layout.layout')
 
-@section('title','时间线列表')
+@section('title'){{$line->title or ''}}(时间点列表)@endsection
 @section('header'){{$line->title or ''}}@endsection
 @section('description','时间点列表')
 @section('breadcrumb')

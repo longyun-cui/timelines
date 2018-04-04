@@ -50,6 +50,13 @@ class PointRepository {
             $order_dir = $order['dir'];
 
             $field = $columns[$order_column]["data"];
+            if($field == "time")
+            {
+                $query->orderByRaw(DB::raw('cast(replace(trim(time)," ","") as SIGNED) '.$order_dir));
+                $query->orderByRaw(DB::raw('cast(replace(trim(time)," ","") as DECIMAL) '.$order_dir));
+                $query->orderByRaw(DB::raw('replace(trim(time)," ","") '.$order_dir));
+                $query->orderBy('time',$order_dir);
+            }
             $query->orderBy($field, $order_dir);
         }
         else $query->orderBy("updated_at", "desc");
