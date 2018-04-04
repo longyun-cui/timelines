@@ -158,9 +158,9 @@ class RootRepository {
                 'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
             ])->where('line_id',$line_decode);
 
-            $query->orderByRaw(DB::raw('cast(replace(time," ","") as SIGNED) '.$orderby));
-            $query->orderByRaw(DB::raw('cast(replace(time," ","") as DECIMAL) '.$orderby));
-            $query->orderByRaw(DB::raw('replace(time," ","") '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(trim(time)," ","") as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(trim(time)," ","") as DECIMAL) '.$orderby));
+            $query->orderByRaw(DB::raw('replace(trim(time)," ","") '.$orderby));
             $query->orderBy('time',$orderby);
             $points = $query->get();
         }
@@ -175,9 +175,9 @@ class RootRepository {
             else $orderby = 'desc';
 
             $query = Point::with(['user'])->where('line_id',$line_decode);
-            $query->orderByRaw(DB::raw('cast(replace(time," ","") as SIGNED) '.$orderby));
-            $query->orderByRaw(DB::raw('cast(replace(time," ","") as DECIMAL) '.$orderby));
-            $query->orderByRaw(DB::raw('replace(time," ","") '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(trim(time)," ","") as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(trim(time)," ","") as DECIMAL) '.$orderby));
+            $query->orderByRaw(DB::raw('replace(trim(time)," ","") '.$orderby));
             $query->orderBy('time',$orderby);
             $points = $query->get();
         }
