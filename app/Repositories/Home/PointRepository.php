@@ -107,12 +107,14 @@ class PointRepository {
         $messages = [
             'id.required' => '参数有误',
             'line_id.required' => '参数有误',
-            'title.required' => '请输入课程标题',
+            'title.required' => '请输入标题',
+            'time.required' => '请输入时间点',
         ];
         $v = Validator::make($post_data, [
             'id' => 'required',
             'line_id' => 'required',
-            'title' => 'required'
+            'title' => 'required',
+            'time' => 'required'
         ], $messages);
         if ($v->fails())
         {
@@ -151,6 +153,7 @@ class PointRepository {
             }
             else throw new Exception("operate--error");
 
+            $post_data['time'] = trim($post_data['time']);
             $bool = $point->fill($post_data)->save();
             if($bool)
             {
