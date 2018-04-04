@@ -158,8 +158,9 @@ class RootRepository {
                 'others'=>function($query) use ($user_id) { $query->where(['user_id' => $user_id]); }
             ])->where('line_id',$line_decode);
 
-            $query->orderByRaw(DB::raw('cast(time as SIGNED) '.$orderby));
-            $query->orderByRaw(DB::raw('cast(time as decimal) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(time," ","") as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(time," ","") as DECIMAL) '.$orderby));
+            $query->orderByRaw(DB::raw('replace(time," ","") '.$orderby));
             $query->orderBy('time',$orderby);
             $points = $query->get();
         }
@@ -174,10 +175,10 @@ class RootRepository {
             else $orderby = 'desc';
 
             $query = Point::with(['user'])->where('line_id',$line_decode);
-
+            $query->orderByRaw(DB::raw('cast(replace(time," ","") as SIGNED) '.$orderby));
+            $query->orderByRaw(DB::raw('cast(replace(time," ","") as DECIMAL) '.$orderby));
+            $query->orderByRaw(DB::raw('replace(time," ","") '.$orderby));
             $query->orderBy('time',$orderby);
-            $query->orderByRaw(DB::raw('cast(time as SIGNED) '.$orderby));
-            $query->orderByRaw(DB::raw('cast(time as decimal) '.$orderby));
             $points = $query->get();
         }
 
@@ -195,7 +196,25 @@ class RootRepository {
             $item->content_show = strip_tags($item->content);
             $img_tags = get_html_img($item->content);
             $item->img_tags = $img_tags;
+
+//            $item->order_time = $item->time;
+//            $item->order_time = str_replace(' ','.',$item->order_time);
+//            $item->order_time = str_replace('.',' ',$item->order_time);
+//            $item->order_time = str_replace('-',' ',$item->order_time);
+//            $item->order_time = str_replace('/',' ',$item->order_time);
+//            $item->order_time = str_replace('1','a',$item->order_time);
+//            $item->order_time = str_replace('2','b',$item->order_time);
+//            $item->order_time = str_replace('3','c',$item->order_time);
+//            $item->order_time = str_replace('4','d',$item->order_time);
+//            $item->order_time = str_replace('5','e',$item->order_time);
+//            $item->order_time = str_replace('6','f',$item->order_time);
+//            $item->order_time = str_replace('7','g',$item->order_time);
+//            $item->order_time = str_replace('8','h',$item->order_time);
+//            $item->order_time = str_replace('9','i',$item->order_time);
+//            $item->time = $item->order_time;
         }
+//        $points = $points->sortByDesc('order_time');
+//        dd($points->toArray());
 
         $author = User::find($line->user_id);
         $author->timestamps = false;
