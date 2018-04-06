@@ -72,6 +72,13 @@
 
                         <h3 class="timeline-header"><a target="_blank" href="{{url('/point/'.encode($po->id))}}">{{$po->title or ''}}</a></h3>
 
+                        {{--description--}}
+                        @if(!empty($po->description))
+                            <div class="timeline-body" style="padding-bottom:0;">
+                                <div class="colo-md-12 text-muted"> {{ $po->description or '' }} </div>
+                            </div>
+                        @endif
+
                         <div class="timeline-body">
 
                             <div class="media">
