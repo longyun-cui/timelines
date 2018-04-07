@@ -79,8 +79,8 @@
                             </div>
                         @endif
 
+                        @if(!empty($po->content))
                         <div class="timeline-body">
-
                             <div class="media">
                                 <div class="media-left">
                                     <img src="{!! $po->img_tags[2][0] or '' !!}" alt="" class="media-object">
@@ -92,8 +92,8 @@
                                 </div>
                             </div>
                             {{--<article class="colo-md-12 point-content"> {!! $po->content or '' !!} </article>--}}
-
                         </div>
+                        @endif
 
                         <div class="timeline-footer box-footer item-tools-row">
                             {{--点赞--}}

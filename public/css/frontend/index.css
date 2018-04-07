@@ -54,7 +54,7 @@
 
 
 .item-piece .media .media-left {display:none;width:150px;height:auto;max-height:150px;float:left;}
-.item-piece .media img {width:100%;}
+.item-piece .media .media-left img {max-width:100%;}
 
 
 .item-entity-container {background:#fff;}
