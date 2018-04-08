@@ -53,7 +53,7 @@
 .item-piece .text-red {color:#e21433}
 
 
-.item-piece .media .media-left {display:none;width:150px;height:auto;max-height:150px;float:left;}
+.item-piece .media .media-left {display:none;width:150px;height:auto;max-height:100px;float:left;}
 .item-piece .media .media-left img {max-width:100%;}
 
 
