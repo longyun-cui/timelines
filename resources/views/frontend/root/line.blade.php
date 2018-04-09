@@ -83,7 +83,13 @@
                         <div class="timeline-body">
                             <div class="media">
                                 <div class="media-left">
-                                    <img src="{!! $po->img_tags[2][0] or '' !!}" alt="" class="media-object">
+                                    <a target="_blank" href="{{url('/point/'.encode($po->id))}}" role="button">
+                                        @if(!empty($po->cover_pic))
+                                            <img class="media-object" src="{{ url(config('common.host.'.env('APP_ENV').'.cdn').'/'.$po->cover_pic) }}">
+                                        @else
+                                            <img class="media-object" src="{{ $po->img_tags[2][0] or '' }}">
+                                        @endif
+                                    </a>
                                 </div>
                                 <div class="media-body">
                                     <div class="clearfix">

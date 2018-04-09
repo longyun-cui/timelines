@@ -30,7 +30,13 @@
 
                 <div class="media">
                     <div class="media-left">
-                        <img src="{!! $item->img_tags[2][0] or '' !!}" alt="" class="media-object">
+                        <a href="{{url('/line/'.encode($item->id))}}" role="button">
+                            @if(!empty($item->cover_pic))
+                                <img class="media-object" src="{{ config('common.host.'.env('APP_ENV').'.cdn').'/'.$item->cover_pic }}">
+                            @else
+                                <img class="media-object" src="{{ $item->img_tags[2][0] or '' }}">
+                            @endif
+                        </a>
                     </div>
                     <div class="media-body">
                         <div class="clearfix">
