@@ -180,7 +180,7 @@
                         'data': 'encode_id',
                         'orderable': false,
                         render: function(data) {
-                            return '<a href="/home/point/list?line_id='+data+'"><button type="button" class="btn btn-sm bg-purple">管理时间点</button></a>';
+                            return '<a href="/home/point/list?line_id='+data+'" target="_blank"><button type="button" class="btn btn-sm bg-purple">管理时间点</button></a>';
                         }
                     },
                     {
