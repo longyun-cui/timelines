@@ -1,5 +1,9 @@
 @extends('frontend.layout.layout')
 
+@section('wx_share_title')时间线@endsection
+@section('wx_share_desc')记录生活更轻松@endsection
+@section('wx_share_imgUrl'){{config('common.host.'.env('APP_ENV').'.root').'/favicon.png'}}@endsection
+
 @section('header_title')  @endsection
 
 @section('title','时间线')
