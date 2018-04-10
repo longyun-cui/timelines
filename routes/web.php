@@ -42,13 +42,18 @@ Route::group(['namespace' => 'Front'], function () {
         return redirect('/lines');
     });
 
-    Route::get('lines', 'RootController@view_lines');
-    Route::get('line/{id?}', 'RootController@view_line');
-//    Route::get('line', 'RootController@view_line');
-    Route::get('point/{id?}', 'RootController@view_point');
-//    Route::get('point', 'RootController@view_point');
 
-    Route::get('u/{id?}', 'RootController@view_user');
+    Route::group(['middleware' => 'wechat.share'], function () {
+
+        Route::get('lines', 'RootController@view_lines');
+        Route::get('line/{id?}', 'RootController@view_line');
+//        Route::get('line', 'RootController@view_line');
+        Route::get('point/{id?}', 'RootController@view_point');
+//        Route::get('point', 'RootController@view_point');
+
+        Route::get('u/{id?}', 'RootController@view_user');
+
+    });
 
 
     Route::group(['middleware' => 'login'], function () {
