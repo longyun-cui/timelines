@@ -1,7 +1,7 @@
 @extends('frontend.layout.layout')
 
 @section('wx_share_title') {{$line->title or ''}} @endsection
-@section('wx_share_desc') {{$line->description or ''}} @endsection
+@section('wx_share_desc') {{$line->description or '@'.$point->user->name}} @endsection
 
 @if(!empty($line->user->portrait_img))
     @section('wx_share_imgUrl'){{config('common.host.'.env('APP_ENV').'.cdn').'/'.$line->user->portrait_img}}@endsection
